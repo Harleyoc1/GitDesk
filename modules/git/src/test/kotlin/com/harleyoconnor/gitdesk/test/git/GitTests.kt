@@ -28,7 +28,7 @@ class GitTests {
     @Disabled("Testing for private remote repositories requires authentication.")
     @Test
     fun `test checking for private remote repository's existence`() {
-        val repositoryUrl = URL("https://github.com/Harleyoc1/GitDesk")
+        val repositoryUrl = URL("https://github.com/Harleyoc1/GitDesk-old")
         Assertions.assertTrue(repositoryExistsAt(repositoryUrl))
     }
 

@@ -70,7 +70,7 @@ dependencies {
 application {
     this.mainClass.set("$group.MainKt")
     this.applicationDefaultJvmArgs = mutableListOf(
-        "--add-modules", "java.scripting" /*,kotlin.reflect" */
+        "--add-modules", "java.scripting,kotlin.reflect"
     )
 }
 

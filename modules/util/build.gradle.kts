@@ -5,7 +5,3 @@ plugins {
 javafx {
     this.version = "17"
 }
-
-dependencies {
-    implementation(project(":util"))
-}
