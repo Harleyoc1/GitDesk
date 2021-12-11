@@ -1,0 +1,132 @@
+
+* {
+    -fx-font-family: "Helvetica Neue";
+    -error-color: #e33535;
+}
+
+/* Default node styles */
+
+.text-field {
+    -fx-text-fill: -primary-text-color;
+    -fx-background-color: -secondary-background-color;
+    -fx-border-color: -primary-border-color;
+    -fx-border-radius: 1px;
+}
+
+.button {
+    -fx-text-fill: -primary-text-color;
+    -fx-background-color: -secondary-background-color;
+    -fx-border-color: -primary-border-color;
+    -fx-border-radius: 2px;
+}
+
+
+/* Common style classes */
+
+.root, .background {
+    -fx-background-color: -primary-background-color;
+}
+
+.text {
+    -fx-text-fill: -primary-text-color;
+}
+
+.secondary-text {
+    -fx-text-fill: -secondary-text-color;
+}
+
+.title {
+    -fx-font-size: 22;
+}
+
+.subtitle {
+    -fx-font-size: 16;
+}
+
+.body {
+    -fx-font-size: 12;
+}
+
+.sub-body {
+    -fx-font-size: 10;
+}
+
+.sub-body-2 {
+    -fx-font-size: 8;
+}
+
+.sub-body-3 {
+    -fx-font-size: 6;
+}
+
+.bold {
+    -fx-font-weight: bold !important;
+}
+
+.mono {
+    -fx-font-family: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";
+}
+
+.label.error {
+    -fx-text-fill: -error-color;
+}
+
+.icon {
+    -fx-background-color: -primary-text-color;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-border-color: transparent;
+}
+
+.enter-button {
+    -fx-background-color: -enter-button-color;
+}
+
+/* Side bar */
+
+.cell {
+    -fx-border-width: 0 0 1px 0;
+}
+
+.side-bar {
+    -fx-background-color: -tertiary-background-color;
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 0 2px 0 0;
+}
+
+.side-bar > .cell {
+    -fx-padding: 0.3334em 0.6667em;
+}
+
+.side-bar > .nav-cell {
+    -fx-padding: 0.6667em 1.33334em;
+}
+
+.side-bar > .nav-cell:selected {
+    -fx-background-color: -tertiary-selected-color;
+}
+
+.side-bar > .cell > .radio, .side-bar .cell > .radio > .dot {
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+
+.side-bar > .cell, .open-existing-tab > .cell, .clone-repository-view .section {
+    -fx-border-color: -primary-border-color;
+}
+
+.repository-cell {
+    -fx-padding: 0.6667em 0.8889em;
+}
+
+.search-bar {
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+}
+
+.open-existing-tab > .top-bar {
+    -fx-background-color: -secondary-background-color;
+}

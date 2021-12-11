@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
+    <left>
+        <VBox styleClass="side-bar" prefWidth="150">
+            <Label text="%app.title" styleClass="cell, text, title" maxWidth="Infinity"/>
+            <fx:define>
+                <ToggleGroup fx:id="navigationGroup"/>
+            </fx:define>
+            <RadioButton fx:id="openExistingButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         onAction="#openOpenExistingTab" maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/file.svg" styleClass="icon"/>
+                        <Label text="%ui.menu.tab.open_existing" styleClass="text, body"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/clone.svg" styleClass="icon"/>
+                        <Label text="%ui.menu.tab.clone_existing" styleClass="text, body"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
+                        <Label text="%ui.menu.tab.create_new" styleClass="text, body"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+        </VBox>
+    </left>
+</BorderPane>

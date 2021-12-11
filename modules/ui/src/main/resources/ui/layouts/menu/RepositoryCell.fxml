@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.RepositoryCellController" alignment="CENTER_LEFT"
+      styleClass="cell, repository-cell" onMouseClicked="#openRepository">
+    <Label fx:id="label" styleClass="text, body"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="directoryLabel" styleClass="secondary-text, sub-body-2"/>
+</HBox>
