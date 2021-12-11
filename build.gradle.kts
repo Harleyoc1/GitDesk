@@ -33,12 +33,12 @@ allprojects {
         implementation(kotlin("stdlib", "1.6.0"))
         implementation(kotlin("reflect", "1.6.0"))
 
-        implementation(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.14.1")
-        implementation(group = "org.apache.logging.log4j", name = "log4j-core", version = "2.14.1")
+        implementation(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.15.0")
+        implementation(group = "org.apache.logging.log4j", name = "log4j-core", version = "2.15.0")
 
-        testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.7.2")
-        testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-params", version = "5.7.2")
-        testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.7.2")
+        testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.8.2")
+        testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-params", version = "5.8.2")
+        testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.8.2")
     }
 
     tasks.test {
