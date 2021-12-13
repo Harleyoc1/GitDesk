@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.util.getUserHome
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.system.SystemManager.Theme
 import org.apache.logging.log4j.LogManager
+import java.io.File
 import java.io.File.separatorChar
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -80,4 +81,6 @@ class MacOSManager : AbstractSystemManager() {
 
     override fun getAppDataLocation() = getUserHome() + "${separatorChar}Library${separatorChar}Application Support"
 
+    override fun openInFileBrowser(file: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("open").arguments("-R", file.path)
 }

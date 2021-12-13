@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox
 class MenuController {
 
     private val openExistingTab: VBox by lazy {
-        loadLayout("menu/OpenExistingTab")
+        loadLayout("menu/tabs/open_existing/Root")
     }
 
     @FXML

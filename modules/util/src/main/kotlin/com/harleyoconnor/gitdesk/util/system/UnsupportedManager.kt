@@ -1,7 +1,11 @@
 package com.harleyoconnor.gitdesk.util.system
 
+import com.harleyoconnor.gitdesk.util.getOsName
 import com.harleyoconnor.gitdesk.util.getUserHome
+import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.system.SystemManager.Theme
+import org.apache.logging.log4j.LogManager
+import java.io.File
 import java.io.File.separatorChar
 
 /**
@@ -42,4 +46,9 @@ class UnsupportedManager : SystemManager {
      */
     override fun getAppDataLocation() = getUserHome() + separatorChar
 
+    override fun openInFileBrowser(file: File): ProceduralProcessBuilder {
+        LogManager.getLogger()
+            .warn("Tried to open file {} in browser, but {} does not support this action.", file, getOsName())
+        return ProceduralProcessBuilder().command("")
+    }
 }

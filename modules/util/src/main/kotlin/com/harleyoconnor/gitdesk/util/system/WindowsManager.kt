@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.util.system
 
 import com.harleyoconnor.gitdesk.util.getUserHome
+import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
+import java.io.File
 
 /**
  * A [SystemManager] for Windows 10.
@@ -24,4 +26,6 @@ class WindowsManager : AbstractSystemManager() {
 
     override fun getAppDataLocation() = getUserHome() + "/AppData/Roaming/"
 
+    override fun openInFileBrowser(file: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("explorer").arguments("/select, ${file.path}")
 }

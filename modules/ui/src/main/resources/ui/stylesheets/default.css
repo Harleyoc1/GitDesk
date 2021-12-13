@@ -36,7 +36,7 @@
 }
 
 .title {
-    -fx-font-size: 22;
+    -fx-font-size: 18;
 }
 
 .subtitle {
@@ -71,6 +71,10 @@
     -fx-text-fill: -error-color;
 }
 
+.padded-5 {
+    -fx-padding: 5;
+}
+
 .icon {
     -fx-background-color: -primary-text-color;
 }
@@ -94,7 +98,7 @@
 .side-bar {
     -fx-background-color: -tertiary-background-color;
     -fx-border-color: -primary-border-color;
-    -fx-border-width: 0 2px 0 0;
+    -fx-border-width: 0 1px 0 0;
 }
 
 .side-bar > .cell {

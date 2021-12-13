@@ -19,7 +19,7 @@ class LocalRepository(
     @Json(name = "last_open") private var lastOpen: Date? = null,
     @DirectoryTree @Json(name = "open_directories") val openDirectories: MutableTree<Directory> =
         MutableArrayTree(directory),
-    @Json(name = "window_cache") val windowCache: WindowCache = WindowCache()
+    @Json(name = "window_cache") val windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
 ) {
     companion object {
         val ADAPTER: JsonAdapter<LocalRepository> by lazy { Data.moshi.adapter(LocalRepository::class.java) }

@@ -6,6 +6,7 @@ import com.harleyoconnor.gitdesk.git.repository.Repository
 /**
  * @author Harley O'Connor
  */
+// TODO: This should only load/save repository data, not manage in-memory data.
 interface RepositoryAccess : DataManager {
 
     fun add(repository: Repository)

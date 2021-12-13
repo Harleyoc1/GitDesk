@@ -11,7 +11,7 @@
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
     <left>
         <VBox styleClass="side-bar" prefWidth="150">
-            <Label text="%app.title" styleClass="cell, text, title" maxWidth="Infinity"/>
+            <Label text="%app.title" styleClass="cell, text, title, bold" maxWidth="Infinity" prefHeight="45"/>
             <fx:define>
                 <ToggleGroup fx:id="navigationGroup"/>
             </fx:define>

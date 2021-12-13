@@ -1,8 +1,10 @@
 package com.harleyoconnor.gitdesk.util.system
 
 import com.harleyoconnor.gitdesk.util.getOsName
+import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.system.SystemManager.Companion.SYSTEM_MANAGER
 import com.harleyoconnor.gitdesk.util.system.SystemManager.Companion.get
+import java.io.File
 
 /**
  * A [SystemManager] handles operations that are specific to the operating system
@@ -71,5 +73,7 @@ interface SystemManager {
      * should always end with a `/`, defining the folder location.
      */
     fun getAppDataLocation(): String
+
+    fun openInFileBrowser(file: File): ProceduralProcessBuilder
 
 }

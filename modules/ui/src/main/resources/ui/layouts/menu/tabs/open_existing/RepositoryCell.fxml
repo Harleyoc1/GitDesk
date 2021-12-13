@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Menu?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.RepositoryCellController" fx:id="root" alignment="CENTER_LEFT"
+      styleClass="cell, repository-cell" onMouseClicked="#openRepository">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <MenuItem text="%ui.button.open" onAction="#openRepository" accelerator="Enter"/>
+                <Menu text="%ui.menu.open_in">
+                    <MenuItem text="%ui.button.open_in.file_browser" onAction="#openInFileBrowser"/>
+                </Menu>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <VBox>
+        <Label fx:id="label" styleClass="text, body"/>
+        <Label fx:id="pathLabel" styleClass="secondary-text, sub-body-2"/>
+    </VBox>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="remoteLabel" text="%ui.repository.no_remote" styleClass="text, sub-body, padded-5"/>
+    <SVGIcon fx:id="remotePlatformIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
+</HBox>
