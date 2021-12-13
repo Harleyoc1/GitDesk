@@ -20,6 +20,36 @@
     -fx-border-radius: 2px;
 }
 
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar, .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .thumb {
+    -fx-background-color: -secondary-background-color;
+}
+
+.scroll-bar > .increment-button, .scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-shape: " ";
+}
+
+.scroll-bar:horizontal > .increment-button, .scroll-bar:horizontal > .decrement-button {
+    -fx-padding: 0 0 10 0;
+}
+
+.scroll-bar:vertical > .increment-button, .scroll-bar:vertical > .decrement-button {
+    -fx-padding: 0 10 0 0;
+}
+
 
 /* Common style classes */
 
@@ -118,7 +148,7 @@
     -fx-border-width: 0;
 }
 
-.side-bar > .cell, .open-existing-tab > .cell, .clone-repository-view .section {
+.side-bar > .cell, .open-existing-tab .cell, .clone-repository-view .section {
     -fx-border-color: -primary-border-color;
 }
 

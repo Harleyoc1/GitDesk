@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.ui.util.loadLayout
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.ToggleGroup
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox

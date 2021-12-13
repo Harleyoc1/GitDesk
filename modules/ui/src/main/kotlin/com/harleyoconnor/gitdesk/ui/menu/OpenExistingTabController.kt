@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox
 class OpenExistingTabController {
 
     @FXML
-    private lateinit var root: VBox
+    private lateinit var content: VBox
 
     @FXML
     private lateinit var searchBar: TextField
@@ -39,7 +39,7 @@ class OpenExistingTabController {
     }
 
     private fun clearDisplayedRepositories() {
-        this.root.children.remove(1, this.root.children.size)
+        this.content.children.remove(1, this.content.children.size)
     }
 
     private fun displayRepositories(searchQuery: String) {
@@ -51,7 +51,7 @@ class OpenExistingTabController {
     }
 
     private fun displayRepository(repository: LocalRepository) {
-        root.children.add(RepositoryCellController.loadCell(repository))
+        content.children.add(RepositoryCellController.loadCell(repository))
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())

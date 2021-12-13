@@ -5,9 +5,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.OpenExistingTabController" fx:id="root" styleClass="open-existing-tab">
-    <HBox styleClass="cell, top-bar" alignment="CENTER" prefHeight="45">
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.OpenExistingTabController" styleClass="open-existing-tab">
+    <HBox styleClass="cell, top-bar" alignment="CENTER" minHeight="45" prefHeight="45">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
                    styleClass="search-bar" prefHeight="35" HBox.hgrow="ALWAYS"/>
         <Button onAction="#onAddPressed" styleClass="icon-button">
@@ -16,4 +17,7 @@
             </graphic>
         </Button>
     </HBox>
+    <ScrollPane fitToWidth="true">
+        <VBox fx:id="content"/>
+    </ScrollPane>
 </VBox>
