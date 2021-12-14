@@ -17,7 +17,7 @@
             </graphic>
         </Button>
     </HBox>
-    <ScrollPane fitToWidth="true">
+    <ScrollPane fx:id="contentScrollPane" fitToWidth="true">
         <VBox fx:id="content"/>
     </ScrollPane>
 </VBox>

@@ -13,6 +13,7 @@ import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.scene.control.Button
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import java.net.URL
@@ -36,11 +37,23 @@ class SelectRemoteTabController {
     @FXML
     private lateinit var content: VBox
 
+    @FXML
+    private lateinit var contentScrollPane: ScrollPane
+
     private val remoteCellsRefreshExecutor by lazy {
         Executors.newSingleThreadExecutor()
     }
 
     private var lastQuery: String = ""
+
+    @FXML
+    fun initialize() {
+        contentScrollPane.vvalueProperty().addListener { _, _, new ->
+            if (new == 1.0) {
+                platform.cellLoader.loadMore(this, searchBar.text)
+            }
+        }
+    }
 
     fun togglePlatform(actionEvent: ActionEvent) {
         platform = Platform.values()[(platform.ordinal + 1) % Platform.values().size]
@@ -68,7 +81,7 @@ class SelectRemoteTabController {
     }
 
     private fun onSearchQueryUpdated(newQuery: String) {
-        platform.cellRefresher.searchQueryUpdated(this, newQuery)
+        platform.cellLoader.searchQueryUpdated(this, newQuery)
     }
 
     private fun clearDisplayedRepositories() {
@@ -77,10 +90,10 @@ class SelectRemoteTabController {
 
     enum class Platform(
         val icon: () -> SVG,
-        val cellRefresher: CellRefresher
+        val cellLoader: RemoteCellLoader
     ) {
-        GITHUB({ getOrLoad("github") }, GitHubCellRefresher),
-        URL({ getOrLoad("web") }, UrlCellRefresher);
+        GITHUB({ getOrLoad("github") }, GitHubRemoteCellLoader),
+        URL({ getOrLoad("web") }, UrlRemoteCellLoader);
 
         companion object {
             fun getOrLoad(iconName: String): SVG {
@@ -89,30 +102,40 @@ class SelectRemoteTabController {
         }
     }
 
-    interface CellRefresher {
+    interface RemoteCellLoader {
         fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String)
+
+        fun loadMore(controller: SelectRemoteTabController, query: String)
     }
 
-    object GitHubCellRefresher : CellRefresher {
+    object GitHubRemoteCellLoader : RemoteCellLoader {
         private val pendingFutures: Queue<CompletableFuture<*>> = LinkedList()
+        private var nextPage = 1
 
         override fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String) {
             clearPendingTasks()
             if (newQuery.isNotEmpty()) {
-                computeSearchTask(controller, newQuery)
+                queueSearchTask(controller, newQuery)
+            }
+        }
+
+        override fun loadMore(controller: SelectRemoteTabController, query: String) {
+            if (query.isNotEmpty()) {
+                queueSearchTask(controller, query)
             }
         }
 
         private fun clearPendingTasks() {
             pendingFutures.forEach { it.cancel(true) }
             pendingFutures.clear()
+            nextPage = 1
         }
 
-        private fun computeSearchTask(controller: SelectRemoteTabController, query: String, page: Int = 1) {
+        private fun queueSearchTask(controller: SelectRemoteTabController, query: String, page: Int = nextPage++) {
             val future = CompletableFuture.runAsync({ Thread.sleep(300) }, controller.remoteCellsRefreshExecutor)
                 .thenApply { runSearch(query, page) }
             future.thenAccept { results ->
-                queueUpdateDisplayedResults(results, controller)
+                queueUpdateDisplayedResults(results, controller, page)
             }.thenRun {
                 pendingFutures.remove(future)
             }
@@ -128,11 +151,14 @@ class SelectRemoteTabController {
 
         private fun queueUpdateDisplayedResults(
             results: Array<RemoteRepository>?,
-            controller: SelectRemoteTabController
+            controller: SelectRemoteTabController,
+            page: Int
         ) {
             results?.let {
                 runLater {
-                    controller.clearDisplayedRepositories()
+                    if (page == 1) {
+                        controller.clearDisplayedRepositories()
+                    }
                     displayResults(controller, it)
                 }
             }
@@ -145,7 +171,7 @@ class SelectRemoteTabController {
         }
     }
 
-    object UrlCellRefresher : CellRefresher {
+    object UrlRemoteCellLoader : RemoteCellLoader {
         override fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String) {
             CompletableFuture.runAsync({
                 val url = getUrlFromQuery(newQuery)
@@ -154,6 +180,9 @@ class SelectRemoteTabController {
                 }
                 queueDisplayResults(controller, url)
             }, controller.remoteCellsRefreshExecutor)
+        }
+
+        override fun loadMore(controller: SelectRemoteTabController, query: String) {
         }
 
         private fun getUrlFromQuery(newQuery: String): URL {
