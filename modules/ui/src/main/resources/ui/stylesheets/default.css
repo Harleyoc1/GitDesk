@@ -20,6 +20,10 @@
     -fx-border-radius: 2px;
 }
 
+.tooltip {
+    -fx-font-size: 10;
+}
+
 .scroll-pane, .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
@@ -152,7 +156,7 @@
     -fx-border-color: -primary-border-color;
 }
 
-.repository-cell {
+.repository-cell, .remote-cell {
     -fx-padding: 0.6667em 0.8889em;
 }
 

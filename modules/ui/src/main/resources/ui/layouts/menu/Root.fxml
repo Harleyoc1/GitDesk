@@ -24,7 +24,8 @@
                     </HBox>
                 </graphic>
             </RadioButton>
-            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity">
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
+                         onAction="#openCloneExistingTab">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/clone.svg" styleClass="icon"/>

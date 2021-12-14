@@ -1,7 +1,7 @@
-package com.harleyoconnor.gitdesk.ui.menu
+package com.harleyoconnor.gitdesk.ui.menu.open
 
 import com.harleyoconnor.gitdesk.data.Data
-import com.harleyoconnor.gitdesk.data.repository.LocalRepository
+import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox
 /**
  * @author Harley O'Connor
  */
-class OpenExistingTabController {
+class OpenTabController {
 
     @FXML
     private lateinit var content: VBox
@@ -39,7 +39,7 @@ class OpenExistingTabController {
     }
 
     private fun clearDisplayedRepositories() {
-        this.content.children.remove(1, this.content.children.size)
+        this.content.children.clear()
     }
 
     private fun displayRepositories(searchQuery: String) {

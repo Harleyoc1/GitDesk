@@ -27,7 +27,7 @@ class SVGIcon : Region() {
         setupFromSvg(svg)
     }
 
-    private fun setupFromSvg(svg: SVG) {
+    fun setupFromSvg(svg: SVG) {
         val path = SVGPath()
         path.content = svg.path
         shape = path

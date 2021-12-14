@@ -1,7 +1,6 @@
-package com.harleyoconnor.gitdesk.ui.menu
+package com.harleyoconnor.gitdesk.ui.menu.open
 
-import com.harleyoconnor.gitdesk.data.repository.LocalRepository
-import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.getUserHome
@@ -21,7 +20,7 @@ class RepositoryCellController {
 
     companion object {
         fun loadCell(repository: LocalRepository): HBox {
-            val fxml = load<HBox, RepositoryCellController>("menu/tabs/open_existing/RepositoryCell")
+            val fxml = load<HBox, RepositoryCellController>("menu/tabs/open/RepositoryCell")
             fxml.controller.setRepository(repository)
             return fxml.root
         }
@@ -62,9 +61,13 @@ class RepositoryCellController {
     }
 
     private fun updateUiWithPath(path: String) {
+        // Make path in cell more concise.
         val formattedPath = path.replace(getUserHome(), "~")
+            .replace("Library/Mobile Documents/com~apple~CloudDocs", "iCloud")
         pathLabel.text = formattedPath
-        pathLabel.tooltip = Tooltip(formattedPath)
+
+        // Display full path in tooltip.
+        pathLabel.tooltip = Tooltip(path)
     }
 
     @FXML

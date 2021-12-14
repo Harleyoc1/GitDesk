@@ -9,5 +9,6 @@ javafx {
 
 dependencies {
     implementation(project(":util"))
+    implementation(project(":git"))
     implementation(project(":data"))
 }

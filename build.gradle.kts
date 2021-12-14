@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 fun property(key: String): String? = project.findProperty(key)?.toString()
 
 plugins {
@@ -43,6 +45,16 @@ allprojects {
 
     tasks.test {
         this.useJUnitPlatform()
+    }
+
+    val compileKotlin: KotlinCompile by tasks
+    val compileTestKotlin: KotlinCompile by tasks
+
+    compileKotlin.kotlinOptions {
+        jvmTarget = "17"
+    }
+    compileTestKotlin.kotlinOptions {
+        jvmTarget = "17"
     }
 }
 

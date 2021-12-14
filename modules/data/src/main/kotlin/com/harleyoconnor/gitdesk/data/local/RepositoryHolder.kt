@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.data.repository
+package com.harleyoconnor.gitdesk.data.local
 
 import com.harleyoconnor.gitdesk.data.Data.moshi
 import com.harleyoconnor.gitdesk.git.repository.Repository

@@ -16,9 +16,11 @@ fun Moshi.Builder.addExtraAdapters(): Moshi.Builder {
     this.add(FileAdapter)
     this.add(DirectoryAdapter)
     this.add(PatternAdapter)
+    this.add(URLAdapter)
     this.add(SyntaxHighlighter::class.java, SyntaxHighlighterAdapter)
     this.add(MutableTreeAdapter.FACTORY)
     this.add(TreeAdapter.FACTORY)
+    this.add(RepositoryNameAdapter)
     this.add(
         Types.newParameterizedType(MutableTree::class.java, Directory::class.java),
         DirectoryTree::class.java,

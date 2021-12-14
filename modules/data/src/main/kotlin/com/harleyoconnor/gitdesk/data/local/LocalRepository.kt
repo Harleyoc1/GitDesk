@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.data.repository
+package com.harleyoconnor.gitdesk.data.local
 
 import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.WindowCache

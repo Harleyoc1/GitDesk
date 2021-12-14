@@ -1,8 +1,5 @@
 package com.harleyoconnor.gitdesk.git.repository
 
-import com.harleyoconnor.gitdesk.git.gitCommand
-import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
-
 /**
  * @author Harley O'Connor
  */
@@ -11,16 +8,10 @@ class Branch(
     val name: String
 ) {
 
-    fun getUpstream(): Remote {
-        return Remote(this.repository, this.getRemoteName())
-    }
-
-    private fun getRemoteName(): String {
-        return FunctionalProcessBuilder.normal()
-            .gitCommand()
-            .arguments("config", "--get", "branch.$name.remote")
-            .directory(repository.directory)
-            .beginAndWaitFor().result!!
+    fun getUpstream(): RemoteReference {
+        val name = Remote.getUpstreamName(repository.directory, name)
+        val url = Remote.getUrl(repository.directory, name)
+        return RemoteReference(name, Remote.getRemote(url))
     }
 
 }
