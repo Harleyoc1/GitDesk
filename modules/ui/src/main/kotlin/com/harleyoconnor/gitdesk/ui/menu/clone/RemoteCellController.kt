@@ -6,11 +6,11 @@ import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import java.io.FileNotFoundException
@@ -29,12 +29,25 @@ class RemoteCellController {
     }
 
     @FXML
+    private lateinit var root: HBox
+
+    @FXML
+    private lateinit var contextMenu: ContextMenu
+
+    @FXML
     private lateinit var label: Label
 
     @FXML
     private lateinit var languageIcon: SVGIcon
 
     private lateinit var remote: Remote
+
+    @FXML
+    fun initialize() {
+        root.setOnContextMenuRequested {
+            contextMenu.show(root, it.screenX, it.screenY)
+        }
+    }
 
     private fun setRemote(remote: Remote) {
         this.remote = remote
