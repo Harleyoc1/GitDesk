@@ -107,11 +107,11 @@ class SelectRemoteTabController {
     }
 
     fun select(remote: Remote) {
-        this.parent.createTab.node = CloneController.load(remote, this)
+        this.parent.cloneTab.node = CloneController.load(remote, this)
     }
 
     fun editSelection() {
-        this.parent.createTab.node = this.root
+        this.parent.cloneTab.node = this.root
     }
 
     enum class Platform(

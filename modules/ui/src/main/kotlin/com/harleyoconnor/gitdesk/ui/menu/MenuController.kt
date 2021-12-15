@@ -37,7 +37,7 @@ class MenuController {
         }
     }
 
-    val createTab: Tab by lazy {
+    private val createTab: Tab by lazy {
         Tab(CreateTabController.load(this)) {
             root.center = it
         }

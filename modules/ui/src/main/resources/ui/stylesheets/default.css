@@ -214,12 +214,12 @@
     -fx-border-width: 0 1px 1px 1px;
 }
 
-.repository-cell.top, .remote-cell.top, .repository-cell.top.bottom, .remote-cell.top.bottom {
-    -fx-border-width: 1px;
-}
-
 .repository-cell.bottom, .remote-cell.bottom {
     -fx-border-width: 0 1px 1px 1px;
+}
+
+.repository-cell.top, .remote-cell.top, .repository-cell.top.bottom, .remote-cell.top.bottom {
+    -fx-border-width: 1px;
 }
 
 .top-bar {
