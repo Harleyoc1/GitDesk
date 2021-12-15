@@ -2,23 +2,29 @@
 * {
     -fx-font-family: "Helvetica Neue";
     -error-color: #e33535;
+    -focus-color: #F9322E;
 }
 
 /* Default node styles */
 
 .text-field {
     -fx-text-fill: -primary-text-color;
-    -fx-background-color: -secondary-background-color;
+    -fx-background-color: -tertiary-background-color;
     -fx-border-color: -primary-border-color;
-    -fx-border-radius: 1px;
+    -fx-border-radius: 4px;
+}
+
+.text-field:focused {
+    -fx-border-color: -focus-color;
 }
 
 .button {
     -fx-text-fill: -primary-text-color;
-    -fx-background-color: -secondary-background-color;
+    -fx-background-color: -tertiary-background-color;
     -fx-background-insets: 0;
     -fx-border-color: -primary-border-color;
-    -fx-border-radius: 2px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
 }
 
 .tooltip {
@@ -27,6 +33,8 @@
 
 .scroll-pane, .scroll-pane > .viewport {
     -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
 
 .scroll-bar, .scroll-bar .track {
@@ -53,6 +61,11 @@
 
 .scroll-bar:vertical > .increment-button, .scroll-bar:vertical > .decrement-button {
     -fx-padding: 0 10 0 0;
+}
+
+
+.scroll-pane.padded {
+    -fx-padding: 10;
 }
 
 
@@ -125,22 +138,33 @@
 }
 
 .enter-button {
-    -fx-background-color: -enter-button-color;
+    -fx-background-color: -focus-color;
+    -fx-text-fill: -tertiary-text-color;
 }
 
 /* Side bar */
 
 .cell {
-    -fx-border-width: 0 0 1px 0;
-    -fx-background-color: -cell-background-color;
+    -fx-border-width: 0;
+}
+
+.cell.top {
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-border-radius: 4px 4px 0 0;
+}
+
+.cell.bottom {
+    -fx-background-radius: 0 0 4px 4px;
+    -fx-border-radius: 0 0 4px 4px;
+}
+
+.cell.top.bottom {
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
 }
 
 .cell.transparent {
     -fx-background-color: transparent;
-}
-
-.cell.field {
-    -fx-background-color: -secondary-background-color;
 }
 
 .side-bar {
@@ -151,7 +175,13 @@
 
 .side-bar > .cell {
     -fx-background-color: -tertiary-background-color;
+    -fx-background-insets: 1 5 1 5;
+    -fx-background-radius: 6px;
     -fx-padding: 0.3334em 0.6667em;
+}
+
+.side-bar > .nav-cell .icon {
+    -fx-background-color: -focus-color;
 }
 
 .side-bar > .nav-cell {
@@ -175,11 +205,19 @@
     -fx-padding: 0.6667em 0.8889em;
 }
 
-.cell-bar {
-    -fx-background-radius: 0;
-    -fx-border-width: 0;
+.repository-cell, .remote-cell {
+    -fx-background-color: -tertiary-background-color;
+    -fx-border-width: 0 1px 1px 1px;
 }
 
-.open-existing-tab > .top-bar {
+.repository-cell.top, .remote-cell.top, .repository-cell.top.bottom, .remote-cell.top.bottom {
+    -fx-border-width: 1px;
+}
+
+.repository-cell.bottom, .remote-cell.bottom {
+    -fx-border-width: 0 1px 1px 1px;
+}
+
+.top-bar {
     -fx-background-color: -secondary-background-color;
 }

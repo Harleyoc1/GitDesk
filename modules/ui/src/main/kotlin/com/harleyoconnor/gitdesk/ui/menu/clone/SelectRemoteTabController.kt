@@ -191,9 +191,13 @@ class SelectRemoteTabController {
         }
 
         private fun displayResults(controller: SelectRemoteTabController, remotes: Array<RemoteRepository>) {
-            controller.content.children.addAll(
+            val children = controller.content.children
+            children.lastOrNull()?.styleClass?.remove("bottom")
+            children.addAll(
                 remotes.map { SelectableRemoteCellController.loadCell(controller, it) }
             )
+            children.firstOrNull()?.styleClass?.add("top")
+            children.lastOrNull()?.styleClass?.add("bottom")
         }
     }
 

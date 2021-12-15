@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectedRemoteCellController" fx:id="root" alignment="CENTER_LEFT"
-      styleClass="cell, remote-cell" onMouseClicked="#editRemote">
+      styleClass="cell, remote-cell, top, bottom" onMouseClicked="#editRemote">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>

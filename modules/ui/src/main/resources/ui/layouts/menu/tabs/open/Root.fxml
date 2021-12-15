@@ -6,18 +6,23 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController" styleClass="open-existing-tab">
-    <HBox styleClass="cell, top-bar" alignment="CENTER" minHeight="45" prefHeight="45">
+    <HBox styleClass="cell, top-bar" alignment="CENTER" minHeight="50" prefHeight="50">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
-                   styleClass="cell-bar" prefHeight="35" HBox.hgrow="ALWAYS"/>
+                   styleClass="cell-bar" prefHeight="35" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets right="10" left="10"/>
+            </HBox.margin>
+        </TextField>
         <Button onAction="#onAddPressed" styleClass="icon-button">
             <graphic>
                 <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/add.svg" styleClass="icon"/>
             </graphic>
         </Button>
     </HBox>
-    <ScrollPane fitToWidth="true">
+    <ScrollPane fitToWidth="true" styleClass="padded">
         <VBox fx:id="content"/>
     </ScrollPane>
 </VBox>

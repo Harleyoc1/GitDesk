@@ -7,11 +7,15 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
     <left>
         <VBox styleClass="side-bar" prefWidth="150">
-            <Label text="%app.title" styleClass="cell, text, title, bold" maxWidth="Infinity" prefHeight="45"/>
+            <padding>
+                <Insets left="3" right="3"/>
+            </padding>
+            <Label text="%app.title" styleClass="cell, text, title, bold" maxWidth="Infinity" prefHeight="50"/>
             <fx:define>
                 <ToggleGroup fx:id="navigationGroup"/>
             </fx:define>

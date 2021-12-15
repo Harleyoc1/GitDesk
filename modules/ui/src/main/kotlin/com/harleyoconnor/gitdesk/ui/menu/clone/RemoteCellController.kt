@@ -19,7 +19,7 @@ import java.io.FileNotFoundException
 abstract class RemoteCellController {
 
     @FXML
-    private lateinit var root: HBox
+    protected lateinit var root: HBox
 
     @FXML
     private lateinit var contextMenu: ContextMenu
@@ -33,7 +33,7 @@ abstract class RemoteCellController {
     protected lateinit var remote: Remote
 
     @FXML
-    fun initialize() {
+    open fun initialize() {
         root.setOnContextMenuRequested {
             contextMenu.show(root, it.screenX, it.screenY)
         }

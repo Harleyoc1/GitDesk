@@ -51,7 +51,11 @@ class OpenTabController {
     }
 
     private fun displayRepository(repository: LocalRepository) {
-        content.children.add(RepositoryCellController.loadCell(repository))
+        val children = content.children
+        children.lastOrNull()?.styleClass?.remove("bottom")
+        children.add(RepositoryCellController.loadCell(repository))
+        children.firstOrNull()?.styleClass?.add("top")
+        children.lastOrNull()?.styleClass?.add("bottom")
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())
