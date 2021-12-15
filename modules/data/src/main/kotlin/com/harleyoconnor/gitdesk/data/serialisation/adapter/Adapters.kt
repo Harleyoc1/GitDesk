@@ -2,7 +2,6 @@ package com.harleyoconnor.gitdesk.data.serialisation.adapter
 
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.DirectoryTree
 import com.harleyoconnor.gitdesk.util.Directory
-import com.harleyoconnor.gitdesk.util.syntax.SyntaxHighlighter
 import com.harleyoconnor.gitdesk.util.tree.MutableTree
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -17,7 +16,6 @@ fun Moshi.Builder.addExtraAdapters(): Moshi.Builder {
     this.add(DirectoryAdapter)
     this.add(PatternAdapter)
     this.add(URLAdapter)
-    this.add(SyntaxHighlighter::class.java, SyntaxHighlighterAdapter)
     this.add(MutableTreeAdapter.FACTORY)
     this.add(TreeAdapter.FACTORY)
     this.add(RepositoryNameAdapter)

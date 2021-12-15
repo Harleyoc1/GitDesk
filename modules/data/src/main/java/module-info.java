@@ -16,7 +16,6 @@ module gitdesk.data {
     exports com.harleyoconnor.gitdesk.data.remote.github;
     exports com.harleyoconnor.gitdesk.data.remote.github.search;
     exports com.harleyoconnor.gitdesk.data.serialisation.qualifier;
-    exports com.harleyoconnor.gitdesk.data.syntax;
 
     exports com.harleyoconnor.gitdesk.data.serialisation.adapter to moshi;
     opens com.harleyoconnor.gitdesk.data to kotlin.reflect;

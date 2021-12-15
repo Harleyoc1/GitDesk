@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.ui
 
-import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.window.SetWindowManager
 import javafx.application.Platform
@@ -34,7 +33,7 @@ class Application : javafx.application.Application() {
     }
 
     override fun stop() {
-        Data.saveAllData()
+        // TODO: Call stop on every window
     }
 
     fun close() {

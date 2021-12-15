@@ -1,13 +1,11 @@
 package com.harleyoconnor.gitdesk.data.local
 
-import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.WindowCache
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.DirectoryTree
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.tree.MutableArrayTree
 import com.harleyoconnor.gitdesk.util.tree.MutableTree
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
 import java.util.Date
 
 /**
@@ -21,9 +19,9 @@ class LocalRepository(
         MutableArrayTree(directory),
     @Json(name = "window_cache") val windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
 ) {
-    companion object {
-        val ADAPTER: JsonAdapter<LocalRepository> by lazy { Data.moshi.adapter(LocalRepository::class.java) }
-    }
+
+    @Transient
+    var open: Boolean = false
 
     fun getLastOpen(): Date? {
         return this.lastOpen

@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.data
 
 import com.harleyoconnor.gitdesk.data.local.RepositoryAccess
-import com.harleyoconnor.gitdesk.data.local.RepositoryHolder
 import com.harleyoconnor.gitdesk.data.serialisation.adapter.addExtraAdapters
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.create
@@ -25,19 +24,17 @@ object Data {
         .addLast(KotlinJsonAdapterFactory())
         .build()
 
-    val repositoryAccess: RepositoryAccess = RepositoryHolder(
+    val repositoryAccess: RepositoryAccess = RepositoryAccess(
         getPath("Repositories.json").toFile().create(),
-        Directory(getPath("Repositories").toFile().makeDirectories())
+        Directory(
+            SystemManager.get().getAppDataLocation() + File.separatorChar +
+                    "GitDesk${File.separatorChar}Repositories"
+        ).makeDirectories()
     )
 
 //    val syntaxHighlighterAccess: SyntaxHighlighterAccess = SyntaxHighlighterHolder(
 //        getPath("Syntax Highlighting")
 //    )
-
-    init {
-        repositoryAccess.load()
-//        syntaxHighlighterAccess.load()
-    }
 
     private fun getPath(relativePath: String): Path {
         return getAppDataPath() + relativePath
@@ -47,10 +44,6 @@ object Data {
         return FileSystems.getDefault().getPath(
             SystemManager.get().getAppDataLocation() + File.separatorChar + "GitDesk"
         )
-    }
-
-    fun saveAllData() {
-        repositoryAccess.save()
     }
 
 }

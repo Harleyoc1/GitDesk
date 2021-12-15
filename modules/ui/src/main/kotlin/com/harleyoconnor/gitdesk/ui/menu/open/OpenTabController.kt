@@ -43,9 +43,9 @@ class OpenTabController {
     }
 
     private fun displayRepositories(searchQuery: String) {
-        Data.repositoryAccess.forEach {
-            if (matchesQuery(it.id, searchQuery)) {
-                displayRepository(it)
+        Data.repositoryAccess.getAll().forEach { (directory, id) ->
+            if (matchesQuery(id, searchQuery)) {
+                displayRepository(Data.repositoryAccess.get(directory))
             }
         }
     }
