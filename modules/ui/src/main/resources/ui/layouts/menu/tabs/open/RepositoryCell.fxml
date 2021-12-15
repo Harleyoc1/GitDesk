@@ -15,7 +15,7 @@
         <ContextMenu fx:id="contextMenu">
             <items>
                 <MenuItem text="%ui.button.open" onAction="#openRepository" accelerator="Enter"/>
-                <Menu text="%ui.menu.open_in">
+                <Menu text="%ui.button.open_in">
                     <MenuItem text="%ui.button.open_in.file_browser" onAction="#openInFileBrowser"/>
                 </Menu>
             </items>

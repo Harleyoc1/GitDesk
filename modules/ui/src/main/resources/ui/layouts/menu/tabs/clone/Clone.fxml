@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.CloneController" fx:id="root" onKeyPressed="#keyPressed"
+      styleClass="clone-tab">
+    <HBox minHeight="45" prefHeight="45" alignment="CENTER_LEFT" styleClass="cell, padded, transparent">
+        <Label styleClass="text, heading, bold" text="%ui.menu.tab.clone.label.remote"/>
+    </HBox>
+    <!-- Remote cell programmatically inserted here. -->
+    <HBox minHeight="33" prefHeight="33" alignment="CENTER_LEFT" styleClass="cell, padded, transparent">
+        <Label styleClass="text, heading, bold" text="%ui.menu.tab.clone.label.location"/>
+    </HBox>
+    <HBox minHeight="45" prefHeight="45" alignment="CENTER" styleClass="cell, field">
+        <TextField fx:id="locationField" promptText="%ui.menu.tab.clone.location.prompt" HBox.hgrow="ALWAYS"
+                   styleClass="cell-bar" prefHeight="35"/>
+        <Button onAction="#openDirectoryChooser" styleClass="icon-button">
+            <graphic>
+                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/directory.svg" styleClass="icon"/>
+            </graphic>
+        </Button>
+    </HBox>
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <VBox.margin>
+            <Insets topRightBottomLeft="20"/>
+        </VBox.margin>
+        <Button onAction="#cancel" text="%ui.button.cancel"/>
+        <Button onAction="#clone" text="%ui.button.clone" styleClass="enter-button"/>
+    </HBox>
+</VBox>

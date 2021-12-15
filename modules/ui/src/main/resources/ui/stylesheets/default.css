@@ -16,6 +16,7 @@
 .button {
     -fx-text-fill: -primary-text-color;
     -fx-background-color: -secondary-background-color;
+    -fx-background-insets: 0;
     -fx-border-color: -primary-border-color;
     -fx-border-radius: 2px;
 }
@@ -77,6 +78,10 @@
     -fx-font-size: 16;
 }
 
+.heading {
+    -fx-font-size: 14;
+}
+
 .body {
     -fx-font-size: 12;
 }
@@ -127,6 +132,15 @@
 
 .cell {
     -fx-border-width: 0 0 1px 0;
+    -fx-background-color: -cell-background-color;
+}
+
+.cell.transparent {
+    -fx-background-color: transparent;
+}
+
+.cell.field {
+    -fx-background-color: -secondary-background-color;
 }
 
 .side-bar {
@@ -136,6 +150,7 @@
 }
 
 .side-bar > .cell {
+    -fx-background-color: -tertiary-background-color;
     -fx-padding: 0.3334em 0.6667em;
 }
 
@@ -152,15 +167,15 @@
     -fx-border-width: 0;
 }
 
-.side-bar > .cell, .open-existing-tab .cell, .clone-repository-view .section {
+.side-bar > .cell, .open-existing-tab .cell, .clone-tab .cell {
     -fx-border-color: -primary-border-color;
 }
 
-.repository-cell, .remote-cell {
+.repository-cell, .remote-cell, .cell.padded {
     -fx-padding: 0.6667em 0.8889em;
 }
 
-.search-bar {
+.cell-bar {
     -fx-background-radius: 0;
     -fx-border-width: 0;
 }

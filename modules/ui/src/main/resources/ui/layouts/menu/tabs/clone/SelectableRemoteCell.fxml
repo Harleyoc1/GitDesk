@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.RemoteCellController" fx:id="root" alignment="CENTER_LEFT"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectableRemoteCellController" fx:id="root" alignment="CENTER_LEFT"
       styleClass="cell, remote-cell" onMouseClicked="#selectRemote">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>
                 <MenuItem text="%ui.button.select" onAction="#selectRemote" accelerator="Enter"/>
-                <Menu text="%ui.menu.open_in">
+                <Menu text="%ui.button.open_in">
                     <MenuItem text="%ui.button.open_in.browser" onAction="#openInBrowser"/>
                 </Menu>
             </items>

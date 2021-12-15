@@ -5,7 +5,9 @@ import com.harleyoconnor.gitdesk.data.remote.github.search.RepositorySearch
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.application.Platform.runLater
@@ -16,6 +18,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
+import javafx.stage.Stage
 import java.net.URL
 import java.util.LinkedList
 import java.util.Queue
@@ -26,6 +29,21 @@ import java.util.concurrent.Executors
  * @author Harley O'Connor
  */
 class SelectRemoteTabController {
+
+    companion object {
+        fun load(parent: MenuController): VBox {
+            val fxml = load<VBox, SelectRemoteTabController>("menu/tabs/clone/SelectRemote")
+            fxml.controller.parent = parent
+            return fxml.root
+        }
+    }
+
+    private lateinit var parent: MenuController
+
+    val stage: Stage get() = parent.stage
+
+    @FXML
+    private lateinit var root: VBox
 
     @FXML
     private lateinit var searchBar: TextField
@@ -55,7 +73,7 @@ class SelectRemoteTabController {
         }
     }
 
-    fun togglePlatform(actionEvent: ActionEvent) {
+    fun togglePlatform(event: ActionEvent) {
         platform = Platform.values()[(platform.ordinal + 1) % Platform.values().size]
         updatePlatformToggleGraphic()
         clearDisplayedRepositories()
@@ -86,6 +104,14 @@ class SelectRemoteTabController {
 
     private fun clearDisplayedRepositories() {
         this.content.children.clear()
+    }
+
+    fun select(remote: Remote) {
+        this.parent.cloneTab.node = CloneController.load(remote, this)
+    }
+
+    fun editSelection() {
+        this.parent.cloneTab.node = this.root
     }
 
     enum class Platform(
@@ -166,7 +192,7 @@ class SelectRemoteTabController {
 
         private fun displayResults(controller: SelectRemoteTabController, remotes: Array<RemoteRepository>) {
             controller.content.children.addAll(
-                remotes.map { RemoteCellController.loadCell(it) }
+                remotes.map { SelectableRemoteCellController.loadCell(controller, it) }
             )
         }
     }
@@ -199,7 +225,7 @@ class SelectRemoteTabController {
             runLater {
                 controller.clearDisplayedRepositories()
                 controller.content.children.add(
-                    RemoteCellController.loadCell(Remote.getRemote(url))
+                    SelectableRemoteCellController.loadCell(controller, Remote.getRemote(url))
                 )
             }
         }

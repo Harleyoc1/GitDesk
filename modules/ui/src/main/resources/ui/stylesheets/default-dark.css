@@ -9,7 +9,10 @@
 
     -primary-border-color: #08090A;
 
-    -enter-button-color: #D6D6D6;
+    -enter-button-color: #555559;
 
     -tertiary-selected-color: #252A2E;
+
+    -cell-background-color: #3C3C40;
+    -cell-backgrounc-color-focused: #48484C;
 }

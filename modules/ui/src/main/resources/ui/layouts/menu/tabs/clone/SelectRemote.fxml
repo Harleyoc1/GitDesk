@@ -7,10 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController" styleClass="open-existing-tab">
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController" fx:id="root"
+      styleClass="open-existing-tab">
     <HBox styleClass="cell, top-bar" alignment="CENTER" minHeight="45" prefHeight="45">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
-                   styleClass="search-bar" prefHeight="35" HBox.hgrow="ALWAYS"/>
+                   styleClass="cell-bar" prefHeight="35" HBox.hgrow="ALWAYS"/>
         <Button onAction="#togglePlatform" fx:id="platformToggle" styleClass="icon-button">
             <graphic>
                 <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/github.svg" styleClass="icon"/>

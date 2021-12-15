@@ -11,7 +11,7 @@ import javafx.stage.Stage
  */
 class MenuWindow(
     stage: Stage, manager: WindowManager
-) : AbstractWindow(stage, loadLayout("menu/Root"), manager) {
+) : AbstractWindow(stage, MenuController.load(stage), manager) {
 
     override val minWidth: Double get() = 550.0
     override val minHeight: Double get() = 400.0

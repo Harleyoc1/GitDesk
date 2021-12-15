@@ -5,10 +5,8 @@ import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
-import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.event.ActionEvent
-import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
@@ -18,15 +16,7 @@ import java.io.FileNotFoundException
 /**
  * @author Harley O'Connor
  */
-class RemoteCellController {
-
-    companion object {
-        fun loadCell(remote: Remote): HBox {
-            val fxml = load<HBox, RemoteCellController>("menu/tabs/clone/RemoteCell")
-            fxml.controller.setRemote(remote)
-            return fxml.root
-        }
-    }
+abstract class RemoteCellController {
 
     @FXML
     private lateinit var root: HBox
@@ -40,7 +30,7 @@ class RemoteCellController {
     @FXML
     private lateinit var languageIcon: SVGIcon
 
-    private lateinit var remote: Remote
+    protected lateinit var remote: Remote
 
     @FXML
     fun initialize() {
@@ -49,7 +39,7 @@ class RemoteCellController {
         }
     }
 
-    private fun setRemote(remote: Remote) {
+    protected open fun initializeWithRemote(remote: Remote) {
         this.remote = remote
         if (remote is RemoteRepository) {
             label.text = remote.name.getFullName()
@@ -71,11 +61,7 @@ class RemoteCellController {
         }
     }
 
-    fun selectRemote(mouseEvent: Event) {
-
-    }
-
-    fun openInBrowser(actionEvent: ActionEvent) {
+    fun openInBrowser(event: ActionEvent) {
         Application.getInstance().hostServices.showDocument(remote.url.toURI().toString())
     }
 

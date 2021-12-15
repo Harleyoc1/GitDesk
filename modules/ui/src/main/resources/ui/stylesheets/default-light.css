@@ -1,7 +1,7 @@
 
 * {
     -primary-background-color: #E1DFE2;
-    -secondary-background-color: #F6F1F1;
+    -secondary-background-color: #FBFBFB;
     -tertiary-background-color: #F4F3F4;
 
     -primary-text-color: #08090A;
@@ -9,7 +9,10 @@
 
     -primary-border-color: #979797;
 
-    -enter-button-color: #D6D6D6;
+    -enter-button-color: #FBFBFB;
 
     -tertiary-selected-color: #E5E2E7;
+
+    -cell-background-color: #F1F0F2;
+    -cell-background-color-focused: #F8F7F7;
 }
