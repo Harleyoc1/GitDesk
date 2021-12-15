@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
     <left>
@@ -15,7 +17,12 @@
             <padding>
                 <Insets left="3" right="3"/>
             </padding>
-            <Label text="%app.title" styleClass="cell, text, title, bold" maxWidth="Infinity" prefHeight="50"/>
+            <HBox maxWidth="Infinity" prefHeight="50" styleClass="cell, top" spacing="5" alignment="CENTER_LEFT">
+                <ImageView preserveRatio="true" fitWidth="32">
+                    <Image url="/ui/images/icon-borderless.png"/>
+                </ImageView>
+                <Label text="%app.title" styleClass="text, title, bold"/>
+            </HBox>
             <fx:define>
                 <ToggleGroup fx:id="navigationGroup"/>
             </fx:define>

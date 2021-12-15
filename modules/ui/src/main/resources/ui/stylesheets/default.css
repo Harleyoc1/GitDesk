@@ -180,6 +180,10 @@
     -fx-padding: 0.3334em 0.6667em;
 }
 
+.side-bar > .cell.top {
+    -fx-padding: 0.3334em;
+}
+
 .side-bar > .nav-cell .icon {
     -fx-background-color: -focus-color;
 }

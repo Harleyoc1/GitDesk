@@ -17,5 +17,6 @@ module gitdesk.ui {
     opens com.harleyoconnor.gitdesk.ui.menu.open to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.clone to javafx.fxml;
 
+    opens ui.images;
     opens ui.stylesheets;
 }
