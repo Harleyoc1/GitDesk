@@ -33,7 +33,7 @@ abstract class RemoteCellController {
     protected lateinit var remote: Remote
 
     @FXML
-    open fun initialize() {
+    fun initialize() {
         root.setOnContextMenuRequested {
             contextMenu.show(root, it.screenX, it.screenY)
         }
