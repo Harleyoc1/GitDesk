@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.StackPane?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.CloneController" fx:id="root" onKeyPressed="#keyPressed"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectLocationController" fx:id="root" onKeyPressed="#keyPressed"
       styleClass="clone-tab">
     <padding>
         <Insets topRightBottomLeft="10"/>

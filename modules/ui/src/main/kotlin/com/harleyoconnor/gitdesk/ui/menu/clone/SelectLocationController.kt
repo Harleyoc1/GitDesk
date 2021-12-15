@@ -18,18 +18,18 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class CloneController {
+class SelectLocationController {
 
     companion object {
-        fun load(remote: Remote, sibling: SelectRemoteTabController): VBox {
-            val fxml = load<VBox, CloneController>("menu/tabs/clone/Clone")
+        fun load(remote: Remote, parent: CloneTab): VBox {
+            val fxml = load<VBox, SelectLocationController>("menu/tabs/clone/SelectLocation")
             fxml.controller.setRemote(remote)
-            fxml.controller.sibling = sibling
+            fxml.controller.parent = parent
             return fxml.root
         }
     }
 
-    private lateinit var sibling: SelectRemoteTabController
+    private lateinit var parent: CloneTab
 
     @FXML
     private lateinit var root: VBox
@@ -55,7 +55,7 @@ class CloneController {
 
     fun openDirectoryChooser(actionEvent: ActionEvent) {
         val directoryChooser = DirectoryChooser()
-        directoryChooser.showDialog(sibling.stage)?.let {
+        directoryChooser.showDialog(parent.stage)?.let {
             this.locationField.text = Directory(it).path
         }
     }
@@ -75,7 +75,7 @@ class CloneController {
     }
 
     fun editRemoteSelection() {
-        sibling.editSelection()
+        parent.returnToRemoteSelectionView()
     }
 
 }

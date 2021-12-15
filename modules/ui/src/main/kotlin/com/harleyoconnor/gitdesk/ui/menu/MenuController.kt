@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
+import com.harleyoconnor.gitdesk.ui.menu.clone.CloneTab
 import com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController
 import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
 import com.harleyoconnor.gitdesk.ui.util.load
@@ -32,7 +33,7 @@ class MenuController {
     }
 
     val cloneTab: Tab by lazy {
-        Tab(SelectRemoteTabController.load(this)) {
+        CloneTab(stage) {
             root.center = it
         }
     }
@@ -74,12 +75,12 @@ class MenuController {
         root.center = this.createTab.node
     }
 
-    class Tab(
+    open class Tab(
         node: Node,
-        private val appender: (Node) -> Unit
+        protected val appender: (Node) -> Unit
     ) {
         var node: Node = node
-            set(value) {
+            protected set(value) {
                 field = value
                 appender(value)
             }

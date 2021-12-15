@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox
 class SelectedRemoteCellController: RemoteCellController() {
 
     companion object {
-        fun loadCell(parent: CloneController, remote: Remote): HBox {
+        fun loadCell(parent: SelectLocationController, remote: Remote): HBox {
             val fxml = load<HBox, SelectedRemoteCellController>("menu/tabs/clone/SelectedRemoteCell")
             fxml.controller.initializeWithRemote(remote)
             fxml.controller.parent = parent
@@ -19,7 +19,7 @@ class SelectedRemoteCellController: RemoteCellController() {
         }
     }
 
-    private lateinit var parent: CloneController
+    private lateinit var parent: SelectLocationController
 
     // TODO: Platform icon
 
