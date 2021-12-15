@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
 import com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController
+import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.loadLayout
 import javafx.event.ActionEvent
@@ -36,6 +37,12 @@ class MenuController {
         }
     }
 
+    val createTab: Tab by lazy {
+        Tab(CreateTabController.load(this)) {
+            root.center = it
+        }
+    }
+
     lateinit var stage: Stage
 
     @FXML
@@ -60,6 +67,11 @@ class MenuController {
     @FXML
     fun openCloneExistingTab(event: ActionEvent) {
         root.center = this.cloneTab.node
+    }
+
+    @FXML
+    fun openCreateTab(event: ActionEvent) {
+        root.center = this.createTab.node
     }
 
     class Tab(

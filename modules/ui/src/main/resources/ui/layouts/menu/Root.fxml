@@ -31,7 +31,7 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/file.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.open_existing" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.open" styleClass="text, body"/>
                     </HBox>
                 </graphic>
             </RadioButton>
@@ -40,15 +40,16 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/clone.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.clone_existing" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.clone" styleClass="text, body"/>
                     </HBox>
                 </graphic>
             </RadioButton>
-            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity">
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
+                         onAction="#openCreateTab">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.create_new" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.create" styleClass="text, body"/>
                     </HBox>
                 </graphic>
             </RadioButton>
