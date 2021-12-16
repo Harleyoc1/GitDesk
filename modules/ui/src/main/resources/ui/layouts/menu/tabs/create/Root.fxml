@@ -14,13 +14,13 @@
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
-    <Label text="%ui.menu.tab.create.label.name" styleClass="text, heading, bold">
+    <Label text="%ui.menu.tab.create.label.name" styleClass="text, heading-3, bold">
         <padding>
             <Insets bottom="8"/>
         </padding>
     </Label>
     <TextField fx:id="nameField" promptText="%ui.menu.tab.create.field.name.prompt" prefHeight="35"/>
-    <Label text="%ui.menu.tab.create.label.location" styleClass="text, heading, bold, padded">
+    <Label text="%ui.menu.tab.create.label.location" styleClass="text, heading-3, bold, padded">
         <padding>
             <Insets top="8" bottom="8"/>
         </padding>

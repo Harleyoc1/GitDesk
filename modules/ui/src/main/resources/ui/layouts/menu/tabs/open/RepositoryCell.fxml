@@ -22,7 +22,7 @@
         </ContextMenu>
     </fx:define>
     <VBox>
-        <Label fx:id="label" styleClass="text, body"/>
+        <Label fx:id="label" styleClass="text, heading-2"/>
         <Label fx:id="pathLabel" styleClass="secondary-text, sub-body-2"/>
     </VBox>
     <Region HBox.hgrow="ALWAYS"/>

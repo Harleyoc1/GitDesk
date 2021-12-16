@@ -18,8 +18,8 @@
                 <Insets left="3" right="3"/>
             </padding>
             <HBox maxWidth="Infinity" prefHeight="50" styleClass="cell, top" spacing="5" alignment="CENTER_LEFT">
-                <ImageView preserveRatio="true" fitWidth="32">
-                    <Image url="/ui/images/icon-borderless.png"/>
+                <ImageView>
+                    <Image url="/ui/images/icon-borderless.png" preserveRatio="true" requestedWidth="32" smooth="true"/>
                 </ImageView>
                 <Label text="%app.title" styleClass="text, title, bold"/>
             </HBox>
@@ -31,7 +31,7 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/file.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.open" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.open" styleClass="text, heading-3"/>
                     </HBox>
                 </graphic>
             </RadioButton>
@@ -40,7 +40,7 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/clone.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.clone" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.clone" styleClass="text, heading-3"/>
                     </HBox>
                 </graphic>
             </RadioButton>
@@ -49,7 +49,7 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
-                        <Label text="%ui.menu.tab.create" styleClass="text, body"/>
+                        <Label text="%ui.menu.tab.create" styleClass="text, heading-3"/>
                     </HBox>
                 </graphic>
             </RadioButton>

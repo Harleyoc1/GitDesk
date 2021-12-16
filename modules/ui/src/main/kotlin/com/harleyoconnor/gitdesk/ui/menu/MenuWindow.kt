@@ -23,4 +23,7 @@ class MenuWindow(
             Application.getInstance().close()
         }
     }
+
+    override fun stop() {
+    }
 }

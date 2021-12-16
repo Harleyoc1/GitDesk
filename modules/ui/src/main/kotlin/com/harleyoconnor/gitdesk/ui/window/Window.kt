@@ -11,4 +11,9 @@ interface Window : Area {
     fun focus()
     fun close()
 
+    /**
+     * Invoked when the Application is stopping. All used resources should be closed/saved safely here.
+     */
+    fun stop()
+
 }

@@ -2,10 +2,9 @@ package com.harleyoconnor.gitdesk.ui.window
 
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.style.DynamicStylesheetManager
-import com.harleyoconnor.gitdesk.ui.style.StaticStylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.StylesheetManager
-import com.harleyoconnor.gitdesk.ui.style.ThemedStylesheet
+import com.harleyoconnor.gitdesk.ui.style.Stylesheets
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
@@ -23,8 +22,7 @@ abstract class AbstractWindow(
 
     private val stylesheetManager: StylesheetManager = DynamicStylesheetManager(scene)
 
-    protected val stylesheets: Array<Stylesheet> =
-        arrayOf(StaticStylesheet("/ui/stylesheets/default.css"), ThemedStylesheet.fromBasePath("/ui/stylesheets/default"))
+    protected open val stylesheets: Array<Stylesheet> = arrayOf(Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED)
 
     init {
         this.setStageBounds()

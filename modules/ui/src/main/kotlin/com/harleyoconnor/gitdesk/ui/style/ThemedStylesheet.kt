@@ -8,7 +8,7 @@ import com.harleyoconnor.gitdesk.util.system.SystemManager
  *
  * @author Harley O'Connor
  */
-class ThemedStylesheet(
+data class ThemedStylesheet(
     private val lightThemePath: String,
     private val darkThemePath: String
 ) : Stylesheet, Themed {

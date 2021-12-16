@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Menu?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.DirectoryCellController" fx:id="root">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <MenuItem text="%ui.button.expand" accelerator="Shortcut+O" onAction="#expandPressed"/>
+                <Menu text="%ui.button.open_in">
+                    <MenuItem text="%ui.button.open_in.file_browser" accelerator="Shortcut+Alt+O"
+                              onAction="#openInFileBrowser"/>
+                </Menu>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <HBox alignment="CENTER_LEFT" fx:id="cell" styleClass="cell, directory-cell" spacing="5" onMousePressed="#select">
+        <SVGIcon fx:id="expandIcon" prefWidth="10" prefHeight="10" path="/ui/icons/arrow.svg" styleClass="icon"
+                 onMousePressed="#expandPressed"/>
+        <SVGIcon fx:id="icon" prefWidth="12" prefHeight="12" path="/ui/icons/directory.svg" styleClass="icon"/>
+        <Label fx:id="nameLabel" styleClass="text, body"/>
+    </HBox>
+</VBox>

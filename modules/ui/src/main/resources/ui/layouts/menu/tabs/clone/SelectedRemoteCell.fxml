@@ -20,7 +20,7 @@
             </items>
         </ContextMenu>
     </fx:define>
-    <Label fx:id="label" styleClass="text, body"/>
+    <Label fx:id="label" styleClass="text, heading-2"/>
     <Region HBox.hgrow="ALWAYS"/>
     <SVGIcon fx:id="languageIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
 </HBox>

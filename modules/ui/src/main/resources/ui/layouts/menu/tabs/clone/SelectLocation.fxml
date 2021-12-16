@@ -15,13 +15,13 @@
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
-    <Label styleClass="text, heading, bold, padded" text="%ui.menu.tab.clone.label.remote">
+    <Label styleClass="text, heading-3, bold, padded" text="%ui.menu.tab.clone.label.remote">
         <padding>
             <Insets bottom="8"/>
         </padding>
     </Label>
     <!-- Remote cell programmatically inserted here. -->
-    <Label styleClass="text, heading, bold, padded" text="%ui.menu.tab.clone.label.location">
+    <Label styleClass="text, heading-3, bold, padded" text="%ui.menu.tab.clone.label.location">
         <padding>
             <Insets top="8" bottom="8"/>
         </padding>

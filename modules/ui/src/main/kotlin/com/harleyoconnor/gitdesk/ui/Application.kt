@@ -18,7 +18,8 @@ class Application : javafx.application.Application() {
     }
 
     private lateinit var primaryStage: Stage
-    private val windowManager = SetWindowManager()
+
+    val windowManager = SetWindowManager()
 
     fun getPrimaryStage(): Stage = primaryStage
 
@@ -33,7 +34,9 @@ class Application : javafx.application.Application() {
     }
 
     override fun stop() {
-        // TODO: Call stop on every window
+        windowManager.forEach {
+            it.stop()
+        }
     }
 
     fun close() {

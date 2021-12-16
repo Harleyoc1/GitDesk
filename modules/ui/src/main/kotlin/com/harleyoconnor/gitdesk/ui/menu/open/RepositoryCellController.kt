@@ -2,10 +2,10 @@ package com.harleyoconnor.gitdesk.ui.menu.open
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.getUserHome
 import com.harleyoconnor.gitdesk.util.system.SystemManager
-import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
@@ -71,12 +71,12 @@ class RepositoryCellController {
     }
 
     @FXML
-    fun openRepository(event: Event) {
-
+    fun openRepository() {
+        RepositoryWindow.focusOrOpen(repository)
     }
 
     @FXML
-    fun openInFileBrowser() {
+    private fun openInFileBrowser() {
         SystemManager.get().openInFileBrowser(repository.directory).begin()
     }
 

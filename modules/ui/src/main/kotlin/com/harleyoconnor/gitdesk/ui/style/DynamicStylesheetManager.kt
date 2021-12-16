@@ -24,7 +24,7 @@ class DynamicStylesheetManager(private val scene: Scene) : StylesheetManager, Th
     }
 
     override fun unregisterSheets(vararg stylesheets: Stylesheet) {
-        this.sheets.removeAll(stylesheets)
+        this.sheets.removeAll(stylesheets.toSet())
         this.update()
     }
 
