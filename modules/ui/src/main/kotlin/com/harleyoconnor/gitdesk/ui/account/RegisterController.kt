@@ -29,7 +29,7 @@ class RegisterController {
     private lateinit var confirmPasswordField: PasswordField
 
     @FXML
-    private lateinit var createButton: Button
+    private lateinit var registerButton: Button
 
     @FXML
     private fun initialize() {
@@ -58,7 +58,7 @@ class RegisterController {
     @FXML
     private fun keyPressed(event: KeyEvent) {
         if (event.code == KeyCode.ENTER) {
-            createButton.fire()
+            registerButton.fire()
         }
     }
 }
