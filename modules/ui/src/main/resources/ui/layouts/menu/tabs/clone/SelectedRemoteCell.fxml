@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectedRemoteCellController" fx:id="root" alignment="CENTER_LEFT"
-      styleClass="cell, remote-cell, top, bottom" onMouseClicked="#editRemote">
+      styleClass="cell, remote-cell, top, bottom" onMouseClicked="#editRemote" spacing="5">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>
@@ -23,4 +23,5 @@
     <Label fx:id="label" styleClass="text, heading-2"/>
     <Region HBox.hgrow="ALWAYS"/>
     <SVGIcon fx:id="languageIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
+    <SVGIcon fx:id="platformIcon" prefWidth="16" prefHeight="16" path="/ui/icons/web.svg" styleClass="icon"/>
 </HBox>

@@ -1,8 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.menu.clone
 
 import com.harleyoconnor.gitdesk.git.repository.Remote
+import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.load
-import javafx.event.Event
+import javafx.fxml.FXML
 import javafx.scene.layout.HBox
 
 /**
@@ -21,10 +23,17 @@ class SelectedRemoteCellController: RemoteCellController() {
 
     private lateinit var parent: SelectLocationController
 
-    // TODO: Platform icon
+    @FXML
+    private lateinit var platformIcon: SVGIcon
 
-    fun editRemote(event: Event) {
-        parent.editRemoteSelection()
+    override fun initializeWithRemote(remote: Remote) {
+        super.initializeWithRemote(remote)
+        platformIcon.setupFromSvg(remote.getIcon())
+    }
+
+    @FXML
+    private fun editRemote() {
+        parent.returnToRemoteSelection()
     }
 
 }

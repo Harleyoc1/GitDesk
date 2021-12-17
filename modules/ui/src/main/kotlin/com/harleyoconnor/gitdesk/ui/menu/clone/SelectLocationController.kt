@@ -5,9 +5,8 @@ import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.getUserHome
-import javafx.event.ActionEvent
-import javafx.event.Event
 import javafx.fxml.FXML
+import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
@@ -39,6 +38,8 @@ class SelectLocationController {
     private lateinit var locationField: TextField
 
     @FXML
+    private lateinit var cloneButton: Button
+
     private lateinit var selectedRemote: Remote
 
     fun setRemote(remote: Remote) {
@@ -53,29 +54,32 @@ class SelectLocationController {
         this.root.children.add(1, SelectedRemoteCellController.loadCell(this, remote))
     }
 
-    fun openDirectoryChooser(actionEvent: ActionEvent) {
+    @FXML
+    private fun openDirectoryChooser() {
         val directoryChooser = DirectoryChooser()
         directoryChooser.showDialog(parent.stage)?.let {
             this.locationField.text = Directory(it).path
         }
     }
 
-    fun cancel(event: ActionEvent) {
-        editRemoteSelection()
+    @FXML
+    private fun cancel() {
+        returnToRemoteSelection()
     }
 
-    fun keyPressed(event: KeyEvent) {
+    @FXML
+    private fun keyPressed(event: KeyEvent) {
         if (event.code == KeyCode.ENTER) {
-            clone(event)
+            cloneButton.fire()
         }
     }
 
-    fun clone(event: Event) {
+    fun clone() {
 
     }
 
-    fun editRemoteSelection() {
-        parent.returnToRemoteSelectionView()
+    fun returnToRemoteSelection() {
+        parent.returnToRemoteSelection()
     }
 
 }

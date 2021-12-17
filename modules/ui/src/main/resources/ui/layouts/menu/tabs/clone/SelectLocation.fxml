@@ -41,6 +41,6 @@
             <Insets bottom="5"/>
         </VBox.margin>
         <Button onAction="#cancel" text="%ui.button.cancel"/>
-        <Button onAction="#clone" text="%ui.button.clone" styleClass="enter-button"/>
+        <Button fx:id="cloneButton" onAction="#clone" text="%ui.button.clone" styleClass="enter-button"/>
     </HBox>
 </VBox>

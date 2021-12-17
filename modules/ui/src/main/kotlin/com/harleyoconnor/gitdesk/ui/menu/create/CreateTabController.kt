@@ -1,13 +1,15 @@
 package com.harleyoconnor.gitdesk.ui.menu.create
 
+import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.getUserHome
-import javafx.event.ActionEvent
-import javafx.event.Event
 import javafx.fxml.FXML
+import javafx.scene.control.Button
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import java.io.File
@@ -34,24 +36,39 @@ class CreateTabController {
     lateinit var locationField: TextField
 
     @FXML
-    fun initialize() {
-        clear(Event(null))
+    private lateinit var createButton: Button
+
+    @FXML
+    private fun initialize() {
+        clear()
     }
 
-    fun openDirectoryChooser(event: ActionEvent) {
+    @FXML
+    private fun openDirectoryChooser() {
         val directoryChooser = DirectoryChooser()
         directoryChooser.showDialog(parent.stage)?.let {
             this.locationField.text = Directory(it).path
         }
     }
 
-    fun clear(event: Event) {
+    @FXML
+    private fun clear() {
         nameField.text = "Project"
         locationField.text = getUserHome() + File.separator + "Project"
     }
 
-    fun create(event: ActionEvent) {
+    @FXML
+    private fun create() {
+        val location = File(locationField.text)
+        location.mkdirs()
+        parent.openRepository(LocalRepository(nameField.text, Directory(location)))
+    }
 
+    @FXML
+    private fun keyPressed(event: KeyEvent) {
+        if (event.code == KeyCode.ENTER) {
+            createButton.fire()
+        }
     }
 
 }

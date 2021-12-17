@@ -19,7 +19,7 @@ class CloneTab(
         this.node = remoteSelectionView
     }
 
-    fun returnToRemoteSelectionView() {
+    fun returnToRemoteSelection() {
         appender(remoteSelectionView)
     }
 

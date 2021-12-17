@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController" styleClass="create-tab">
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController" styleClass="create-tab"
+      onKeyPressed="#keyPressed">
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
@@ -41,6 +42,6 @@
             <Insets bottom="5"/>
         </VBox.margin>
         <Button onAction="#clear" text="%ui.button.clear"/>
-        <Button onAction="#create" text="%ui.button.create" styleClass="enter-button"/>
+        <Button fx:id="createButton" onAction="#create" text="%ui.button.create" styleClass="enter-button"/>
     </HBox>
 </VBox>

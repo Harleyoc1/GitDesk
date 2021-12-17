@@ -9,6 +9,7 @@ import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.getUserHome
 import com.harleyoconnor.gitdesk.util.system.SystemManager
@@ -122,7 +123,7 @@ class RepositoryCellController {
         if (remote is RemoteRepository) {
             remoteLabel.text = remote.name.getFullName()
             if (remote is GitHubRemoteRepository) {
-                remotePlatformIcon.setupFromSvg(SVGCache.getOrLoad(UIResource("/ui/icons/github.svg")))
+                remotePlatformIcon.setupFromSvg(remote.getIcon())
             }
         } else {
             remoteLabel.text = remote.url.toExternalForm().removePrefix("https://").removeSuffix(".git")
