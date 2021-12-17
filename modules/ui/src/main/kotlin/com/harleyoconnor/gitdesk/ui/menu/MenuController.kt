@@ -7,7 +7,7 @@ import com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.load
-import javafx.event.ActionEvent
+import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ToggleGroup
@@ -53,28 +53,40 @@ class MenuController {
     private lateinit var root: BorderPane
 
     @FXML
-    private lateinit var openExistingButton: RadioButton
-
-    @FXML
     private lateinit var navigationGroup: ToggleGroup
 
     @FXML
-    private fun initialize() {
-        openExistingButton.fire()
-    }
+    private lateinit var openTabButton: RadioButton
 
     @FXML
-    private fun openOpenExistingTab(event: ActionEvent) {
+    private lateinit var cloneTabButton: RadioButton
+
+    @FXML
+    private lateinit var createTabButton: RadioButton
+
+    @FXML
+    private fun initialize() {
+        openTabButton.setOnSelected {
+            openOpenTab()
+        }
+        cloneTabButton.setOnSelected {
+            openCloneTab()
+        }
+        createTabButton.setOnSelected {
+            openCreateTab()
+        }
+        openTabButton.fire()
+    }
+
+    private fun openOpenTab() {
         root.center = this.openTab.node
     }
 
-    @FXML
-    private fun openCloneExistingTab(event: ActionEvent) {
+    private fun openCloneTab() {
         root.center = this.cloneTab.node
     }
 
-    @FXML
-    private fun openCreateTab(event: ActionEvent) {
+    private fun openCreateTab() {
         root.center = this.createTab.node
     }
 

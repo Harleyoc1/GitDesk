@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
     <left>
@@ -26,8 +22,8 @@
             <fx:define>
                 <ToggleGroup fx:id="navigationGroup"/>
             </fx:define>
-            <RadioButton fx:id="openExistingButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
-                         onAction="#openOpenExistingTab" maxWidth="Infinity">
+            <RadioButton fx:id="openTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/file.svg" styleClass="icon"/>
@@ -35,8 +31,8 @@
                     </HBox>
                 </graphic>
             </RadioButton>
-            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
-                         onAction="#openCloneExistingTab">
+            <RadioButton fx:id="cloneTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/clone.svg" styleClass="icon"/>
@@ -44,8 +40,8 @@
                     </HBox>
                 </graphic>
             </RadioButton>
-            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
-                         onAction="#openCreateTab">
+            <RadioButton fx:id="createTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
