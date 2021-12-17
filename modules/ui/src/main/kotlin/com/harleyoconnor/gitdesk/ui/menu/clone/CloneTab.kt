@@ -20,11 +20,11 @@ class CloneTab(
     }
 
     fun returnToRemoteSelection() {
-        appender(remoteSelectionView)
+        this.node = remoteSelectionView
     }
 
     fun toLocationSelection(remote: Remote) {
-        appender(SelectLocationController.load(remote, this))
+        this.node = SelectLocationController.load(remote, this)
     }
 
 }
