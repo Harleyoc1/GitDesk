@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.harleyoconnor.gitdesk.ui.node.RepositoryCellList?>
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController" styleClass="open-existing-tab">
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController" styleClass="open-existing-tab"
+      onKeyPressed="#keyPressed">
     <HBox styleClass="cell, top-bar" alignment="CENTER" minHeight="50" prefHeight="50">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
-                   prefHeight="35" HBox.hgrow="ALWAYS">
+                   prefHeight="35" HBox.hgrow="ALWAYS" onKeyPressed="#keyPressed">
             <HBox.margin>
                 <Insets left="10"/>
             </HBox.margin>
@@ -26,6 +27,6 @@
         </Button>
     </HBox>
     <ScrollPane fitToWidth="true" styleClass="padded">
-        <VBox fx:id="content"/>
+        <RepositoryCellList fx:id="content"/>
     </ScrollPane>
 </VBox>

@@ -153,7 +153,7 @@ class RepositoryCellController {
         SystemManager.get().openInFileBrowser(repository.directory).begin()
     }
 
-    fun openInBrowser() {
+    private fun openInBrowser() {
         remote?.let { Application.getInstance().hostServices.showDocument(it.url.toURI().toString()) }
     }
 

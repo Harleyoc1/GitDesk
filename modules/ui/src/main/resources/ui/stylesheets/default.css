@@ -243,6 +243,22 @@
     -fx-border-width: 1px;
 }
 
+.selection-cell-list > .cell:selected {
+    -fx-background-color: -accent-color;
+}
+
+.selection-cell-list > .cell:selected .text {
+    -fx-text-fill: -tertiary-text-color;
+}
+
+.selection-cell-list > .cell:selected .icon {
+    -fx-background-color: -tertiary-text-color;
+}
+
+.selection-cell-list > .cell:selected .secondary-text {
+    -fx-text-fill: -quaternary-text-color;
+}
+
 .top-bar {
     -fx-background-color: -secondary-background-color;
 }

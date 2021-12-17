@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.data.remote.github.search.RepositorySearch
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.node.RemoteCellList
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.addBottomClass
 import com.harleyoconnor.gitdesk.ui.util.addTopClass
@@ -19,10 +20,10 @@ import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
 import java.net.URL
-import java.util.LinkedList
-import java.util.Queue
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
@@ -52,7 +53,7 @@ class SelectRemoteTabController {
     private var platform: Platform = Platform.GITHUB
 
     @FXML
-    private lateinit var content: VBox
+    private lateinit var content: RemoteCellList
 
     @FXML
     private lateinit var contentScrollPane: ScrollPane
@@ -65,6 +66,9 @@ class SelectRemoteTabController {
 
     @FXML
     fun initialize() {
+        content.setOnElementSelected { event ->
+            parent.toLocationSelection(event.element)
+        }
         contentScrollPane.vvalueProperty().addListener { _, _, new ->
             if (new == 1.0) {
                 platform.cellLoader.loadMore(this, searchBar.text)
@@ -102,7 +106,12 @@ class SelectRemoteTabController {
     }
 
     private fun clearDisplayedRepositories() {
-        this.content.children.clear()
+        this.content.clear()
+    }
+
+    @FXML
+    private fun keyPressed(event: KeyEvent) {
+        this.content.keyPressed(event)
     }
 
     enum class Platform(
@@ -184,9 +193,11 @@ class SelectRemoteTabController {
         private fun displayResults(controller: SelectRemoteTabController, remotes: Array<RemoteRepository>) {
             val children = controller.content.children
             children.lastOrNull()?.removeBottomClass()
-            children.addAll(
-                remotes.map { SelectableRemoteCellController.loadCell(controller.parent, it) }
-            )
+            remotes.map {
+                it to SelectableRemoteCellController.loadCell(controller.parent, it)
+            }.forEach {
+                controller.content.addElement(it.first, it.second)
+            }
             children.firstOrNull()?.addTopClass()
             children.lastOrNull()?.addBottomClass()
         }
@@ -219,8 +230,10 @@ class SelectRemoteTabController {
         ) {
             runLater {
                 controller.clearDisplayedRepositories()
-                controller.content.children.add(
-                    SelectableRemoteCellController.loadCell(controller.parent, Remote.getRemote(url))
+                val remote = Remote.getRemote(url)
+                controller.content.addElement(
+                    remote,
+                    SelectableRemoteCellController.loadCell(controller.parent, remote)
                 )
             }
         }

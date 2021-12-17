@@ -5,9 +5,9 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
+import com.harleyoconnor.gitdesk.ui.node.RepositoryCellList
 import com.harleyoconnor.gitdesk.ui.util.*
 import com.harleyoconnor.gitdesk.util.Directory
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyEvent
@@ -31,20 +31,24 @@ class OpenTabController {
     private lateinit var parent: MenuController
 
     @FXML
-    private lateinit var content: VBox
+    private lateinit var content: RepositoryCellList
 
     @FXML
     private lateinit var searchBar: TextField
     private var lastSearchQuery = ""
 
-    private val cells: MutableMap<LocalRepository, HBox> = mutableMapOf()
+    private val cellsCache: MutableMap<LocalRepository, HBox> = mutableMapOf()
 
-    fun setup(parent: MenuController) {
+    private fun setup(parent: MenuController) {
         this.parent = parent
+        this.content.setOnElementSelected { event ->
+            parent.openRepository(event.element)
+        }
         displayRepositories("")
     }
 
-    fun onAddPressed(event: ActionEvent) {
+    @FXML
+    private fun onAddPressed() {
         val directoryChooser = DirectoryChooser()
         directoryChooser.showDialog(parent.stage)?.let {
             addDirectory(Directory(it))
@@ -58,7 +62,8 @@ class OpenTabController {
         parent.openRepository(LocalRepository(directory.name, directory))
     }
 
-    fun onSearchQueryUpdated(keyEvent: KeyEvent) {
+    @FXML
+    private fun onSearchQueryUpdated(keyEvent: KeyEvent) {
         val query = searchBar.text
         if (lastSearchQuery == query) {
             return
@@ -73,7 +78,7 @@ class OpenTabController {
             it.removeTopClass()
             it.removeBottomClass()
         }
-        this.content.children.clear()
+        this.content.clear()
     }
 
     private fun displayRepositories(searchQuery: String) {
@@ -88,7 +93,7 @@ class OpenTabController {
     private fun displayRepository(repository: LocalRepository) {
         val children = content.children
         children.lastOrNull()?.removeBottomClass()
-        children.add(cells.computeIfAbsent(repository) {
+        content.addElement(repository, cellsCache.computeIfAbsent(repository) {
             RepositoryCellController.loadCell(this.parent, it)
         })
         children.firstOrNull()?.addTopClass()
@@ -96,5 +101,10 @@ class OpenTabController {
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())
+
+    @FXML
+    private fun keyPressed(event: KeyEvent) {
+        content.keyPressed(event)
+    }
 
 }
