@@ -11,6 +11,7 @@ module gitdesk.data {
     requires org.apache.logging.log4j;
 
     exports com.harleyoconnor.gitdesk.data;
+    exports com.harleyoconnor.gitdesk.data.highlighting;
     exports com.harleyoconnor.gitdesk.data.local;
     exports com.harleyoconnor.gitdesk.data.remote;
     exports com.harleyoconnor.gitdesk.data.remote.github;
@@ -22,4 +23,5 @@ module gitdesk.data {
     opens com.harleyoconnor.gitdesk.data.local to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github.search to kotlin.reflect;
+    opens com.harleyoconnor.gitdesk.data.serialisation to kotlin.reflect;
 }

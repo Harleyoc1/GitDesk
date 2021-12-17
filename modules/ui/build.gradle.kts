@@ -12,5 +12,6 @@ dependencies {
     implementation(project(":git"))
     implementation(project(":data"))
 
+    implementation(group = "com.squareup.moshi", name = "moshi-kotlin", version = "1.13.0-SNAPSHOT")
     implementation(group = "org.fxmisc.richtext", name = "richtextfx", version = "0.10.7")
 }

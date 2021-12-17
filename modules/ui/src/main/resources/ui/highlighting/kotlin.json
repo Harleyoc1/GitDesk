@@ -1,0 +1,125 @@
+{
+  "type": "keyword_based",
+  "priority": 1,
+  "name_pattern": ".*\\.kts{0,1}",
+  "keywords": [
+    "as",
+    "as?",
+    "break",
+    "class",
+    "continue",
+    "do",
+    "else",
+    "for",
+    "fun",
+    "if",
+    "in",
+    "!in",
+    "interface",
+    "is",
+    "!is",
+    "object",
+    "package",
+    "return",
+    "super",
+    "this",
+    "throw",
+    "by",
+    "catch",
+    "constructor",
+    "delegate",
+    "dynamic",
+    "field",
+    "file",
+    "finally",
+    "import",
+    "init",
+    "param",
+    "receiver",
+    "setparam",
+    "where",
+    "actual",
+    "abstract",
+    "annotation",
+    "companion",
+    "const",
+    "crossinline",
+    "data",
+    "enum",
+    "expect",
+    "external",
+    "final",
+    "infix",
+    "inline",
+    "inner",
+    "internal",
+    "lateinit",
+    "noinline",
+    "open",
+    "operator",
+    "out",
+    "override",
+    "private",
+    "protected",
+    "public",
+    "reified",
+    "sealed",
+    "suspend",
+    "tailrec",
+    "vararg",
+    "it",
+    "val"
+  ],
+  "highlights": [
+    {
+      "pattern": "\\(|\\)",
+      "group_name": "PAREN",
+      "style_class": "paren"
+    },
+    {
+      "pattern": "\\{|\\}",
+      "group_name": "BRACE",
+      "style_class": "brace"
+    },
+    {
+      "pattern": "\\[|\\]",
+      "group_name": "BRACKET",
+      "style_class": "bracket"
+    },
+    {
+      "pattern": "\\;",
+      "group_name": "SEMICOLON",
+      "style_class": "semicolon"
+    },
+    {
+      "pattern": "@[^ ]+",
+      "group_name": "ANNOTATION",
+      "style_class": "annotation"
+    },
+    {
+      "pattern": "\\b(true|false|null|([0-9]*\\.[0-9]+[fFdD]?)|([0-9]+[lLfFdD]?))\\b",
+      "group_name": "CONSTANT",
+      "style_class": "constant"
+    },
+    {
+      "pattern": "'([^'\\\\]|\\\\.)'",
+      "group_name": "CHAR",
+      "style_class": "char"
+    },
+    {
+      "pattern": "\"([^\"\\\\]|\\\\.)*\"",
+      "group_name": "STRING",
+      "style_class": "string"
+    },
+    {
+      "pattern": "/\\*\\*(.|\\R)*?\\*/",
+      "group_name": "DOC",
+      "style_class": "doc"
+    },
+    {
+      "pattern": "//[^\n]*|/\\*(.|\\R)*?\\*/",
+      "group_name": "COMMENT",
+      "style_class": "comment"
+    }
+  ]
+}

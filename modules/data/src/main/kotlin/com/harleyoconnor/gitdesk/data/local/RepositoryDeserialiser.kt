@@ -15,9 +15,9 @@ class RepositoryDeserialiser(
 ) : Deserialiser<String, LocalRepository> {
 
     @Throws(JsonDataException::class)
-    override fun deserialise(input: String): LocalRepository {
-        return adapter.fromJson(getDestinationFile(input).readText())
-            ?: throw JsonDataException("Cannot deserialise repository with id `$input`: invalid Json.")
+    override fun deserialise(key: String): LocalRepository {
+        return adapter.fromJson(getDestinationFile(key).readText())
+            ?: throw JsonDataException("Cannot deserialise repository with id `$key`: invalid Json.")
     }
 
     @Throws(JsonDataException::class)

@@ -6,9 +6,9 @@ import kotlin.jvm.Throws
 /**
  * @author Harley O'Connor
  */
-interface Deserialiser<I, D> {
+interface Deserialiser<K, D> {
 
     @Throws(JsonDataException::class)
-    fun deserialise(input: I): D
+    fun deserialise(key: K): D
 
 }

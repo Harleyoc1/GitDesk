@@ -1,6 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote.github.search
 
-import com.harleyoconnor.gitdesk.data.Data
+import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubRemoteRepository
 import com.squareup.moshi.Types
 
@@ -19,7 +19,7 @@ class RepositorySearch(
     override val id: String = "repositories"
 
     override fun decodeResults(body: String): SearchResults<GitHubRemoteRepository>? {
-        return Data.moshi.adapter<SearchResults<GitHubRemoteRepository>>(
+        return MOSHI.adapter<SearchResults<GitHubRemoteRepository>>(
             Types.newParameterizedType(SearchResults::class.java, GitHubRemoteRepository::class.java)
         ).fromJson(body)
     }

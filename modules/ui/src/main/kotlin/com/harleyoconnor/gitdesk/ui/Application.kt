@@ -35,7 +35,7 @@ class Application : javafx.application.Application() {
 
     override fun stop() {
         windowManager.forEach {
-            it.stop()
+            it.closeAndSaveResources()
         }
     }
 

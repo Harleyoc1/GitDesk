@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.Data
+import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.License
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
@@ -16,7 +17,7 @@ class GitHubLicense(
 ): License, GitHubNode {
 
     companion object {
-        val ADAPTER: JsonAdapter<GitHubLicense> by lazy { Data.moshi.adapter(GitHubLicense::class.java) }
+        val ADAPTER: JsonAdapter<GitHubLicense> by lazy { MOSHI.adapter(GitHubLicense::class.java) }
     }
 
 }

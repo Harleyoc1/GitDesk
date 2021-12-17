@@ -1,0 +1,39 @@
+{
+  "type": "keyword_based",
+  "priority": 2,
+  "name_pattern": "module-info.java",
+  "keywords": [
+    "import",
+    "module",
+    "exports",
+    "opens",
+    "to",
+    "provides",
+    "with",
+    "uses",
+    "requires",
+    "transitive"
+  ],
+  "highlights": [
+    {
+      "pattern": "\\{|\\}",
+      "group_name": "BRACE",
+      "style_class": "brace"
+    },
+    {
+      "pattern": "\\;",
+      "group_name": "SEMICOLON",
+      "style_class": "semicolon"
+    },
+    {
+      "pattern": "/\\*\\*(.|\\R)*?\\*/",
+      "group_name": "DOC",
+      "style_class": "doc"
+    },
+    {
+      "pattern": "//[^\n]*|/\\*(.|\\R)*?\\*/",
+      "group_name": "COMMENT",
+      "style_class": "comment"
+    }
+  ]
+}

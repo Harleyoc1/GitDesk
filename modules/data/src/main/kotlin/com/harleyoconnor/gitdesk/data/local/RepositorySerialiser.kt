@@ -11,10 +11,10 @@ import java.io.File
 class RepositorySerialiser(
     private val adapter: JsonAdapter<LocalRepository>,
     private val repositoriesDirectory: Directory
-) : Serialiser<LocalRepository, Unit> {
+) : Serialiser<String, LocalRepository> {
 
-    override fun serialise(data: LocalRepository) {
-        getDestinationFile(data.id).writeText(adapter.toJson(data))
+    override fun serialise(key: String, data: LocalRepository) {
+        getDestinationFile(key).writeText(adapter.toJson(data))
     }
 
     private fun getDestinationFile(id: String): File {

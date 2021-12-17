@@ -12,8 +12,9 @@ interface Window : Area {
     fun close()
 
     /**
-     * Invoked when the Application is stopping. All used resources should be closed/saved safely here.
+     * Invoked when the Application is stopping or the window closing. All used resources should be closed/saved safely
+     * here.
      */
-    fun stop()
+    fun closeAndSaveResources()
 
 }

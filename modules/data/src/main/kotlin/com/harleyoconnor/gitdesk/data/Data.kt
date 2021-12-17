@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data
 
+import com.harleyoconnor.gitdesk.data.highlighting.SyntaxHighlighterAccess
 import com.harleyoconnor.gitdesk.data.local.RepositoryAccess
 import com.harleyoconnor.gitdesk.data.serialisation.adapter.addExtraAdapters
 import com.harleyoconnor.gitdesk.util.Directory
@@ -13,31 +14,30 @@ import java.io.File
 import java.nio.file.FileSystems
 import java.nio.file.Path
 
+val MOSHI: Moshi = Moshi.Builder()
+    .addExtraAdapters()
+    .addLast(KotlinJsonAdapterFactory())
+    .build()
+
 /**
  *
  * @author Harley O'Connor
  */
 object Data {
 
-    val moshi: Moshi = Moshi.Builder()
-        .addExtraAdapters()
-        .addLast(KotlinJsonAdapterFactory())
-        .build()
-
     val repositoryAccess: RepositoryAccess = RepositoryAccess(
         getPath("Repositories.json").toFile().create(),
         Directory(
-            SystemManager.get().getAppDataLocation() + File.separatorChar +
-                    "GitDesk${File.separatorChar}Repositories"
+            getPath("Repositories").toFile()
         ).makeDirectories()
     )
 
-//    val syntaxHighlighterAccess: SyntaxHighlighterAccess = SyntaxHighlighterHolder(
-//        getPath("Syntax Highlighting")
-//    )
+    val syntaxHighlighterAccess: SyntaxHighlighterAccess = SyntaxHighlighterAccess(
+        Directory(getPath("Syntax Highlighting").toFile())
+    )
 
     private fun getPath(relativePath: String): Path {
-        return getAppDataPath() + relativePath
+        return getAppDataPath() + (File.separatorChar + relativePath)
     }
 
     private fun getAppDataPath(): Path {

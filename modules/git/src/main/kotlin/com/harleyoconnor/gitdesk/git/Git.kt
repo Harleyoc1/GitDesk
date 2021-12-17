@@ -13,6 +13,14 @@ fun <B : ProcessBuilder<R>, R : Response> B.gitCommand(): B {
     return this
 }
 
+fun initRepository(directory: Directory): Boolean {
+    return ProceduralProcessBuilder()
+        .gitCommand()
+        .directory(directory)
+        .arguments("init")
+        .beginAndWaitFor().success()
+}
+
 fun repositoryExistsAt(directory: Directory): Boolean {
     return ProceduralProcessBuilder()
         .gitCommand()

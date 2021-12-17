@@ -10,7 +10,7 @@
 <?import javafx.scene.control.Menu?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.menu.open.RepositoryCellController" fx:id="root" alignment="CENTER_LEFT"
-      styleClass="cell, repository-cell" onMouseClicked="#openRepository">
+      styleClass="cell, repository-cell" onMouseClicked="#onCellPressed">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>

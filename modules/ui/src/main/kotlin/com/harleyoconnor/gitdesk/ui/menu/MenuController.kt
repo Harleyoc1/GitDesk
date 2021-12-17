@@ -1,10 +1,11 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
+import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.menu.clone.CloneTab
-import com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController
 import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
+import com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.util.loadLayout
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
@@ -19,15 +20,15 @@ import javafx.stage.Stage
 class MenuController {
 
     companion object {
-        fun load(stage: Stage): BorderPane {
+        fun load(parent: MenuWindow): BorderPane {
             val fxml = load<BorderPane, MenuController>("menu/Root")
-            fxml.controller.stage = stage
+            fxml.controller.parent = parent
             return fxml.root
         }
     }
 
     private val openTab: Tab by lazy {
-        Tab(loadLayout("menu/tabs/open/Root")) {
+        Tab(OpenTabController.load(this)) {
             root.center = it
         }
     }
@@ -44,7 +45,9 @@ class MenuController {
         }
     }
 
-    lateinit var stage: Stage
+    lateinit var parent: MenuWindow
+
+    val stage: Stage get() = parent.stage
 
     @FXML
     private lateinit var root: BorderPane
@@ -56,23 +59,28 @@ class MenuController {
     private lateinit var navigationGroup: ToggleGroup
 
     @FXML
-    fun initialize() {
+    private fun initialize() {
         openExistingButton.fire()
     }
 
     @FXML
-    fun openOpenExistingTab(event: ActionEvent) {
+    private fun openOpenExistingTab(event: ActionEvent) {
         root.center = this.openTab.node
     }
 
     @FXML
-    fun openCloneExistingTab(event: ActionEvent) {
+    private fun openCloneExistingTab(event: ActionEvent) {
         root.center = this.cloneTab.node
     }
 
     @FXML
-    fun openCreateTab(event: ActionEvent) {
+    private fun openCreateTab(event: ActionEvent) {
         root.center = this.createTab.node
+    }
+
+    fun openRepository(repository: LocalRepository) {
+        RepositoryWindow.focusOrOpen(repository)
+        this.parent.close()
     }
 
     open class Tab(

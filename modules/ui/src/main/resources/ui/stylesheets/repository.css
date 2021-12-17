@@ -1,8 +1,8 @@
 
 .side-bar .cell {
     -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
     -fx-border-color: transparent;
 }
 
@@ -15,9 +15,55 @@
 }
 
 .side-bar .cell:open .text {
-    -fx-text-fill: -tertiary-text-color;
+    -fx-text-fill: -accent-contrast-color;
 }
 
 .side-bar .cell:open .icon {
-    -fx-background-color: -tertiary-text-color;
+    -fx-background-color: -accent-contrast-color;
+}
+
+.code-area {
+    -fx-background-color: -primary-background-color;
+}
+
+.code-area .text {
+    -fx-font-family: Menlo;
+    -fx-font-style: normal;
+    -fx-fill: -primary-text-color;
+}
+
+.code-area .caret {
+    -fx-stroke: -primary-text-color;
+}
+
+.code-area .lineno {
+    -fx-background-color: -primary-background-color;
+}
+
+.code-editor .keyword {
+    -fx-fill: -keyword-color;
+}
+
+.code-editor .string {
+    -fx-fill: -string-color;
+}
+
+.code-editor .char {
+    -fx-fill: -char-color;
+}
+
+.code-editor .doc {
+    -fx-fill: -doc-color;
+}
+
+.code-editor .comment {
+    -fx-fill: -comment-color;
+}
+
+.code-editor .annotation {
+    -fx-fill: -annotation-color;
+}
+
+.code-editor .constant {
+    -fx-fill: -constant-color;
 }

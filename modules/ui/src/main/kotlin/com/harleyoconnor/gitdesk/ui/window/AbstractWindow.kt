@@ -13,8 +13,8 @@ import javafx.stage.Stage
  * @author Harley O'Connor
  */
 abstract class AbstractWindow(
-    protected val stage: Stage,
-    protected val root: Parent,
+    val stage: Stage,
+    protected var root: Parent,
     protected val manager: WindowManager
 ) : Window {
 
@@ -22,7 +22,7 @@ abstract class AbstractWindow(
 
     private val stylesheetManager: StylesheetManager = DynamicStylesheetManager(scene)
 
-    protected open val stylesheets: Array<Stylesheet> = arrayOf(Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED)
+    protected open val stylesheets: Array<Stylesheet> get() = arrayOf(Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED)
 
     init {
         this.setStageBounds()
@@ -54,9 +54,11 @@ abstract class AbstractWindow(
     override fun close() {
         stage.close()
         manager.setClosed(this)
+        postClose()
     }
 
     protected open fun postClose() {
+        closeAndSaveResources()
         if (manager.noWindowsOpen()) {
             MenuWindow(Stage(), manager).open()
         }

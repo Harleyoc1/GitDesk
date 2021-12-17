@@ -12,6 +12,7 @@ import javafx.fxml.FXML
 import javafx.geometry.Insets
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
+import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import java.io.File
@@ -58,7 +59,7 @@ open class FileCellController {
 
     @FXML
     private fun select(event: MouseEvent) {
-        if (event.isSecondaryButtonDown || event.isControlDown) {
+        if (event.button == MouseButton.SECONDARY || event.isControlDown) {
             contextMenu.show(cell, event.screenX, event.screenY)
         } else if (cell.pseudoClassStates.contains(SELECTED_PSEUDO_CLASS)) {
             open(event)

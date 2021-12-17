@@ -16,10 +16,12 @@ import org.fxmisc.wellbehaved.event.EventPattern.keyPressed
 import org.fxmisc.wellbehaved.event.InputMap
 import org.fxmisc.wellbehaved.event.InputMap.consume
 import org.fxmisc.wellbehaved.event.Nodes
+import org.reactfx.Subscription
 import java.lang.Character.isWhitespace
 import java.time.Duration
 import java.util.Optional
 import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.min
 
@@ -32,10 +34,11 @@ import kotlin.math.min
 class CodeEditor : CodeArea() {
 
     companion object {
-        val HIGHLIGHTING_EXECUTOR: Executor = Executors.newSingleThreadExecutor()
+        val HIGHLIGHTING_EXECUTOR: ExecutorService = Executors.newSingleThreadExecutor()
     }
 
     private lateinit var highlighter: SyntaxHighlighter
+    private var highlightingSubscription: Subscription? = null
 
     init {
         this.paragraphGraphicFactory = LineNumberFactory.get(this)
@@ -47,8 +50,9 @@ class CodeEditor : CodeArea() {
     }
 
     fun setupSyntaxHighlighting(highlighter: SyntaxHighlighter) {
+        this.highlightingSubscription?.unsubscribe()
         this.highlighter = highlighter
-        this.multiPlainChanges()
+        this.highlightingSubscription = this.multiPlainChanges()
             .successionEnds(Duration.ofMillis(500))
             .retainLatestUntilLater(HIGHLIGHTING_EXECUTOR)
             .supplyTask(this::computeHighlightingAsync)

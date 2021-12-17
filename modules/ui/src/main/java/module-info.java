@@ -10,8 +10,15 @@ module gitdesk.ui {
     requires javafx.fxml;
     requires javafx.controls;
     requires org.fxmisc.richtext;
+    requires moshi;
+    requires reactfx;
+    requires wellbehavedfx;
+    requires org.apache.logging.log4j;
 
     exports com.harleyoconnor.gitdesk.ui;
+    exports com.harleyoconnor.gitdesk.ui.highlighting;
+
+    opens com.harleyoconnor.gitdesk.ui.highlighting to kotlin.reflect;
 
     opens com.harleyoconnor.gitdesk.ui.node to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu to javafx.fxml;

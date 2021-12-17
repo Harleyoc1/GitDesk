@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
+import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.node.CodeEditor
 import javafx.fxml.FXML
 import java.io.File
@@ -20,6 +21,9 @@ class FileEditorController {
     }
 
     private fun loadFromFile(file: File) {
+        Data.syntaxHighlighterAccess.getForFile(file.name)?.let {
+            this.editor.setupSyntaxHighlighting(it)
+        }
         this.editor.replaceText(file.readLines().joinToString(separator = "\n"))
     }
 

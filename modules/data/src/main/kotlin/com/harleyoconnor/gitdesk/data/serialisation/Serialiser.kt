@@ -3,8 +3,8 @@ package com.harleyoconnor.gitdesk.data.serialisation
 /**
  * @author Harley O'Connor
  */
-interface Serialiser<D, O> {
+interface Serialiser<K, D> {
 
-    fun serialise(data: D): O
+    fun serialise(key: K, data: D)
 
 }

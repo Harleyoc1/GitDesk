@@ -2,16 +2,32 @@ package com.harleyoconnor.gitdesk.ui.menu.open
 
 import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.git.initRepository
+import com.harleyoconnor.gitdesk.git.repositoryExistsAt
+import com.harleyoconnor.gitdesk.ui.menu.MenuController
+import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.util.Directory
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
+import javafx.stage.DirectoryChooser
 
 /**
  * @author Harley O'Connor
  */
 class OpenTabController {
+
+    companion object {
+        fun load(parent: MenuController): VBox {
+            val fxml = load<VBox, OpenTabController>("menu/tabs/open/Root")
+            fxml.controller.setup(parent)
+            return fxml.root
+        }
+    }
+
+    private lateinit var parent: MenuController
 
     @FXML
     private lateinit var content: VBox
@@ -20,12 +36,23 @@ class OpenTabController {
     private lateinit var searchBar: TextField
     private var lastSearchQuery = ""
 
-    fun initialize() {
+    fun setup(parent: MenuController) {
+        this.parent = parent
         displayRepositories("")
     }
 
     fun onAddPressed(event: ActionEvent) {
+        val directoryChooser = DirectoryChooser()
+        directoryChooser.showDialog(parent.stage)?.let {
+            addDirectory(Directory(it))
+        }
+    }
 
+    private fun addDirectory(directory: Directory) {
+        if (!repositoryExistsAt(directory)) {
+            initRepository(directory)
+        }
+        parent.openRepository(LocalRepository(directory.name, directory))
     }
 
     fun onSearchQueryUpdated(keyEvent: KeyEvent) {
@@ -53,7 +80,7 @@ class OpenTabController {
     private fun displayRepository(repository: LocalRepository) {
         val children = content.children
         children.lastOrNull()?.styleClass?.remove("bottom")
-        children.add(RepositoryCellController.loadCell(repository))
+        children.add(RepositoryCellController.loadCell(this.parent, repository))
         children.firstOrNull()?.styleClass?.add("top")
         children.lastOrNull()?.styleClass?.add("bottom")
     }

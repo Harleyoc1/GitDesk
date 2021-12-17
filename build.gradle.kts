@@ -87,7 +87,7 @@ application {
 }
 
 tasks.getByName<JavaExec>("run") {
-    systemProperty("gitdesk.app.syntax_highlighting.force_built_in", "true")
+    systemProperty("gitdesk.ui.highlighting.force_built_in", "true")
 }
 
 val javaHome: String? =

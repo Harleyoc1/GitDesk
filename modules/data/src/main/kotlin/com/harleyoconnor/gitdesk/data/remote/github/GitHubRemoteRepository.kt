@@ -1,11 +1,11 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
-import com.harleyoconnor.gitdesk.data.Data
+import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
-import java.util.Date
+import java.util.*
 
 /**
  * @author Harley O'Connor
@@ -31,7 +31,7 @@ class GitHubRemoteRepository(
 ) : GitHubNode, RemoteRepository {
 
     companion object {
-        val ADAPTER: JsonAdapter<GitHubRemoteRepository> by lazy { Data.moshi.adapter(GitHubRemoteRepository::class.java) }
+        val ADAPTER: JsonAdapter<GitHubRemoteRepository> by lazy { MOSHI.adapter(GitHubRemoteRepository::class.java) }
     }
 
     override val parent: RemoteRepository?

@@ -3,6 +3,7 @@
     -fx-font-family: "Helvetica Neue";
     -error-color: #e33535;
     -accent-color: #F9322E;
+    -accent-contrast-color: #FCFDFC;
 }
 
 /* Default node styles */

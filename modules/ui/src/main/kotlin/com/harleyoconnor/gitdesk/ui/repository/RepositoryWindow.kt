@@ -3,10 +3,8 @@ package com.harleyoconnor.gitdesk.ui.repository
 import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.Application
-import com.harleyoconnor.gitdesk.ui.style.StaticStylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
-import com.harleyoconnor.gitdesk.ui.style.ThemedStylesheet
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import javafx.stage.Stage
 
@@ -32,10 +30,10 @@ class RepositoryWindow(
     override val id: String get() = repository.id
 
     override val stylesheets: Array<Stylesheet> get() = arrayOf(
-        Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED, Stylesheets.REPOSITORY
+        Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED, Stylesheets.REPOSITORY, Stylesheets.REPOSITORY_THEMED
     )
 
-    override fun stop() {
+    override fun closeAndSaveResources() {
         Data.repositoryAccess.save(repository.directory, repository)
     }
 }

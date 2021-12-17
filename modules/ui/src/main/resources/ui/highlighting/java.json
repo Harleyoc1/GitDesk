@@ -1,0 +1,109 @@
+{
+  "type": "keyword_based",
+  "priority": 1,
+  "name_pattern": ".*\\.java",
+  "keywords": [
+    "abstract",
+    "assert",
+    "boolean",
+    "break",
+    "byte",
+    "case",
+    "catch",
+    "char",
+    "class",
+    "const",
+    "continue",
+    "default",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "extends",
+    "final",
+    "finally",
+    "float",
+    "for",
+    "goto",
+    "if",
+    "implements",
+    "import",
+    "instanceof",
+    "int",
+    "interface",
+    "long",
+    "native",
+    "new",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "short",
+    "static",
+    "strictfp",
+    "super",
+    "switch",
+    "synchronized",
+    "this",
+    "throw",
+    "throws",
+    "transient",
+    "try",
+    "void",
+    "volatile",
+    "while"
+  ],
+  "highlights": [
+    {
+      "pattern": "\\(|\\)",
+      "group_name": "PAREN",
+      "style_class": "paren"
+    },
+    {
+      "pattern": "\\{|\\}",
+      "group_name": "BRACE",
+      "style_class": "brace"
+    },
+    {
+      "pattern": "\\[|\\]",
+      "group_name": "BRACKET",
+      "style_class": "bracket"
+    },
+    {
+      "pattern": "\\;",
+      "group_name": "SEMICOLON",
+      "style_class": "semicolon"
+    },
+    {
+      "pattern": "@[^ ]+",
+      "group_name": "ANNOTATION",
+      "style_class": "annotation"
+    },
+    {
+      "pattern": "\\b(true|false|null|([0-9]*\\.[0-9]+[fFdD]?)|([0-9]+[lLfFdD]?))\\b",
+      "group_name": "CONSTANT",
+      "style_class": "constant"
+    },
+    {
+      "pattern": "'([^'\\\\]|\\\\.)'",
+      "group_name": "CHAR",
+      "style_class": "char"
+    },
+    {
+      "pattern": "\"([^\"\\\\]|\\\\.)*\"",
+      "group_name": "STRING",
+      "style_class": "string"
+    },
+    {
+      "pattern": "/\\*\\*(.|\\R)*?\\*/",
+      "group_name": "DOC",
+      "style_class": "doc"
+    },
+    {
+      "pattern": "//[^\n]*|/\\*(.|\\R)*?\\*/",
+      "group_name": "COMMENT",
+      "style_class": "comment"
+    }
+  ]
+}

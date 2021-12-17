@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.local
 
 import com.harleyoconnor.gitdesk.data.Data
+import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.serialisation.DataAccess
 import com.harleyoconnor.gitdesk.util.Directory
 import com.squareup.moshi.JsonAdapter
@@ -21,7 +22,7 @@ class RepositoryAccess(
     private val repositories: Repositories = Repositories.load(repositoriesFile)
 
     init {
-        val repositoryAdapter = Data.moshi.adapter(LocalRepository::class.java)
+        val repositoryAdapter = MOSHI.adapter(LocalRepository::class.java)
         serialiser = RepositorySerialiser(repositoryAdapter, repositoriesDirectory)
         deserialiser = RepositoryDeserialiser(repositoryAdapter, repositoriesDirectory)
     }
@@ -53,7 +54,7 @@ class RepositoryAccess(
     }
 
     override fun save(key: Directory, data: LocalRepository) {
-        serialiser.serialise(data)
+        serialiser.serialise(data.id, data)
         updateRepositoriesData(data)
         repositories.save(repositoriesFile)
     }
@@ -74,7 +75,7 @@ class RepositoryAccess(
         val open: MutableSet<String>
     ) {
         companion object {
-            private val ADAPTER: JsonAdapter<Repositories> by lazy { Data.moshi.adapter(Repositories::class.java) }
+            private val ADAPTER: JsonAdapter<Repositories> by lazy { MOSHI.adapter(Repositories::class.java) }
 
             fun load(repositoriesFile: File): Repositories {
                 return ADAPTER.fromJson(repositoriesFile.readText()) ?: Repositories(mutableMapOf(), mutableSetOf())
