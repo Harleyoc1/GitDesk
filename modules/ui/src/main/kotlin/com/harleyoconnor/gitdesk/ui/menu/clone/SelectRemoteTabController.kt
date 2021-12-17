@@ -20,8 +20,11 @@ import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
-import javafx.scene.input.KeyEvent
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.VBox
+import org.fxmisc.wellbehaved.event.EventPattern
+import org.fxmisc.wellbehaved.event.InputMap
+import org.fxmisc.wellbehaved.event.Nodes
 import java.net.URL
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -69,6 +72,17 @@ class SelectRemoteTabController {
         content.setOnElementSelected { event ->
             parent.toLocationSelection(event.element)
         }
+        Nodes.addInputMap(searchBar, InputMap.sequence(
+            InputMap.consume(EventPattern.keyPressed(KeyCode.UP)) {
+                content.moveSelectionUp()
+            },
+            InputMap.consume(EventPattern.keyPressed(KeyCode.DOWN)) {
+                content.moveSelectionDown()
+            },
+            InputMap.consume(EventPattern.keyPressed(KeyCode.ENTER)) {
+                content.select()
+            }
+        ))
         contentScrollPane.vvalueProperty().addListener { _, _, new ->
             if (new == 1.0) {
                 platform.cellLoader.loadMore(this, searchBar.text)
@@ -107,11 +121,6 @@ class SelectRemoteTabController {
 
     private fun clearDisplayedRepositories() {
         this.content.clear()
-    }
-
-    @FXML
-    private fun keyPressed(event: KeyEvent) {
-        this.content.keyPressed(event)
     }
 
     enum class Platform(

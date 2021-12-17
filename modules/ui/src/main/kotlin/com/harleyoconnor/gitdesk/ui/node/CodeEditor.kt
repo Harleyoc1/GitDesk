@@ -68,26 +68,26 @@ class CodeEditor : CodeArea() {
                 this.lineStart(SelectionPolicy.CLEAR)
             },
             consume(keyPressed(KeyCode.LEFT, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                this.lineStart(SelectionPolicy.ADJUST)
+                this.lineStart(SelectionPolicy.EXTEND)
             },
             consume(keyPressed(KeyCode.RIGHT, KeyCombination.SHORTCUT_DOWN)) {
                 this.lineEnd(SelectionPolicy.CLEAR)
             },
             consume(keyPressed(KeyCode.RIGHT, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                this.lineEnd(SelectionPolicy.ADJUST)
+                this.lineEnd(SelectionPolicy.EXTEND)
             },
 
             consume(keyPressed(KeyCode.LEFT, KeyCombination.ALT_DOWN)) {
                 this.toPreviousWord(SelectionPolicy.CLEAR)
             },
             consume(keyPressed(KeyCode.LEFT, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                this.toPreviousWord(SelectionPolicy.ADJUST)
+                this.toPreviousWord(SelectionPolicy.EXTEND)
             },
             consume(keyPressed(KeyCode.RIGHT, KeyCombination.ALT_DOWN)) {
                 this.toNextWord(SelectionPolicy.CLEAR)
             },
             consume(keyPressed(KeyCode.RIGHT, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                this.toNextWord(SelectionPolicy.ADJUST)
+                this.toNextWord(SelectionPolicy.EXTEND)
             },
 
             consume(keyPressed(KeyCode.BACK_SPACE, KeyCombination.ALT_DOWN)) { this.deletePreviousWord() },
@@ -95,7 +95,9 @@ class CodeEditor : CodeArea() {
 
             consume(keyPressed(KeyCode.BACK_SPACE, KeyCombination.SHORTCUT_DOWN)) { this.deleteLine() },
             consume(keyPressed(KeyCode.DELETE, KeyCombination.SHORTCUT_DOWN)) { this.deleteLine() }
-        )
+        ).ifConsumed {
+            this.requestFollowCaret()
+        }
     }
 
     private fun toPreviousWord(selectionPolicy: SelectionPolicy) {

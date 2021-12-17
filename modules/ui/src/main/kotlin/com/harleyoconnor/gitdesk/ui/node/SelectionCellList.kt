@@ -5,8 +5,6 @@ import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.scene.Node
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
 
 /**
@@ -35,18 +33,21 @@ abstract class SelectionCellList<E> : VBox() {
         this.onElementSelected = handler
     }
 
-    fun keyPressed(event: KeyEvent) {
-        if (event.code == KeyCode.ENTER) {
-            selection?.let {
-                onElementSelected.handle(ElementSelectedEvent(it.element, it.node))
-                event.consume()
-            }
-        } else if (event.code == KeyCode.DOWN) {
-            moveSelectionDown()
-            event.consume()
-        } else if (event.code == KeyCode.UP) {
-            moveSelectionUp()
-            event.consume()
+    fun select() {
+        selection?.let {
+            onElementSelected.handle(ElementSelectedEvent(it.element, it.node))
+        }
+    }
+
+    fun moveSelectionDown() {
+        selection?.down(elements, this.children)?.let {
+            selection = it
+        }
+    }
+
+    fun moveSelectionUp() {
+        selection?.up(elements, this.children)?.let {
+            selection = it
         }
     }
 
@@ -61,18 +62,6 @@ abstract class SelectionCellList<E> : VBox() {
     fun clear() {
         this.elements.clear()
         this.children.clear()
-    }
-
-    private fun moveSelectionDown() {
-        selection?.down(elements, this.children)?.let {
-            selection = it
-        }
-    }
-
-    private fun moveSelectionUp() {
-        selection?.up(elements, this.children)?.let {
-            selection = it
-        }
     }
 
     class ElementSelectedEvent<E>(

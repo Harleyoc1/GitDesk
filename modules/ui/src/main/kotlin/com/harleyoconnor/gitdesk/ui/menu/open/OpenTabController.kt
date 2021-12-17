@@ -10,10 +10,15 @@ import com.harleyoconnor.gitdesk.ui.util.*
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
+import org.fxmisc.wellbehaved.event.EventPattern.keyPressed
+import org.fxmisc.wellbehaved.event.InputMap
+import org.fxmisc.wellbehaved.event.InputMap.consume
+import org.fxmisc.wellbehaved.event.Nodes
 
 /**
  * @author Harley O'Connor
@@ -38,6 +43,21 @@ class OpenTabController {
     private var lastSearchQuery = ""
 
     private val cellsCache: MutableMap<LocalRepository, HBox> = mutableMapOf()
+
+    @FXML
+    private fun initialize() {
+        Nodes.addInputMap(searchBar, InputMap.sequence(
+            consume(keyPressed(KeyCode.UP)) {
+                content.moveSelectionUp()
+            },
+            consume(keyPressed(KeyCode.DOWN)) {
+                content.moveSelectionDown()
+            },
+            consume(keyPressed(KeyCode.ENTER)) {
+                content.select()
+            }
+        ))
+    }
 
     private fun setup(parent: MenuController) {
         this.parent = parent
@@ -101,10 +121,5 @@ class OpenTabController {
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())
-
-    @FXML
-    private fun keyPressed(event: KeyEvent) {
-        content.keyPressed(event)
-    }
 
 }

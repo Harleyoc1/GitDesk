@@ -12,7 +12,7 @@
       styleClass="open-existing-tab">
     <StackPane styleClass="cell, top-bar" minHeight="50" prefHeight="50">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated" prefHeight="35"
-                   HBox.hgrow="ALWAYS" onKeyPressed="#keyPressed">
+                   HBox.hgrow="ALWAYS">
             <StackPane.margin>
                 <Insets right="10" left="10"/>
             </StackPane.margin>
