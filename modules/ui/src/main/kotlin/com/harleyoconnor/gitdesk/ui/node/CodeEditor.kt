@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.node
 
+import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.util.syntax.SyntaxHighlighter
 import com.harleyoconnor.gitdesk.util.system.MacOSManager
 import com.harleyoconnor.gitdesk.util.system.SystemManager
@@ -19,10 +20,7 @@ import org.fxmisc.wellbehaved.event.Nodes
 import org.reactfx.Subscription
 import java.lang.Character.isWhitespace
 import java.time.Duration
-import java.util.Optional
-import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.*
 import kotlin.math.min
 
 /**
@@ -32,10 +30,6 @@ import kotlin.math.min
  * @author Harley O'Connor
  */
 class CodeEditor : CodeArea() {
-
-    companion object {
-        val HIGHLIGHTING_EXECUTOR: ExecutorService = Executors.newSingleThreadExecutor()
-    }
 
     private lateinit var highlighter: SyntaxHighlighter
     private var highlightingSubscription: Subscription? = null
@@ -54,7 +48,7 @@ class CodeEditor : CodeArea() {
         this.highlighter = highlighter
         this.highlightingSubscription = this.multiPlainChanges()
             .successionEnds(Duration.ofMillis(500))
-            .retainLatestUntilLater(HIGHLIGHTING_EXECUTOR)
+            .retainLatestUntilLater(Application.getInstance().backgroundExecutor)
             .supplyTask(this::computeHighlightingAsync)
             .awaitLatest(this.multiPlainChanges())
             .filterMap { t ->
@@ -150,7 +144,7 @@ class CodeEditor : CodeArea() {
                 return highlighter.highlight(text) as StyleSpans<Collection<String>>
             }
         }
-        HIGHLIGHTING_EXECUTOR.execute(task)
+        Application.getInstance().backgroundExecutor.execute(task)
         return task
     }
 

@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.data.local
 
 import com.harleyoconnor.gitdesk.data.WindowCache
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.DirectoryTree
+import com.harleyoconnor.gitdesk.git.repository.Repository
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.tree.MutableArrayTree
 import com.harleyoconnor.gitdesk.util.tree.MutableTree
@@ -19,6 +20,8 @@ class LocalRepository(
         MutableArrayTree(directory),
     @Json(name = "window_cache") val windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
 ) {
+
+    val gitRepository: Repository by lazy { Repository(directory) }
 
     @Transient
     var open: Boolean = false

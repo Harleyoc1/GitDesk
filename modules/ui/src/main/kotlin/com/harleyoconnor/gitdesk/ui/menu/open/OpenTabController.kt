@@ -5,12 +5,13 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.util.*
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyEvent
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 
@@ -35,6 +36,8 @@ class OpenTabController {
     @FXML
     private lateinit var searchBar: TextField
     private var lastSearchQuery = ""
+
+    private val cells: MutableMap<LocalRepository, HBox> = mutableMapOf()
 
     fun setup(parent: MenuController) {
         this.parent = parent
@@ -66,6 +69,10 @@ class OpenTabController {
     }
 
     private fun clearDisplayedRepositories() {
+        this.content.children.forEach {
+            it.removeTopClass()
+            it.removeBottomClass()
+        }
         this.content.children.clear()
     }
 
@@ -77,12 +84,15 @@ class OpenTabController {
         }
     }
 
+    @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayRepository(repository: LocalRepository) {
         val children = content.children
-        children.lastOrNull()?.styleClass?.remove("bottom")
-        children.add(RepositoryCellController.loadCell(this.parent, repository))
-        children.firstOrNull()?.styleClass?.add("top")
-        children.lastOrNull()?.styleClass?.add("bottom")
+        children.lastOrNull()?.removeBottomClass()
+        children.add(cells.computeIfAbsent(repository) {
+            RepositoryCellController.loadCell(this.parent, it)
+        })
+        children.firstOrNull()?.addTopClass()
+        children.lastOrNull()?.addBottomClass()
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())

@@ -1,5 +1,7 @@
 package com.harleyoconnor.gitdesk.git.repository
 
+import com.harleyoconnor.gitdesk.util.map
+
 /**
  * @author Harley O'Connor
  */
@@ -8,10 +10,12 @@ class Branch(
     val name: String
 ) {
 
-    fun getUpstream(): RemoteReference {
-        val name = Remote.getUpstreamName(repository.directory, name)
-        val url = Remote.getUrl(repository.directory, name)
-        return RemoteReference(name, Remote.getRemote(url))
+    fun getUpstream(): RemoteReference? {
+        return Remote.getUpstreamName(repository.directory, name)?.map { remoteName ->
+            Remote.getUrl(repository.directory, remoteName)?.map { remoteUrl ->
+                RemoteReference(name, Remote.getRemote(remoteUrl))
+            }
+        }
     }
 
 }

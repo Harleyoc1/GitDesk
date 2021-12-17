@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.git.repository
 
 import com.harleyoconnor.gitdesk.git.gitCommand
 import com.harleyoconnor.gitdesk.util.Directory
+import com.harleyoconnor.gitdesk.util.map
 import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import java.net.URL
 import java.util.regex.Pattern
@@ -31,19 +32,17 @@ interface Remote {
             override val url: URL = url
         }
 
-        fun getUpstreamName(gitDirectory: Directory, branchName: String): String = FunctionalProcessBuilder.normal()
+        fun getUpstreamName(gitDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()
             .gitCommand()
             .arguments("config", "--get", "branch.$branchName.remote")
             .directory(gitDirectory)
-            .beginAndWaitFor().result!!
+            .beginAndWaitFor().result
 
-        fun getUrl(gitDirectory: Directory, remoteName: String): URL = URL(
-            FunctionalProcessBuilder.normal()
-                .gitCommand()
-                .arguments("config", "--get", "remote.$remoteName.url")
-                .directory(gitDirectory)
-                .beginAndWaitFor().result!!
-        )
+        fun getUrl(gitDirectory: Directory, remoteName: String): URL? = FunctionalProcessBuilder.normal()
+            .gitCommand()
+            .arguments("config", "--get", "remote.$remoteName.url")
+            .directory(gitDirectory)
+            .beginAndWaitFor().result?.map { URL(it) }
 
         private class Type(
             val urlPattern: Pattern,

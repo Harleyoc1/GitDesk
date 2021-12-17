@@ -17,6 +17,7 @@
                 <MenuItem text="%ui.button.open" onAction="#openRepository" accelerator="Enter"/>
                 <Menu text="%ui.button.open_in">
                     <MenuItem text="%ui.button.open_in.file_browser" onAction="#openInFileBrowser"/>
+                    <MenuItem fx:id="openInBrowserItem" text="%ui.button.open_in.browser" disable="true"/>
                 </Menu>
             </items>
         </ContextMenu>
@@ -26,6 +27,6 @@
         <Label fx:id="pathLabel" styleClass="secondary-text, sub-body-2"/>
     </VBox>
     <Region HBox.hgrow="ALWAYS"/>
-    <Label fx:id="remoteLabel" text="%ui.repository.no_remote" styleClass="text, sub-body, padded-5"/>
+    <Label fx:id="remoteLabel" text="%ui.repository.loading_remote" styleClass="text, sub-body, padded-5"/>
     <SVGIcon fx:id="remotePlatformIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
 </HBox>

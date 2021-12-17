@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.window.SetWindowManager
 import javafx.application.Platform
 import javafx.stage.Stage
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 
 /**
@@ -20,6 +21,8 @@ class Application : javafx.application.Application() {
     private lateinit var primaryStage: Stage
 
     val windowManager = SetWindowManager()
+
+    val backgroundExecutor = Executors.newSingleThreadExecutor()
 
     fun getPrimaryStage(): Stage = primaryStage
 
