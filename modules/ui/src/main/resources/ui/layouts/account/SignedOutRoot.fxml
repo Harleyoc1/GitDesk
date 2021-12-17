@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.harleyoconnor.gitdesk.ui.account.SignedOutController" fx:id="root">
+    <left>
+        <VBox styleClass="side-bar" prefWidth="150">
+            <padding>
+                <Insets left="3" right="3"/>
+            </padding>
+            <HBox maxWidth="Infinity" prefHeight="50" styleClass="cell, top" spacing="5" alignment="CENTER_LEFT">
+                <ImageView>
+                    <Image url="/ui/images/icon-borderless.png" preserveRatio="true" requestedWidth="32" smooth="true"/>
+                </ImageView>
+                <Label text="%ui.account.title" styleClass="text, title, bold"/>
+            </HBox>
+            <fx:define>
+                <ToggleGroup fx:id="navigationGroup"/>
+            </fx:define>
+            <RadioButton fx:id="openRegisterButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         onAction="#openRegisterTab" maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
+                        <Label text="%ui.account.tab.register" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
+                         onAction="#openSignInTab">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/key.svg" styleClass="icon"/>
+                        <Label text="%ui.account.tab.sign_in" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+        </VBox>
+    </left>
+</BorderPane>

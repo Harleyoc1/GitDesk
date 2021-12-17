@@ -60,7 +60,7 @@ abstract class AbstractWindow(
     protected open fun postClose() {
         closeAndSaveResources()
         if (manager.noWindowsOpen()) {
-            MenuWindow(Stage(), manager).open()
+            MenuWindow(Stage()).open()
         }
     }
 

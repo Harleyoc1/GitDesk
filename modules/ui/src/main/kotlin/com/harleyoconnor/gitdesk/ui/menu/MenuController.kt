@@ -5,10 +5,10 @@ import com.harleyoconnor.gitdesk.ui.menu.clone.CloneTab
 import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
 import com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
+import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.load
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.Node
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ToggleGroup
 import javafx.scene.layout.BorderPane
@@ -81,17 +81,6 @@ class MenuController {
     fun openRepository(repository: LocalRepository) {
         RepositoryWindow.focusOrOpen(repository)
         this.parent.close()
-    }
-
-    open class Tab(
-        node: Node,
-        protected val appender: (Node) -> Unit
-    ) {
-        var node: Node = node
-            protected set(value) {
-                field = value
-                appender(value)
-            }
     }
 
 }

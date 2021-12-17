@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui
 
+import com.harleyoconnor.gitdesk.ui.account.AccountWindow
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.window.SetWindowManager
 import javafx.application.Platform
@@ -33,7 +34,8 @@ class Application : javafx.application.Application() {
     override fun start(primaryStage: Stage) {
         this.primaryStage = primaryStage
 
-        MenuWindow(primaryStage, windowManager).open()
+        MenuWindow(primaryStage).open()
+        AccountWindow(Stage()).open()
     }
 
     override fun stop() {

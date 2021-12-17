@@ -1,6 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.node
 
-import com.harleyoconnor.gitdesk.ui.util.SELECTED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType

@@ -1,7 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu.clone
 
 import com.harleyoconnor.gitdesk.git.repository.Remote
-import com.harleyoconnor.gitdesk.ui.menu.MenuController
+import com.harleyoconnor.gitdesk.ui.util.Tab
 import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.stage.Stage
@@ -10,8 +10,8 @@ import javafx.stage.Stage
  * @author Harley O'Connor
  */
 class CloneTab(
-    val stage: Stage, appender: (Node) -> Unit
-) : MenuController.Tab(Region(), appender) {
+    val stage: Stage, setter: (Node) -> Unit
+) : Tab(Region(), setter) {
 
     private val remoteSelectionView = SelectRemoteTabController.load(this)
 

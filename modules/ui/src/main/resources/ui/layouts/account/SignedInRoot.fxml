@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.harleyoconnor.gitdesk.ui.account.SignedInController" fx:id="root">
+    <left>
+        <VBox styleClass="side-bar" prefWidth="150">
+            <padding>
+                <Insets left="3" right="3"/>
+            </padding>
+            <HBox maxWidth="Infinity" prefHeight="50" styleClass="cell, top" spacing="5" alignment="CENTER_LEFT">
+                <ImageView>
+                    <Image url="/ui/images/icon-borderless.png" preserveRatio="true" requestedWidth="32" smooth="true"/>
+                </ImageView>
+                <Label text="%ui.account.title" styleClass="text, title, bold"/>
+            </HBox>
+            <fx:define>
+                <ToggleGroup fx:id="navigationGroup"/>
+            </fx:define>
+            <RadioButton fx:id="detailsTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         onAction="#openDetailsTab" maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/pencil.svg" styleClass="icon"/>
+                        <Label text="%ui.account.tab.details" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton toggleGroup="$navigationGroup" styleClass="cell, nav-cell" maxWidth="Infinity"
+                         onAction="#openGitHubTab">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/github.svg" styleClass="icon"/>
+                        <Label text="%ui.account.tab.sign_in" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <Region VBox.vgrow="ALWAYS"/>
+            <HBox maxWidth="Infinity" styleClass="cell" spacing="5" alignment="CENTER_LEFT">
+                <Label fx:id="usernameLabel" styleClass="text, heading-3" HBox.hgrow="ALWAYS"/>
+                <Button onAction="#signOut" styleClass="icon-button">
+                    <graphic>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/exit.svg" styleClass="icon"/>
+                    </graphic>
+                </Button>
+            </HBox>
+        </VBox>
+    </left>
+</BorderPane>

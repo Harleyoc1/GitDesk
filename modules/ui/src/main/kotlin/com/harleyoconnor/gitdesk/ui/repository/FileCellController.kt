@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
-import com.harleyoconnor.gitdesk.ui.util.OPEN_PSEUDO_CLASS
-import com.harleyoconnor.gitdesk.ui.util.SELECTED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.system.SystemManager

@@ -1,9 +1,10 @@
 
 * {
     -fx-font-family: "Helvetica Neue";
-    -error-color: #e33535;
+    -error-color: #D70A0A;
     -accent-color: #F9322E;
     -accent-contrast-color: #FCFDFC;
+    -secondary-accent-constrast-color: #E0DCE2;
 }
 
 /* Default node styles */
@@ -79,6 +80,20 @@
 
 .scroll-pane.padded {
     -fx-padding: 10;
+}
+
+.field .label {
+    -fx-text-fill: -primary-text-color;
+    -fx-font-size: 12;
+}
+
+.field .error-label {
+    -fx-text-fill: -error-color;
+    -fx-font-size: 9;
+}
+
+.field > .text-field:error, .field > .password-field:error {
+    -fx-border-color: -error-color;
 }
 
 
@@ -160,7 +175,7 @@
 
 .enter-button {
     -fx-background-color: -accent-color;
-    -fx-text-fill: -tertiary-text-color;
+    -fx-text-fill: -accent-contrast-color;
 }
 
 /* Side bar */
@@ -248,15 +263,15 @@
 }
 
 .selection-cell-list > .cell:selected .text {
-    -fx-text-fill: -tertiary-text-color;
+    -fx-text-fill: -accent-contrast-color;
 }
 
 .selection-cell-list > .cell:selected .icon {
-    -fx-background-color: -tertiary-text-color;
+    -fx-background-color: -accent-contrast-color;
 }
 
 .selection-cell-list > .cell:selected .secondary-text {
-    -fx-text-fill: -quaternary-text-color;
+    -fx-text-fill: -secondary-accent-constrast-color;
 }
 
 .top-bar {

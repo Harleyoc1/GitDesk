@@ -21,6 +21,7 @@ module gitdesk.ui {
     opens com.harleyoconnor.gitdesk.ui.highlighting to kotlin.reflect;
 
     opens com.harleyoconnor.gitdesk.ui.node to javafx.fxml;
+    opens com.harleyoconnor.gitdesk.ui.account to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.clone to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.create to javafx.fxml;

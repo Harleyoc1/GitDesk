@@ -13,8 +13,8 @@ import javafx.stage.Stage
  * @author Harley O'Connor
  */
 class MenuWindow(
-    stage: Stage, manager: WindowManager
-) : AbstractWindow(stage, Region(), manager) {
+    stage: Stage
+) : AbstractWindow(stage, Region(), Application.getInstance().windowManager) {
 
     override val minWidth: Double get() = 550.0
     override val minHeight: Double get() = 400.0

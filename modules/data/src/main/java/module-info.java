@@ -11,6 +11,7 @@ module gitdesk.data {
     requires org.apache.logging.log4j;
 
     exports com.harleyoconnor.gitdesk.data;
+    exports com.harleyoconnor.gitdesk.data.account;
     exports com.harleyoconnor.gitdesk.data.highlighting;
     exports com.harleyoconnor.gitdesk.data.local;
     exports com.harleyoconnor.gitdesk.data.remote;
