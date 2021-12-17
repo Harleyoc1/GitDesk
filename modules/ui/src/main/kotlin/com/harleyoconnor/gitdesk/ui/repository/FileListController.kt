@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.*
+import com.harleyoconnor.gitdesk.util.tree.traversal.PreOrderTraverser
 import javafx.fxml.FXML
 import javafx.scene.layout.VBox
 import java.io.File
@@ -41,10 +42,19 @@ class FileListController {
             }
         }
 
+    private val directoryCells: MutableMap<Directory, DirectoryCellController> = mutableMapOf()
+
     private fun setup(repository: LocalRepository, parent: RepositoryController) {
         this.repository = repository
         this.parent = parent
         appendCells(repository.directory, root)
+        showLastOpenDirectories()
+    }
+
+    private fun showLastOpenDirectories() {
+        repository.openDirectories.traverse(PreOrderTraverser({ directory ->
+            directoryCells[directory]?.openDirectory()
+        }))
     }
 
     fun appendCells(directory: Directory, box: VBox, insetIndex: Int = 0) {
@@ -67,8 +77,11 @@ class FileListController {
         }
     }
 
-    private fun createDirectoryCell(directory: Directory, insetIndex: Int) =
-        DirectoryCellController.load(directory, insetIndex, this)
+    private fun createDirectoryCell(directory: Directory, insetIndex: Int): VBox {
+        val cell = DirectoryCellController.load(directory, insetIndex, this)
+        directoryCells[directory] = cell.controller
+        return cell.root
+    }
 
     private fun appendFileCells(box: VBox, files: Array<File>, insetIndex: Int) {
         files.forEach {
@@ -79,5 +92,14 @@ class FileListController {
     private fun createFileCell(file: File, insetIndex: Int) = FileCellController.load(file, insetIndex, this)
 
     private fun shouldShowFile(file: File): Boolean = !file.name.startsWith(".")
+
+    fun onDirectoryOpened(directory: Directory) {
+        val parent = Directory(directory.parentFile)
+        this.repository.openDirectories.addLeaf(parent, directory)
+    }
+
+    fun onDirectoryClosed(directory: Directory) {
+        this.repository.openDirectories.remove(directory)
+    }
 
 }

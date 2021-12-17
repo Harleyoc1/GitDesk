@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu.create
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
@@ -61,7 +62,9 @@ class CreateTabController {
     private fun create() {
         val location = File(locationField.text)
         location.mkdirs()
-        parent.openRepository(LocalRepository(nameField.text, Directory(location)))
+        val directory = Directory(location)
+        initRepository(directory)
+        parent.openRepository(LocalRepository(nameField.text, directory))
     }
 
     @FXML

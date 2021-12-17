@@ -1,8 +1,5 @@
 package com.harleyoconnor.gitdesk.ui.window
 
-import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
-import javafx.stage.Stage
-
 /**
  * @author Harley O'Connor
  */
@@ -17,9 +14,6 @@ class SetWindowManager : WindowManager {
     override fun setClosed(window: Window) {
         this.windows.removeIf {
             it == window
-        }
-        if (this.noWindowsOpen() && window !is MenuWindow) {
-            MenuWindow(Stage(), this).open()
         }
     }
 

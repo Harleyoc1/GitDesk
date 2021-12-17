@@ -15,10 +15,10 @@ import java.io.File
 class DirectoryCellController : FileCellController() {
 
     companion object {
-        fun load(directory: Directory, insetIndex: Int, parent: FileListController): VBox {
-            val fxml = load<VBox, FileCellController>("repository/DirectoryCell")
+        fun load(directory: Directory, insetIndex: Int, parent: FileListController): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, DirectoryCellController> {
+            val fxml = load<VBox, DirectoryCellController>("repository/DirectoryCell")
             fxml.controller.setup(directory, insetIndex, parent)
-            return fxml.root
+            return fxml
         }
     }
 
@@ -67,15 +67,17 @@ class DirectoryCellController : FileCellController() {
         }
     }
 
-    private fun openDirectory() {
+    fun openDirectory() {
         parent.appendCells(directory, root, insetIndex + 1)
         expandIcon.rotate = 90.0
         open = true
+        parent.onDirectoryOpened(directory)
     }
 
     private fun closeDirectory() {
         root.children.remove(1, root.children.size)
         expandIcon.rotate = 0.0
         open = false
+        parent.onDirectoryClosed(directory)
     }
 }

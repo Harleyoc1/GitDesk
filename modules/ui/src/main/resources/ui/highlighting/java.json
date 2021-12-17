@@ -52,7 +52,10 @@
     "try",
     "void",
     "volatile",
-    "while"
+    "while",
+    "record",
+    "sealed",
+    "permits"
   ],
   "highlights": [
     {
