@@ -92,7 +92,7 @@
       "style_class": "semicolon"
     },
     {
-      "pattern": "@[^ ]+",
+      "pattern": "@[^ \\(]+",
       "group_name": "ANNOTATION",
       "style_class": "annotation"
     },
