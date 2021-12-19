@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.data.local
 
-import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.serialisation.DataAccess
 import com.harleyoconnor.gitdesk.util.Directory
@@ -71,14 +70,18 @@ class RepositoryAccess(
     fun getAll(): Map<Directory, String> = repositories.all
 
     class Repositories(
-        val all: MutableMap<Directory, String>,
-        val open: MutableSet<String>
+        val all: MutableMap<Directory, String> = mutableMapOf(),
+        val open: MutableSet<String> = mutableSetOf()
     ) {
         companion object {
             private val ADAPTER: JsonAdapter<Repositories> by lazy { MOSHI.adapter(Repositories::class.java) }
 
             fun load(repositoriesFile: File): Repositories {
-                return ADAPTER.fromJson(repositoriesFile.readText()) ?: Repositories(mutableMapOf(), mutableSetOf())
+                return try {
+                    ADAPTER.fromJson(repositoriesFile.readText()) ?: Repositories()
+                } catch (e: Exception) {
+                    Repositories()
+                }
             }
         }
 

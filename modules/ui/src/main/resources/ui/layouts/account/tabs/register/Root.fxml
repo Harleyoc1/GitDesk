@@ -4,15 +4,17 @@
 <?import com.harleyoconnor.gitdesk.ui.node.TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.account.RegisterController" onKeyPressed="#keyPressed"
+      fx:controller="com.harleyoconnor.gitdesk.ui.account.register.RegisterController" onKeyPressed="#keyPressed"
       spacing="8">
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
     <TextField fx:id="usernameField" labelText="%ui.account.tab.register.field.username.label" prefHeight="35"
-               validation="Length [4,64]" styleClass="field"/>
+               validation="Length [4,64]; UsernameAvailable" styleClass="field"/>
     <TextField fx:id="emailField" labelText="%ui.account.tab.register.field.email.label" prefHeight="35"
                validation="Length [0,128]; Email" styleClass="field"/>
     <PasswordField fx:id="passwordField" labelText="%ui.account.tab.register.field.password.label" prefHeight="35"
@@ -24,7 +26,7 @@
         <VBox.margin>
             <Insets bottom="5"/>
         </VBox.margin>
-        <Button onAction="#clear" text="%ui.button.clear"/>
+        <Button onAction="#clearAllFields" text="%ui.button.clear"/>
         <Button fx:id="registerButton" onAction="#register" text="%ui.button.register" styleClass="enter-button"/>
     </HBox>
 </VBox>

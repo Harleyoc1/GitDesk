@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.account
 
+import com.harleyoconnor.gitdesk.ui.account.register.RegisterTab
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.loadLayout
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
@@ -24,7 +25,7 @@ class SignedOutController {
     private lateinit var signInTabButton: RadioButton
 
     private val registerTab: Tab by lazy {
-        Tab(loadLayout<VBox>("account/tabs/register/Root")) {
+        RegisterTab {
             root.center = it
         }
     }

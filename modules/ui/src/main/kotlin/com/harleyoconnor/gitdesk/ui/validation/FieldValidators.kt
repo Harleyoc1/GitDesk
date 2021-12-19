@@ -17,7 +17,8 @@ object FieldValidators {
     private val validators: Map<String, FieldValidatorFactory> = mapOf(
         "Length" to { arguments -> constructLengthValidator(arguments[0]) },
         "Regex" to { arguments -> constructRegexValidator(arguments[0], arguments[1]) },
-        "Email" to { _ -> EMAIL }
+        "Email" to { EMAIL },
+        "UsernameAvailable" to { UsernameAvailableValidator }
     )
 
     fun getValidator(id: String, arguments: Array<String>): FieldValidator? {

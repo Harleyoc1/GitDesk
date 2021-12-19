@@ -14,8 +14,6 @@ import com.harleyoconnor.gitdesk.ui.util.removeBottomClass
 import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.application.Platform.runLater
-import javafx.event.ActionEvent
-import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
@@ -90,7 +88,8 @@ class SelectRemoteTabController {
         }
     }
 
-    fun togglePlatform(event: ActionEvent) {
+    @FXML
+    private fun togglePlatform() {
         platform = Platform.values()[(platform.ordinal + 1) % Platform.values().size]
         updatePlatformToggleGraphic()
         clearDisplayedRepositories()
@@ -106,7 +105,8 @@ class SelectRemoteTabController {
         platformToggle.graphic = icon
     }
 
-    fun onSearchQueryUpdated(event: Event) {
+    @FXML
+    private fun onSearchQueryUpdated() {
         val query = searchBar.text
         if (query == lastQuery) {
             return

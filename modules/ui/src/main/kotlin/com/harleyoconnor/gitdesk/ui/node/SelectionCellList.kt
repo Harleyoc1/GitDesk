@@ -20,22 +20,31 @@ abstract class SelectionCellList<E> : VBox() {
         set(value) {
             field?.node?.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false)
             field = value
-            field?.node?.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true)
+            field?.let {
+                onElementFocused?.handle(ElementEvent(ElementEvent.FOCUSED, it.element, it.node))
+                it.node.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true)
+            }
         }
 
-    private lateinit var onElementSelected: EventHandler<ElementSelectedEvent<E>>
+    private var onElementFocused: EventHandler<ElementEvent<E>>? = null
+
+    private var onElementSelected: EventHandler<ElementEvent<E>>? = null
 
     init {
         this.styleClass.add("selection-cell-list")
     }
 
-    fun setOnElementSelected(handler: EventHandler<ElementSelectedEvent<E>>) {
+    fun setOnElementFocused(handler: EventHandler<ElementEvent<E>>) {
+        this.onElementFocused = handler
+    }
+
+    fun setOnElementSelected(handler: EventHandler<ElementEvent<E>>) {
         this.onElementSelected = handler
     }
 
     fun select() {
         selection?.let {
-            onElementSelected.handle(ElementSelectedEvent(it.element, it.node))
+            onElementSelected?.handle(ElementEvent(ElementEvent.SELECTED, it.element, it.node))
         }
     }
 
@@ -64,13 +73,15 @@ abstract class SelectionCellList<E> : VBox() {
         this.children.clear()
     }
 
-    class ElementSelectedEvent<E>(
+    class ElementEvent<E>(
+        type: EventType<ElementEvent<*>>,
         val element: E,
         val node: Node
-    ): Event(NORMAL) {
+    ): Event(type) {
 
         companion object {
-            val NORMAL: EventType<ElementSelectedEvent<*>> = EventType("normal")
+            val FOCUSED: EventType<ElementEvent<*>> = EventType("focused")
+            val SELECTED: EventType<ElementEvent<*>> = EventType("selected")
         }
 
     }
