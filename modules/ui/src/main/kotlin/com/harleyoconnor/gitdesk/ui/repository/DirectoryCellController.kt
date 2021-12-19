@@ -67,11 +67,15 @@ class DirectoryCellController : FileCellController() {
         }
     }
 
-    fun openDirectory() {
+    private fun openDirectory() {
+        setOpen()
+        parent.onDirectoryOpened(directory)
+    }
+
+    fun setOpen() {
         parent.appendCells(directory, root, insetIndex + 1)
         expandIcon.rotate = 90.0
         open = true
-        parent.onDirectoryOpened(directory)
     }
 
     private fun closeDirectory() {

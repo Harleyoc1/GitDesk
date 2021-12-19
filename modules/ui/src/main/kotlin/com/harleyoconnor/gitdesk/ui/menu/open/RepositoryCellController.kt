@@ -126,7 +126,8 @@ class RepositoryCellController {
                 remotePlatformIcon.setupFromSvg(remote.getIcon())
             }
         } else {
-            remoteLabel.text = remote.url.toExternalForm().removePrefix("https://").removeSuffix(".git")
+            remoteLabel.text = remote.url.toExternalForm().substringAfter('@')
+                .removePrefix("https://").removeSuffix(".git")
             remotePlatformIcon.setupFromSvg(SVGCache.getOrLoad(UIResource("/ui/icons/web.svg")))
         }
     }

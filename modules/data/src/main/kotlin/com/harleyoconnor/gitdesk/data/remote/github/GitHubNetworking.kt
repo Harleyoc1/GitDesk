@@ -17,7 +17,7 @@ object GitHubNetworking : PlatformNetworking {
     private const val acceptableRepositoryRange = "$acceptableUsernameRange\\_."
 
     private val repositoryUrlPattern =
-        Pattern.compile("http(s?)://(www\\.)?github\\.com/[$acceptableUsernameRange]{4,}/[$acceptableRepositoryRange]+/?")
+        Pattern.compile("http(s?)://(.*@)?(www\\.)?github\\.com/[$acceptableUsernameRange]{4,}/[$acceptableRepositoryRange]+/?")
 
     override fun getRemoteRepository(username: String, repository: String): RemoteRepository? {
         val response = getJsonAt(URI.create(getRemoteRepositoryUrl(username, repository)))

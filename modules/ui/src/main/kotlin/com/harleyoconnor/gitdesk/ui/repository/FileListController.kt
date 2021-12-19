@@ -2,7 +2,13 @@ package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.util.*
+import com.harleyoconnor.gitdesk.util.Directory
+import com.harleyoconnor.gitdesk.util.forFirst
+import com.harleyoconnor.gitdesk.util.forSecond
+import com.harleyoconnor.gitdesk.util.sort
+import com.harleyoconnor.gitdesk.util.split
+import com.harleyoconnor.gitdesk.util.stream
+import com.harleyoconnor.gitdesk.util.toTypedArray
 import com.harleyoconnor.gitdesk.util.tree.traversal.PreOrderTraverser
 import javafx.fxml.FXML
 import javafx.scene.layout.VBox
@@ -53,7 +59,7 @@ class FileListController {
 
     private fun showLastOpenDirectories() {
         repository.openDirectories.traverse(PreOrderTraverser({ directory ->
-            directoryCells[directory]?.openDirectory()
+            directoryCells[directory]?.setOpen()
         }))
     }
 

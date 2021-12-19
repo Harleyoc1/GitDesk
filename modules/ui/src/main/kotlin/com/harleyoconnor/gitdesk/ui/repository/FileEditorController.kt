@@ -16,11 +16,13 @@ class FileEditorController {
     private lateinit var editor: CodeEditor
 
     fun setFile(file: File) {
-        this.file = file
-        loadFromFile(file)
+        if (this.file != file) {
+            this.file = file
+            loadFromFile()
+        }
     }
 
-    private fun loadFromFile(file: File) {
+    private fun loadFromFile() {
         Data.syntaxHighlighterAccess.getForFile(file.name)?.let {
             this.editor.setupSyntaxHighlighting(it)
         }
