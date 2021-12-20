@@ -55,7 +55,6 @@ class CodeEditor : CodeArea() {
                 if (t.isSuccess) {
                     Optional.of(t.get())
                 } else {
-                    LogManager.getLogger().error(t.failure)
                     Optional.empty()
                 }
             }

@@ -10,7 +10,7 @@ import java.io.File
  */
 class FileEditorController {
 
-    private lateinit var file: File
+    private var file: File? = null
 
     @FXML
     private lateinit var editor: CodeEditor
@@ -18,11 +18,11 @@ class FileEditorController {
     fun setFile(file: File) {
         if (this.file != file) {
             this.file = file
-            loadFromFile()
+            loadFromFile(file)
         }
     }
 
-    private fun loadFromFile() {
+    private fun loadFromFile(file: File) {
         Data.syntaxHighlighterAccess.getForFile(file.name)?.let {
             this.editor.setupSyntaxHighlighting(it)
         }
@@ -30,7 +30,7 @@ class FileEditorController {
     }
 
     private fun saveToFile() {
-        this.file.writeText(this.editor.text)
+        this.file?.writeText(this.editor.text)
     }
 
 }
