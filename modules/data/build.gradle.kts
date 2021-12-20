@@ -15,5 +15,8 @@ dependencies {
 }
 
 tasks.test {
-    systemProperty("gitdesk.session_key", project.findProperty("gitdesk.session_key").toString())
+    val sessionKey = project.findProperty("gitdesk.session_key")
+    if (sessionKey != null) {
+        systemProperty("gitdesk.session_key", sessionKey.toString())
+    }
 }
