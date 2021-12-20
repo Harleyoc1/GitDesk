@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.data.account.verifyEmailRequest
 import com.harleyoconnor.gitdesk.ui.node.TextField
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.validation.FieldValidator
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -53,6 +54,11 @@ class VerifyEmailController {
             verifyEmailRequest(verificationData).thenAccept {
                 it.apply { session ->
                     session.save()
+                    Platform.runLater {
+                        session.getAccount()?.let { account ->
+                            parent.toSignedInView(account)
+                        }
+                    }
                 }
             }.join()
         } catch (ignored: FieldValidator.InvalidException) { }

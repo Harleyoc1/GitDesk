@@ -167,6 +167,10 @@
     -fx-background-color: -primary-text-color;
 }
 
+.icon.accent {
+    -fx-background-color: -accent-color;
+}
+
 .icon-button {
     -fx-background-color: transparent;
     -fx-background-radius: 6px;
@@ -224,7 +228,7 @@
     -fx-background-color: -accent-color;
 }
 
-.side-bar > .nav-cell {
+.side-bar > .nav-cell, .side-bar > .cell.padded {
     -fx-padding: 0.6667em 1.33334em;
 }
 
@@ -241,7 +245,7 @@
     -fx-border-color: -primary-border-color;
 }
 
-.repository-cell, .remote-cell, .cell.padded {
+.repository-cell, .remote-cell {
     -fx-padding: 0.6667em 0.8889em;
 }
 
@@ -276,4 +280,9 @@
 
 .top-bar {
     -fx-background-color: -secondary-background-color;
+}
+
+.account-cell {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: -primary-border-color;
 }

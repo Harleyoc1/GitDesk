@@ -2,18 +2,27 @@ package com.harleyoconnor.gitdesk.ui.account
 
 import com.harleyoconnor.gitdesk.ui.account.register.RegisterTab
 import com.harleyoconnor.gitdesk.ui.util.Tab
-import com.harleyoconnor.gitdesk.ui.util.loadLayout
+import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.VBox
 
 /**
  *
  * @author Harley O'Connor
  */
 class SignedOutController {
+
+    companion object {
+        fun load(parent: AccountWindow): BorderPane {
+            val fxml = load<BorderPane, SignedOutController>("account/SignedOutRoot")
+            fxml.controller.setup(parent)
+            return fxml.root
+        }
+    }
+
+    private lateinit var parent: AccountWindow
 
     @FXML
     private lateinit var root: BorderPane
@@ -25,19 +34,19 @@ class SignedOutController {
     private lateinit var signInTabButton: RadioButton
 
     private val registerTab: Tab by lazy {
-        RegisterTab {
+        RegisterTab(this.parent::toSignedInView) {
             root.center = it
         }
     }
 
     private val signInTab: Tab by lazy {
-        Tab(loadLayout<VBox>("account/tabs/sign_in/Root")) {
+        Tab(SignInController.load(this.parent::toSignedInView)) {
             root.center = it
         }
     }
 
-    @FXML
-    private fun initialize() {
+    fun setup(parent: AccountWindow) {
+        this.parent = parent
         registerTabButton.setOnSelected {
             openRegisterTab()
         }

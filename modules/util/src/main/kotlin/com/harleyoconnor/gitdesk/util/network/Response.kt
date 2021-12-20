@@ -18,7 +18,7 @@ class Response<B>(
     }
 
     fun <N> map(mapper: (B) -> N?): Response<N> {
-        return Response(body?.let { mapper(it) }, code)
+        return Response(if (wasSuccess()) mapper(body!!) else null, code)
     }
 
     fun ifCodeEquals(code: Int, action: () -> Unit): Response<B> {
@@ -35,16 +35,24 @@ class Response<B>(
         return this
     }
 
-    fun apply(consumer: (B) -> Unit) {
+    fun apply(consumer: (B) -> Unit): Response<B> {
         if (wasSuccess()) {
             consumer(body!!)
         }
+        return this
     }
 
-    fun <T> apply(function: (B) -> T, default: T): T {
+    fun <T> applyOrElse(function: (B) -> T, default: T): T {
         return if (wasSuccess()) {
             function(body!!)
         } else default
+    }
+
+    fun ifError(action: (Int) -> Unit): Response<B> {
+        if (wasError()) {
+            action(code)
+        }
+        return this
     }
 
     fun wasSuccess() = code in 200 until 300 && body != null

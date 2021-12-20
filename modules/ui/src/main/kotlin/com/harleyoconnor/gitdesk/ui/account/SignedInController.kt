@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.account
 
 import com.harleyoconnor.gitdesk.data.account.Account
+import com.harleyoconnor.gitdesk.data.account.Session
+import com.harleyoconnor.gitdesk.ui.util.load
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Label
@@ -13,6 +15,16 @@ import javafx.scene.layout.BorderPane
  */
 class SignedInController {
 
+    companion object {
+        fun load(parent: AccountWindow, account: Account): BorderPane {
+            val fxml = load<BorderPane, SignedInController>("account/SignedInRoot")
+            fxml.controller.setup(parent, account)
+            return fxml.root
+        }
+    }
+
+    private lateinit var parent: AccountWindow
+
     @FXML
     private lateinit var root: BorderPane
 
@@ -24,7 +36,8 @@ class SignedInController {
 
     private lateinit var account: Account
 
-    private fun setup(account: Account) {
+    private fun setup(parent: AccountWindow, account: Account) {
+        this.parent = parent
         this.account = account
         usernameLabel.text = account.username
         detailsTabButton.fire()
@@ -42,6 +55,7 @@ class SignedInController {
 
     @FXML
     private fun signOut(event: ActionEvent) {
-
+        Session.delete()
+        parent.toSignedOutView()
     }
 }

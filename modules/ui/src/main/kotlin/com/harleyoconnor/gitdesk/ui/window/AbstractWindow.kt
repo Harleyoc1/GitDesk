@@ -14,9 +14,15 @@ import javafx.stage.Stage
  */
 abstract class AbstractWindow(
     val stage: Stage,
-    protected var root: Parent,
+    root: Parent,
     protected val manager: WindowManager
 ) : Window {
+
+    protected var root: Parent = root
+        set(value) {
+            field = value
+            scene.root = value
+        }
 
     protected val scene: Scene = Scene(root)
 

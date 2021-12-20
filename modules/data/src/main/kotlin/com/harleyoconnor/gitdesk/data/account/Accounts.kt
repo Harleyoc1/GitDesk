@@ -55,7 +55,9 @@ class RegistrationData(
 fun registerRequest(creationData: AccountCreationData): CompletableFuture<Response<RegistrationData>> {
     val request = createRegisterRequest(creationData)
     return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-        .thenApply { Response.from(it).map { json -> RegistrationData.ADAPTER.fromJson(json) } }
+        .thenApply {
+            Response.from(it).map { json -> RegistrationData.ADAPTER.fromJson(json) }
+        }
 }
 
 private fun createRegisterRequest(creationData: AccountCreationData): HttpRequest {
@@ -93,7 +95,7 @@ fun verifyEmailRequest(verificationData: VerificationData): CompletableFuture<Re
     assert(verificationData.verificationCode != null)
     val request = createVerifyEmailRequest(verificationData)
     return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-        .thenApply { println(it.statusCode()); Response.from(it).map { json -> println(json); Session.ADAPTER.fromJson(json) } }
+        .thenApply { Response.from(it).map { json -> Session.ADAPTER.fromJson(json) } }
 }
 
 private fun createVerifyEmailRequest(verificationData: VerificationData): HttpRequest {
@@ -109,6 +111,79 @@ private fun createVerifyEmailRequest(verificationData: VerificationData): HttpRe
                 .build()
         )
         .header(HttpHeader.CONTENT_TYPE, HttpHeader.FORM_ENCODED)
+        .header(HttpHeader.ACCEPT, HttpHeader.JSON)
+        .build()
+}
+
+class AccountCredentials(
+    private val username: String,
+    private val password: String
+) {
+    fun createMap(): Map<String, String> {
+        return mapOf(
+            "username" to username,
+            "password" to password
+        )
+    }
+}
+
+fun signInRequest(accountCredentials: AccountCredentials): CompletableFuture<Response<Session>> {
+    val request = createSignInRequest(accountCredentials)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { json -> Session.ADAPTER.fromJson(json) } }
+}
+
+private fun createSignInRequest(accountCredentials: AccountCredentials): HttpRequest {
+    return HttpRequest.newBuilder()
+        .POST(
+            HttpRequest.BodyPublishers.ofString(
+                accountCredentials.createMap().toHttpFormData()
+            )
+        )
+        .uri(
+            startBuildingUri()
+                .append("sign-in/")
+                .build()
+        )
+        .header(HttpHeader.CONTENT_TYPE, HttpHeader.FORM_ENCODED)
+        .header(HttpHeader.ACCEPT, HttpHeader.JSON)
+        .build()
+}
+
+fun getAccountRequest(session: Session): CompletableFuture<Response<Account>> {
+    val request = createGetAccountRequest(session)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { json -> Account.ADAPTER.fromJson(json) } }
+}
+
+private fun createGetAccountRequest(session: Session): HttpRequest {
+    return HttpRequest.newBuilder()
+        .GET()
+        .uri(
+            startBuildingUri()
+                .append("account/")
+                .build()
+        )
+        .header(HttpHeader.SESSION_KEY, session.key)
+        .header(HttpHeader.ACCEPT, HttpHeader.JSON)
+        .build()
+}
+
+fun deleteSessionRequest(session: Session): CompletableFuture<Response<Unit>> {
+    val request = createDeleteSessionRequest(session)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { } }
+}
+
+private fun createDeleteSessionRequest(session: Session): HttpRequest {
+    return HttpRequest.newBuilder()
+        .DELETE()
+        .uri(
+            startBuildingUri()
+                .append("session/")
+                .parameter("session_key", session.key)
+                .build()
+        )
         .header(HttpHeader.ACCEPT, HttpHeader.JSON)
         .build()
 }

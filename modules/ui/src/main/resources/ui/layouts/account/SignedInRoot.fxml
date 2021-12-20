@@ -36,17 +36,21 @@
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/github.svg" styleClass="icon"/>
-                        <Label text="%ui.account.tab.sign_in" styleClass="text, heading-3"/>
+                        <Label text="%ui.account.tab.github" styleClass="text, heading-3"/>
                     </HBox>
                 </graphic>
             </RadioButton>
             <Region VBox.vgrow="ALWAYS"/>
-            <HBox maxWidth="Infinity" styleClass="cell" spacing="5" alignment="CENTER_LEFT">
+            <HBox maxWidth="Infinity" styleClass="cell, padded, account-cell" spacing="5" alignment="CENTER_LEFT">
                 <Label fx:id="usernameLabel" styleClass="text, heading-3" HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS"/>
                 <Button onAction="#signOut" styleClass="icon-button">
                     <graphic>
-                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/exit.svg" styleClass="icon"/>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/exit.svg" styleClass="icon, accent"/>
                     </graphic>
+                    <tooltip>
+                        <Tooltip text="%ui.button.sign_out"/>
+                    </tooltip>
                 </Button>
             </HBox>
         </VBox>
