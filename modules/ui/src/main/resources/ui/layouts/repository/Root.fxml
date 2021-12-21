@@ -9,7 +9,8 @@
             fx:controller="com.harleyoconnor.gitdesk.ui.repository.RepositoryController" fx:id="root">
     <center>
         <SplitPane fx:id="centre">
-            <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"/>
+            <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"
+                        SplitPane.resizableWithParent="false"/>
             <VBox alignment="CENTER">
                 <Label text="%ui.repository.no_file_open" styleClass="text, body"/>
             </VBox>
