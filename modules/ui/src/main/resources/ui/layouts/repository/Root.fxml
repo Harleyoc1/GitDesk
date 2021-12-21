@@ -1,12 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.VBox?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.repository.RepositoryController" fx:id="root">
+    <left>
+        <VBox prefWidth="20" maxHeight="Infinity" styleClass="repository-tabs">
+            <fx:define>
+                <ToggleGroup fx:id="tabNavigationGroup"/>
+            </fx:define>
+            <RadioButton fx:id="editorTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+                <graphic>
+                    <VBox alignment="CENTER" spacing="5">
+                        <Group>
+                            <Label text="%ui.repository.tab.editor" rotate="270" styleClass="text, body"/>
+                        </Group>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/file.svg" styleClass="icon"/>
+                    </VBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton fx:id="changesTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+                <graphic>
+                    <VBox alignment="CENTER" spacing="5">
+                        <Group>
+                            <Label text="%ui.repository.tab.changes" rotate="270" styleClass="text, body"/>
+                        </Group>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/commit.svg" styleClass="icon"/>
+                    </VBox>
+                </graphic>
+            </RadioButton>
+            <Region VBox.vgrow="ALWAYS"/>
+            <RadioButton fx:id="issuesTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+                <graphic>
+                    <VBox alignment="CENTER" spacing="5">
+                        <Group>
+                            <Label text="%ui.repository.tab.issues" rotate="270" styleClass="text, body"/>
+                        </Group>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/issue.svg" styleClass="icon"/>
+                    </VBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton fx:id="pullRequestsTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+                <graphic>
+                    <VBox alignment="CENTER" spacing="5">
+                        <Group>
+                            <Label text="%ui.repository.tab.pull_requests" rotate="270" styleClass="text, body"/>
+                        </Group>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/pull_request.svg" styleClass="icon"/>
+                    </VBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton fx:id="checklistsTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+                <graphic>
+                    <VBox alignment="CENTER" spacing="5">
+                        <Group>
+                            <Label text="%ui.repository.tab.checklists" rotate="270" styleClass="text, body"/>
+                        </Group>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/checkbox.svg" styleClass="icon"/>
+                    </VBox>
+                </graphic>
+            </RadioButton>
+        </VBox>
+    </left>
     <center>
         <SplitPane fx:id="centre">
             <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"

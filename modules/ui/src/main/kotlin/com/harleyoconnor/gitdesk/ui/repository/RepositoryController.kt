@@ -2,8 +2,10 @@ package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import javafx.fxml.FXML
 import javafx.scene.Node
+import javafx.scene.control.RadioButton
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.SplitPane
 import javafx.scene.layout.BorderPane
@@ -25,17 +27,28 @@ class RepositoryController {
     }
 
     private lateinit var stage: Stage
-
     private lateinit var repository: LocalRepository
-
     @FXML
     private lateinit var root: BorderPane
-
     @FXML
     private lateinit var centre: SplitPane
-
     @FXML
     private lateinit var fileList: ScrollPane
+
+    @FXML
+    private lateinit var editorTabButton: RadioButton
+
+    @FXML
+    private lateinit var changesTabButton: RadioButton
+
+    @FXML
+    private lateinit var issuesTabButton: RadioButton
+
+    @FXML
+    private lateinit var pullRequestsTabButton: RadioButton
+
+    @FXML
+    private lateinit var checklistsTabButton: RadioButton
 
     private val fileEditorTabPane = load<Node, FileEditorTabPaneController>("repository/FileEditorRoot")
 
@@ -43,6 +56,15 @@ class RepositoryController {
         this.stage = stage
         this.repository = repository
         fileList.content = FileListController.load(repository, this)
+
+        editorTabButton.setOnSelected {
+            openEditorTab()
+        }
+        editorTabButton.fire()
+    }
+
+    private fun openEditorTab() {
+
     }
 
     fun setFileInEditor(fileCell: FileCellController) {
