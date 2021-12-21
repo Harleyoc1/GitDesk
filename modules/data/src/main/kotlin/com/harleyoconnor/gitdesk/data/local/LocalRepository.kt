@@ -18,7 +18,7 @@ class LocalRepository(
     @Json(name = "last_open") private var lastOpen: Date? = null,
     @DirectoryTree @Json(name = "open_directories") val openDirectories: MutableTree<Directory> =
         MutableArrayTree(directory),
-    @Json(name = "window_cache") val windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
+    @Json(name = "window_cache") var windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
 ) {
 
     val gitRepository: Repository by lazy { Repository(directory) }
@@ -32,6 +32,7 @@ class LocalRepository(
 
     fun close() {
         this.lastOpen = Date()
+        this.open = false
     }
 
     override fun equals(other: Any?): Boolean {

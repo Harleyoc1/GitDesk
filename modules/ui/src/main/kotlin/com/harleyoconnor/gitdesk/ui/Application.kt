@@ -1,7 +1,9 @@
 package com.harleyoconnor.gitdesk.ui
 
+import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.account.AccountWindow
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.window.SetWindowManager
 import javafx.application.Platform
 import javafx.stage.Stage
@@ -34,8 +36,21 @@ class Application : javafx.application.Application() {
     override fun start(primaryStage: Stage) {
         this.primaryStage = primaryStage
 
-        MenuWindow(primaryStage).open()
-        AccountWindow(Stage()).open()
+        openLastOpenRepositories()
+
+        if (windowManager.noWindowsOpen()) {
+            MenuWindow(primaryStage).open()
+            AccountWindow(Stage()).open() // TODO: Proper way of accessing account window.
+        }
+    }
+
+    private fun openLastOpenRepositories() {
+        Data.repositoryAccess.getAll().entries.stream()
+            .map { Data.repositoryAccess.get(it.key) }
+            .filter { it.open }
+            .forEach {
+                RepositoryWindow.focusOrOpen(it)
+            }
     }
 
     override fun stop() {
