@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.account
+package com.harleyoconnor.gitdesk.ui.account.signin
 
 import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.AccountCredentials

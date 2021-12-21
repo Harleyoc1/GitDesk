@@ -175,6 +175,7 @@
     -fx-background-color: transparent;
     -fx-background-radius: 6px;
     -fx-border-color: transparent;
+    -fx-padding: 10;
 }
 
 .enter-button {
@@ -285,4 +286,8 @@
 .account-cell {
     -fx-border-width: 1 0 0 0;
     -fx-border-color: -primary-border-color;
+}
+
+.no-padding {
+    -fx-padding: 0;
 }

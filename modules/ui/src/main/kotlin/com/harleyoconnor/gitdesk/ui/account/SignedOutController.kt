@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.account
 
 import com.harleyoconnor.gitdesk.ui.account.register.RegisterTab
+import com.harleyoconnor.gitdesk.ui.account.signin.SignInController
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected

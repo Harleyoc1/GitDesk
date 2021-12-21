@@ -37,7 +37,7 @@ class RepositoryController {
     @FXML
     private lateinit var fileList: ScrollPane
 
-    private val fileEditor = load<Node, FileEditorController>("repository/FileEditor")
+    private val fileEditorTabPane = load<Node, FileEditorTabPaneController>("repository/FileEditorRoot")
 
     fun setup(stage: Stage, repository: LocalRepository) {
         this.stage = stage
@@ -45,11 +45,11 @@ class RepositoryController {
         fileList.content = FileListController.load(repository, this)
     }
 
-    fun setFileInEditor(file: File) {
+    fun setFileInEditor(fileCell: FileCellController) {
         if (centre.items[1] is VBox) {
-            centre.items[1] = fileEditor.root
+            centre.items[1] = fileEditorTabPane.root
         }
-        fileEditor.controller.setFile(file)
+        fileEditorTabPane.controller.open(fileCell)
     }
 
 }

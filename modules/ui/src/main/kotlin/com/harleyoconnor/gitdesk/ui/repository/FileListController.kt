@@ -11,6 +11,7 @@ import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
 import com.harleyoconnor.gitdesk.util.tree.traversal.PreOrderTraverser
 import javafx.fxml.FXML
+import javafx.scene.Node
 import javafx.scene.layout.VBox
 import java.io.File
 
@@ -41,10 +42,10 @@ class FileListController {
         }
     var open: FileCellController? = null
         set(value) {
-            open?.close()
+            open?.displayAsClosed()
             field = value
             if (value?.file?.isDirectory == false) {
-                parent.setFileInEditor(value.file)
+                parent.setFileInEditor(value)
             }
         }
 
@@ -53,7 +54,7 @@ class FileListController {
     private fun setup(repository: LocalRepository, parent: RepositoryController) {
         this.repository = repository
         this.parent = parent
-        appendCells(repository.directory, root)
+        root.children.addAll(buildCells(repository.directory))
         showLastOpenDirectories()
     }
 
@@ -63,24 +64,28 @@ class FileListController {
         }))
     }
 
-    fun appendCells(directory: Directory, box: VBox, insetIndex: Int = 0) {
+    fun buildCells(directory: Directory, insetIndex: Int = 0): Array<Node> {
+        val cells: MutableList<Node> = mutableListOf()
         directory.stream()
             .filter { this.shouldShowFile(it) }
             .split { it.isDirectory }
             .forFirst { directories ->
-                appendDirectoryCells(
-                    box, sort(directories.map { Directory(it) }.toTypedArray()), insetIndex
+                cells.addAll(
+                    buildDirectoryCells(sort(directories.map { Directory(it) }.toTypedArray()), insetIndex)
                 )
             }
             .forSecond { files ->
-                appendFileCells(box, sort(files.toTypedArray()), insetIndex)
+                cells.addAll(
+                    buildFileCells(sort(files.toTypedArray()), insetIndex)
+                )
             }
+        return cells.toTypedArray()
     }
 
-    private fun appendDirectoryCells(box: VBox, directories: Array<Directory>, insetIndex: Int) {
-        directories.forEach {
-            box.children.add(this.createDirectoryCell(it, insetIndex))
-        }
+    private fun buildDirectoryCells(directories: Array<Directory>, insetIndex: Int): Array<Node> {
+        return directories.map {
+            this.createDirectoryCell(it, insetIndex)
+        }.toTypedArray()
     }
 
     private fun createDirectoryCell(directory: Directory, insetIndex: Int): VBox {
@@ -89,10 +94,10 @@ class FileListController {
         return cell.root
     }
 
-    private fun appendFileCells(box: VBox, files: Array<File>, insetIndex: Int) {
-        files.forEach {
-            box.children.add(this.createFileCell(it, insetIndex))
-        }
+    private fun buildFileCells(files: Array<File>, insetIndex: Int): Array<Node> {
+        return files.map {
+            this.createFileCell(it, insetIndex)
+        }.toTypedArray()
     }
 
     private fun createFileCell(file: File, insetIndex: Int) = FileCellController.load(file, insetIndex, this)

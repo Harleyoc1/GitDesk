@@ -6,6 +6,7 @@ import com.harleyoconnor.gitdesk.util.Directory
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Insets
+import javafx.scene.Node
 import javafx.scene.layout.VBox
 import java.io.File
 
@@ -15,7 +16,11 @@ import java.io.File
 class DirectoryCellController : FileCellController() {
 
     companion object {
-        fun load(directory: Directory, insetIndex: Int, parent: FileListController): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, DirectoryCellController> {
+        fun load(
+            directory: Directory,
+            insetIndex: Int,
+            parent: FileListController
+        ): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, DirectoryCellController> {
             val fxml = load<VBox, DirectoryCellController>("repository/DirectoryCell")
             fxml.controller.setup(directory, insetIndex, parent)
             return fxml
@@ -34,10 +39,13 @@ class DirectoryCellController : FileCellController() {
     @FXML
     private lateinit var expandIcon: SVGIcon
 
+    private lateinit var cells: Array<Node>
+
     override fun setup(file: File, insetIndex: Int, parent: FileListController) {
         assert(file is Directory)
         directory = Directory(file)
         this.insetIndex = insetIndex
+        this.cells = parent.buildCells(directory, insetIndex + 1)
         super.setup(file, insetIndex, parent)
     }
 
@@ -73,7 +81,7 @@ class DirectoryCellController : FileCellController() {
     }
 
     fun setOpen() {
-        parent.appendCells(directory, root, insetIndex + 1)
+        root.children.addAll(cells)
         expandIcon.rotate = 90.0
         open = true
     }

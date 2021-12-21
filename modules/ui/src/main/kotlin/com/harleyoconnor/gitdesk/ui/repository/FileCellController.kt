@@ -78,7 +78,7 @@ open class FileCellController {
         cell.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, true)
     }
 
-    fun close() {
+    fun displayAsClosed() {
         cell.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, false)
     }
 
