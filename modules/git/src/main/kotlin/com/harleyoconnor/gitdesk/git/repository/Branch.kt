@@ -5,7 +5,7 @@ import com.harleyoconnor.gitdesk.util.map
 /**
  * @author Harley O'Connor
  */
-class Branch(
+data class Branch(
     private val repository: Repository,
     val name: String
 ) {

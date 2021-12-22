@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.util
 
+import java.util.LinkedList
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -20,7 +21,7 @@ inline fun <reified T> Stream<T>.toTypedArray(): Array<T> {
  * `true` if the element should go in the first stream or `false` if it should go in the second.
  * @return the split pair of streams
  */
-fun <T> Stream<T>.split(predicate: (T) -> Boolean): Pair<Stream<T>, Stream<T>> {
+fun <T> Stream<T>.splitToPair(predicate: (T) -> Boolean): Pair<Stream<T>, Stream<T>> {
     val first = mutableListOf<T>()
     val second = mutableListOf<T>()
 
@@ -33,6 +34,18 @@ fun <T> Stream<T>.split(predicate: (T) -> Boolean): Pair<Stream<T>, Stream<T>> {
     }
 
     return first.stream() to second.stream()
+}
+
+fun <E> List<E>.split(delimiterPredicate: (E) -> Boolean): List<List<E>> {
+    val new = LinkedList<MutableList<E>>()
+    new.add(mutableListOf())
+    for (element in this) {
+        if (delimiterPredicate(element)) {
+            new.add(mutableListOf())
+        }
+        new.peekLast().add(element)
+    }
+    return new
 }
 
 fun <T> Stream<T>.toSet(): Set<T> {

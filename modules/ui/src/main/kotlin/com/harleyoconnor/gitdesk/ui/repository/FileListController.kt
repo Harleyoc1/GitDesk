@@ -6,7 +6,7 @@ import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.forFirst
 import com.harleyoconnor.gitdesk.util.forSecond
 import com.harleyoconnor.gitdesk.util.sort
-import com.harleyoconnor.gitdesk.util.split
+import com.harleyoconnor.gitdesk.util.splitToPair
 import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
 import com.harleyoconnor.gitdesk.util.tree.traversal.PreOrderTraverser
@@ -68,7 +68,7 @@ class FileListController {
         val cells: MutableList<Node> = mutableListOf()
         directory.stream()
             .filter { this.shouldShowFile(it) }
-            .split { it.isDirectory }
+            .splitToPair { it.isDirectory }
             .forFirst { directories ->
                 cells.addAll(
                     buildDirectoryCells(sort(directories.map { Directory(it) }.toTypedArray()), insetIndex)
