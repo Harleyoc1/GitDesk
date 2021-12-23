@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.load
@@ -21,7 +21,7 @@ class DirectoryCellController : FileCellController() {
             insetIndex: Int,
             parent: FileListController
         ): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, DirectoryCellController> {
-            val fxml = load<VBox, DirectoryCellController>("repository/DirectoryCell")
+            val fxml = load<VBox, DirectoryCellController>("repository/editor/DirectoryCell")
             fxml.controller.setup(directory, insetIndex, parent)
             return fxml
         }

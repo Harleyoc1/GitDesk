@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController">
+    <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"
+                SplitPane.resizableWithParent="false"/>
+    <TabPane fx:id="fileEditorTabs" styleClass="tab-bar">
+        <Tab>
+            <VBox alignment="CENTER">
+                <Label text="%ui.repository.editor.no_file_open" styleClass="text, body"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</SplitPane>

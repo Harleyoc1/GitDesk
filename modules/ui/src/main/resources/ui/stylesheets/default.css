@@ -96,6 +96,25 @@
     -fx-border-color: -error-color;
 }
 
+.check-box > .box {
+    -fx-border-color: -accent-color;
+    -fx-border-width: 0.1em;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0.083334em 0.083334em 0.166667em 0.166667em; /* 1 1 2 2 */
+}
+
+.check-box > .box > .mark {
+    -fx-padding: 0.166667em 0.166667em 0.25em 0.25em; /* 2 2 3 3 */
+    -fx-shape: "M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z";
+}
+
+.check-box:selected > .box > .mark {
+    -fx-background-insets: 1 0 -1 0;
+    -fx-background-color: -accent-color;
+}
+
 
 /* Common style classes */
 

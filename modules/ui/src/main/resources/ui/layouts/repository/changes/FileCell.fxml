@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.FileCellController" fx:id="cell"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.changes.FileCellController" fx:id="cell"
       alignment="CENTER_LEFT" styleClass="cell, file-cell" spacing="5" onMousePressed="#select">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
@@ -20,6 +22,10 @@
             </items>
         </ContextMenu>
     </fx:define>
+    <padding>
+        <Insets top="2" right="8" bottom="2" left="8"/>
+    </padding>
+    <CheckBox fx:id="stageCheckbox" styleClass="stage-check-box"/>
     <SVGIcon fx:id="icon" prefWidth="12" prefHeight="12" path="/ui/icons/missing.svg" styleClass="icon"/>
     <Label fx:id="nameLabel" styleClass="text, body"/>
 </HBox>

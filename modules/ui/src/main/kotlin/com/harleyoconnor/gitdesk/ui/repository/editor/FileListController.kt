@@ -1,6 +1,7 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryController
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.forFirst
@@ -21,8 +22,8 @@ import java.io.File
 class FileListController {
 
     companion object {
-        fun load(repository: LocalRepository, parent: RepositoryController): VBox {
-            val fxml = load<VBox, FileListController>("repository/FileList")
+        fun load(repository: LocalRepository, parent: EditorTabController): VBox {
+            val fxml = load<VBox, FileListController>("repository/editor/FileList")
             fxml.controller.setup(repository, parent)
             return fxml.root
         }
@@ -30,7 +31,7 @@ class FileListController {
 
     private lateinit var repository: LocalRepository
 
-    private lateinit var parent: RepositoryController
+    private lateinit var parent: EditorTabController
 
     @FXML
     private lateinit var root: VBox
@@ -45,13 +46,13 @@ class FileListController {
             open?.displayAsClosed()
             field = value
             if (value?.file?.isDirectory == false) {
-                parent.setFileInEditor(value)
+                parent.open(value)
             }
         }
 
     private val directoryCells: MutableMap<Directory, DirectoryCellController> = mutableMapOf()
 
-    private fun setup(repository: LocalRepository, parent: RepositoryController) {
+    private fun setup(repository: LocalRepository, parent: EditorTabController) {
         this.repository = repository
         this.parent = parent
         root.children.addAll(buildCells(repository.directory))

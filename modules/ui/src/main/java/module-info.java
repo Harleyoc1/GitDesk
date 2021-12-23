@@ -28,6 +28,8 @@ module gitdesk.ui {
     opens com.harleyoconnor.gitdesk.ui.menu.create to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.open to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.repository to javafx.fxml;
+    opens com.harleyoconnor.gitdesk.ui.repository.editor to javafx.fxml;
+    opens com.harleyoconnor.gitdesk.ui.repository.changes to javafx.fxml;
 
     opens ui.images;
     opens ui.stylesheets;

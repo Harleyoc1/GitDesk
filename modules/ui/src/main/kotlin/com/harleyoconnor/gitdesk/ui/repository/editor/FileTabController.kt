@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.getIcon
@@ -11,7 +11,6 @@ import javafx.scene.control.Label
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.Tooltip
-import java.io.File
 
 /**
  * @author Harley O'Connor
@@ -20,7 +19,7 @@ class FileTabController {
 
     companion object {
         fun load(parent: TabPane, fileCell: FileCellController): Tab {
-            val fxml = load<Tab, FileTabController>("repository/FileTab")
+            val fxml = load<Tab, FileTabController>("repository/editor/FileTab")
             fxml.controller.setup(parent, fileCell)
             return fxml.root
         }

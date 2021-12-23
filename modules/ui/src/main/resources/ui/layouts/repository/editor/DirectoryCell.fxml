@@ -8,7 +8,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Menu?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.DirectoryCellController" fx:id="root">
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.DirectoryCellController" fx:id="root">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>

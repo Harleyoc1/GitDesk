@@ -1,17 +1,15 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTabController
+import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
+import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import javafx.fxml.FXML
-import javafx.scene.Node
 import javafx.scene.control.RadioButton
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.SplitPane
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.VBox
 import javafx.stage.Stage
-import java.io.File
 
 /**
  * @author Harley O'Connor
@@ -28,12 +26,9 @@ class RepositoryController {
 
     private lateinit var stage: Stage
     private lateinit var repository: LocalRepository
+
     @FXML
     private lateinit var root: BorderPane
-    @FXML
-    private lateinit var centre: SplitPane
-    @FXML
-    private lateinit var fileList: ScrollPane
 
     @FXML
     private lateinit var editorTabButton: RadioButton
@@ -50,28 +45,28 @@ class RepositoryController {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
-    private val fileEditorTabPane = load<Node, FileEditorTabPaneController>("repository/FileEditorRoot")
+    private val editorTab: Tab by lazy {
+        Tab(EditorTabController.load(stage, repository)) {
+            root.center = it
+        }
+    }
+
+    private val changesTab: Tab by lazy {
+        Tab(ChangesTabController.load(stage, repository)) {
+            root.center = it
+        }
+    }
 
     fun setup(stage: Stage, repository: LocalRepository) {
         this.stage = stage
         this.repository = repository
-        fileList.content = FileListController.load(repository, this)
 
         editorTabButton.setOnSelected {
-            openEditorTab()
+            editorTab.open()
+        }
+        changesTabButton.setOnSelected {
+            changesTab.open()
         }
         editorTabButton.fire()
     }
-
-    private fun openEditorTab() {
-
-    }
-
-    fun setFileInEditor(fileCell: FileCellController) {
-        if (centre.items[1] is VBox) {
-            centre.items[1] = fileEditorTabPane.root
-        }
-        fileEditorTabPane.controller.open(fileCell)
-    }
-
 }

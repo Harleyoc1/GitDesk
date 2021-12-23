@@ -3,7 +3,7 @@
 <?import com.harleyoconnor.gitdesk.ui.node.CodeEditor?>
 <?import org.fxmisc.flowless.VirtualizedScrollPane?>
 <VirtualizedScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-                       fx:controller="com.harleyoconnor.gitdesk.ui.repository.FileEditorController">
+                       fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.FileEditorController">
     <content>
         <CodeEditor fx:id="editor" prefWidth="Infinity" prefHeight="Infinity" styleClass="background"/>
     </content>

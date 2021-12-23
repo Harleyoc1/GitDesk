@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
@@ -24,7 +24,7 @@ open class FileCellController {
 
     companion object {
         fun load(file: File, insetIndex: Int, parent: FileListController): HBox {
-            val fxml = load<HBox, FileCellController>("repository/FileCell")
+            val fxml = load<HBox, FileCellController>("repository/editor/FileCell")
             fxml.controller.setup(file, insetIndex, parent)
             return fxml.root
         }

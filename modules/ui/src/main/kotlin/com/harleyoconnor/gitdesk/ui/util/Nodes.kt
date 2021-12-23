@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.util
 
 import javafx.scene.Node
+import javafx.scene.control.CheckBox
 import javafx.scene.control.RadioButton
 
 fun Node.addTopClass() {
@@ -23,6 +24,16 @@ fun RadioButton.setOnSelected(action: () -> Unit) {
     this.selectedProperty().addListener { _, _, newValue ->
         if (newValue) {
             action()
+        }
+    }
+}
+
+fun CheckBox.setOnActions(selected: () -> Unit, deselected: () -> Unit) {
+    this.selectedProperty().addListener { _, _, newValue ->
+        if (newValue) {
+            selected()
+        } else {
+            deselected()
         }
     }
 }

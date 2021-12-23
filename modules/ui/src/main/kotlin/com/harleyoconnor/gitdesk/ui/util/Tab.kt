@@ -15,4 +15,6 @@ open class Tab(
             field = value
             setter(value)
         }
+
+    fun open() = setter(node)
 }

@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import javafx.scene.control.Tab
 import java.io.File

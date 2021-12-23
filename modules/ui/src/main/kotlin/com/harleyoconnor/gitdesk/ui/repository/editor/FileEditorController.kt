@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.node.CodeEditor
@@ -14,7 +14,7 @@ class FileEditorController {
 
     companion object {
         fun load(file: File): Node {
-            val fxml = load<Node, FileEditorController>("repository/FileEditor")
+            val fxml = load<Node, FileEditorController>("repository/editor/FileEditor")
             fxml.controller.setFile(file)
             return fxml.root
         }

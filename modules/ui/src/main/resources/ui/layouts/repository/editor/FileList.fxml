@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.FileListController" fx:id="root" spacing="2">
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.FileListController" fx:id="root" spacing="2">
     <padding>
         <Insets top="10" left="8" bottom="10" right="8"/>
     </padding>

@@ -40,6 +40,16 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .directory(directory)
     }
 
+    fun addToStage(file: File): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("add", file.canonicalFile.relativeTo(directory).path)
+        .directory(directory)
+
+    fun removeFromStage(file: File): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("reset", "HEAD", "--", file.canonicalFile.relativeTo(directory).path)
+        .directory(directory)
+
     fun getChangedFiles(): FunctionalProcessBuilder<Array<File>> {
         return FunctionalProcessBuilder(this::mapChangedFilesResponse)
             .gitCommand()

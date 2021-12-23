@@ -49,19 +49,11 @@ class SignedOutController {
     fun setup(parent: AccountWindow) {
         this.parent = parent
         registerTabButton.setOnSelected {
-            openRegisterTab()
+            registerTab.open()
         }
         signInTabButton.setOnSelected {
-            openSignInTab()
+            signInTab.open()
         }
         registerTabButton.fire()
-    }
-
-    private fun openRegisterTab() {
-        root.center = registerTab.node
-    }
-
-    private fun openSignInTab() {
-        root.center = signInTab.node
     }
 }
