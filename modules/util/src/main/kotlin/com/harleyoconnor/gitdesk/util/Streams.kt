@@ -59,3 +59,7 @@ fun <T> Stream<T>.toUnmodifiableSet(): Set<T> {
 fun <T : Pair<K, V>, K, V> Stream<T>.pairsToMap(): Map<K, V> {
     return this.collect(Collectors.toMap({ it.first }, { it.second }))
 }
+
+fun <T : Map.Entry<K, V>, K, V> Stream<T>.entriesToMap(): Map<K, V> {
+    return this.collect(Collectors.toMap({ it.key }, { it.value }))
+}

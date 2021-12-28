@@ -1,8 +1,13 @@
 package com.harleyoconnor.gitdesk.data.local
 
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.serialisation.DataAccess
 import com.harleyoconnor.gitdesk.util.Directory
+import com.harleyoconnor.gitdesk.util.entriesToMap
+import com.harleyoconnor.gitdesk.util.pairsToMap
+import com.harleyoconnor.gitdesk.util.toSet
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
 import java.io.File
@@ -68,6 +73,10 @@ class RepositoryAccess(
     }
 
     fun getAll(): Map<Directory, String> = repositories.all
+
+    fun getAllNotOpen(): Map<Directory, String> = repositories.all.entries.stream()
+        .filter { !repositories.open.contains(it.value) }
+        .entriesToMap()
 
     class Repositories(
         val all: MutableMap<Directory, String> = mutableMapOf(),

@@ -26,10 +26,10 @@ import org.fxmisc.wellbehaved.event.Nodes
 class OpenTabController {
 
     companion object {
-        fun load(parent: MenuController): VBox {
+        fun load(parent: MenuController): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, OpenTabController> {
             val fxml = load<VBox, OpenTabController>("menu/tabs/open/Root")
             fxml.controller.setup(parent)
-            return fxml.root
+            return fxml
         }
     }
 
@@ -67,8 +67,7 @@ class OpenTabController {
         displayRepositories("")
     }
 
-    @FXML
-    private fun onAddPressed() {
+    fun selectLocalRepository() {
         val directoryChooser = DirectoryChooser()
         directoryChooser.showDialog(parent.stage)?.let {
             addDirectory(Directory(it))

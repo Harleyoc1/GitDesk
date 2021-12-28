@@ -12,6 +12,7 @@ dependencies {
 
     implementation(group = "com.harleyoconnor.javautilities", name = "JavaUtilities", version = "0.1.2")
     implementation(group = "com.squareup.moshi", name = "moshi-kotlin", version = "1.13.0-SNAPSHOT")
+    implementation(group = "com.google.guava", name = "guava", version = "31.0.1-jre")
 }
 
 tasks.test {

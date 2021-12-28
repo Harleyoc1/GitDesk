@@ -6,8 +6,28 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.EditMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.OpenRecentMenu?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
+    <top>
+        <MenuBar useSystemMenuBar="true">
+             <Menu text="%ui.menu.file">
+                 <MenuItem text="%ui.mnu.file.new" accelerator="Shortcut+N" onAction="#selectCreateTab"/>
+                 <MenuItem text="%ui.mnu.file.open" accelerator="Shortcut+O" onAction="#selectLocal"/>
+                 <MenuItem text="%ui.mnu.file.clone" accelerator="Shortcut+Ctrl+C" onAction="#selectCloneTab"/>
+                 <OpenRecentMenu fx:id="openRecentItem" text="%ui.menu.file.open_recent"/>
+                 <SeparatorMenuItem/>
+                 <MenuItem text="%ui.menu.file.close_window" accelerator="Shortcut+W" onAction="#closeWindow"/>
+             </Menu>
+            <EditMenu fx:id="editMenu"/>
+            <ViewMenu fx:id="viewMenu"/>
+            <WindowMenu fx:id="windowMenu"/>
+            <Menu text="%ui.menu.help"/>
+        </MenuBar>
+    </top>
     <left>
         <VBox styleClass="side-bar" prefWidth="150">
             <padding>

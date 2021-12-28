@@ -16,7 +16,7 @@
                 <Insets left="10"/>
             </HBox.margin>
         </TextField>
-        <Button onAction="#onAddPressed" styleClass="icon-button">
+        <Button onAction="#selectLocalRepository" styleClass="icon-button">
             <HBox.margin>
                 <Insets right="10"/>
             </HBox.margin>

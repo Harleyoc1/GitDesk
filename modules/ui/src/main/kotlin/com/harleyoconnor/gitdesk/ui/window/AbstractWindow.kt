@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.ui.window
 
-import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.style.DynamicStylesheetManager

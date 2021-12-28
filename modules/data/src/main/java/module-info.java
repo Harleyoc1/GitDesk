@@ -9,6 +9,7 @@ module gitdesk.data {
     requires kotlin.stdlib;
     requires java.net.http;
     requires org.apache.logging.log4j;
+    requires com.google.common;
 
     exports com.harleyoconnor.gitdesk.data;
     exports com.harleyoconnor.gitdesk.data.account;

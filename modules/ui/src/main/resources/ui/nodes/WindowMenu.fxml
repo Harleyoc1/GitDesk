@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<fx:root type="Menu" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" text="%ui.menu.window">
+    <MenuItem text="%ui.menu.window.minimise" accelerator="Shortcut+M" onAction="#minimise"/>
+</fx:root>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<fx:root type="Menu" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" text="%ui.menu.edit">
+    <MenuItem text="%ui.menu.edit.undo" accelerator="Shortcut+Z" onAction="#undo"/>
+    <MenuItem text="%ui.menu.edit.redo" accelerator="Shortcut+Shift+Z" onAction="#redo"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="%ui.menu.edit.cut" accelerator="Shortcut+X" onAction="#cut"/>
+    <MenuItem text="%ui.menu.edit.copy" accelerator="Shortcut+C" onAction="#copy"/>
+    <MenuItem text="%ui.menu.edit.paste" accelerator="Shortcut+V" onAction="#paste"/>
+    <MenuItem text="%ui.menu.edit.select_all" accelerator="Shortcut+A" onAction="#selectAll"/>
+</fx:root>
