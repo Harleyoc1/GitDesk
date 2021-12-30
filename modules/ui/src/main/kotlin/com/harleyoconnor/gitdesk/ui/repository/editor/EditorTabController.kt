@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
 import com.harleyoconnor.gitdesk.ui.util.load
 import javafx.fxml.FXML
 import javafx.scene.control.ScrollPane
@@ -15,10 +16,10 @@ import javafx.stage.Stage
 class EditorTabController {
 
     companion object {
-        fun load(stage: Stage, repository: LocalRepository): SplitPane {
+        fun load(stage: Stage, repository: LocalRepository): LoadedFXML<SplitPane, EditorTabController> {
             val fxml = load<SplitPane, EditorTabController>("repository/editor/Root")
             fxml.controller.setup(stage, repository)
-            return fxml.root
+            return fxml
         }
     }
 
@@ -49,6 +50,13 @@ class EditorTabController {
         fileEditorTabs.selectionModel.select(
             getOrCreateTab(fileCell)
         )
+    }
+
+    fun save() {
+        val selectedTab = fileEditorTabs.selectionModel.selectedItem
+        if (selectedTab is FileTab) {
+            selectedTab.getSaveCallback().invoke()
+        }
     }
 
     private fun getOrCreateTab(fileCell: FileCellController) = fileEditorTabs.tabs.stream()

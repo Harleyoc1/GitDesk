@@ -59,6 +59,7 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
 
     private fun mapChangedFilesResponse(response: Response): Array<File> {
         return response.output.split("\n").stream()
+            .filter { it.isNotEmpty() }
             .map { relativePath -> File(directory.absolutePath + File.separatorChar + relativePath) }
             .toTypedArray()
     }

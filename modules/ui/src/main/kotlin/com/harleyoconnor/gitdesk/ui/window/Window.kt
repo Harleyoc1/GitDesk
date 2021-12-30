@@ -1,11 +1,18 @@
 package com.harleyoconnor.gitdesk.ui.window
 
+import com.harleyoconnor.gitdesk.ui.menubar.SelectableAccess
+import javafx.stage.Stage
+
 /**
  * @author Harley O'Connor
  */
 interface Window : Area {
 
     val id: String
+
+    val stage: Stage
+
+    val selectableAccess: SelectableAccess
 
     fun open()
     fun focus()

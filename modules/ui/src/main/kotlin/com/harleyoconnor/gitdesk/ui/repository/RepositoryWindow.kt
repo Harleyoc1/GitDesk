@@ -7,14 +7,15 @@ import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
+import javafx.scene.layout.Region
 import javafx.stage.Stage
 
 /**
  * @author Harley O'Connor
  */
 class RepositoryWindow(
-    stage: Stage, private val repository: LocalRepository
-) : AbstractWindow(stage, RepositoryController.load(stage, repository), Application.getInstance().windowManager) {
+    stage: Stage, val repository: LocalRepository
+) : AbstractWindow(stage, Region(), Application.getInstance().windowManager) {
 
     companion object {
         fun focusOrOpen(repository: LocalRepository) {
@@ -30,11 +31,12 @@ class RepositoryWindow(
 
     override val id: String get() = repository.id
 
-    override val stylesheets: Array<Stylesheet> get() = arrayOf(
-        Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED, Stylesheets.REPOSITORY, Stylesheets.REPOSITORY_THEMED
+    override fun getStylesheets(): Array<Stylesheet> = arrayOf(
+        Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY
     )
 
     init {
+        root = RepositoryController.load(this, repository)
         loadFromWindowCache(repository.windowCache)
     }
 

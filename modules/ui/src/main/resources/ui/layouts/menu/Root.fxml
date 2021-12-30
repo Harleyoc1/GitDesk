@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.harleyoconnor.gitdesk.ui.menubar.EditMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.FileMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.EditMenu?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.OpenRecentMenu?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.menu.MenuController" fx:id="root">
     <top>
         <MenuBar useSystemMenuBar="true">
-             <Menu text="%ui.menu.file">
-                 <MenuItem text="%ui.menu.file.new" accelerator="Shortcut+N" onAction="#selectCreateTab"/>
-                 <MenuItem text="%ui.menu.file.open" accelerator="Shortcut+O" onAction="#selectLocal"/>
-                 <MenuItem text="%ui.menu.file.clone" accelerator="Shortcut+Ctrl+C" onAction="#selectCloneTab"/>
-                 <OpenRecentMenu fx:id="openRecentItem" text="%ui.menu.file.open_recent"/>
-                 <SeparatorMenuItem/>
-                 <MenuItem text="%ui.menu.file.close_window" accelerator="Shortcut+W" onAction="#closeWindow"/>
-             </Menu>
+            <FileMenu fx:id="fileMenu"/>
             <EditMenu fx:id="editMenu"/>
             <ViewMenu fx:id="viewMenu"/>
             <WindowMenu fx:id="windowMenu"/>

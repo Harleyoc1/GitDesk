@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.harleyoconnor.gitdesk.ui.menubar.OpenRecentMenu?>
+<fx:root type="Menu" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" text="%ui.menu.file">
+    <MenuItem text="%ui.menu.file.new" accelerator="Shortcut+N" onAction="#selectCreateTab"/>
+    <MenuItem text="%ui.menu.file.open" accelerator="Shortcut+O" onAction="#importLocal"/>
+    <MenuItem text="%ui.menu.file.clone" accelerator="Shortcut+Ctrl+C" onAction="#selectCloneTab"/>
+    <OpenRecentMenu fx:id="openRecentItem" text="%ui.menu.file.open_recent"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="%ui.menu.file.close_window" accelerator="Shortcut+W" onAction="#closeWindow"/>
+</fx:root>

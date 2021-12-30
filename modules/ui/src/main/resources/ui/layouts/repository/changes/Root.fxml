@@ -12,8 +12,8 @@
         <ScrollPane fx:id="fileList" fitToWidth="true"/>
         <ScrollPane fx:id="commitArea" fitToWidth="true"/>
     </SplitPane>
-    <TabPane fx:id="fileTabs" styleClass="tab-bar">
-        <Tab>
+    <TabPane fx:id="fileTabs" maxWidth="Infinity" styleClass="tab-bar">
+        <Tab closable="false">
             <VBox alignment="CENTER">
                 <Label text="%ui.repository.changes.no_file_open" styleClass="text, body"/>
             </VBox>

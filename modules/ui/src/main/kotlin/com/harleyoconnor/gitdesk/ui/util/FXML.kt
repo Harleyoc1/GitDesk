@@ -11,9 +11,9 @@ fun loaderForLayout(path: String): FXMLLoader =
 fun <N : Node> loadLayout(path: String): N =
     FXMLLoader.load(Application::class.java.getResource("/ui/layouts/$path.fxml"), TRANSLATIONS_BUNDLE)
 
-fun <N, C> load(path: String): FXML<N, C> {
+fun <N, C> load(path: String): LoadedFXML<N, C> {
     val loader = loaderForLayout(path)
-    return FXML(loader.load(), loader.getController())
+    return LoadedFXML(loader.load(), loader.getController())
 }
 
-class FXML<N, C>(val root: N, val controller: C)
+class LoadedFXML<N, C>(val root: N, val controller: C)

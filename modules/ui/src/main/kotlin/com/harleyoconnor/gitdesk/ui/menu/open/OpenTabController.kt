@@ -26,7 +26,7 @@ import org.fxmisc.wellbehaved.event.Nodes
 class OpenTabController {
 
     companion object {
-        fun load(parent: MenuController): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, OpenTabController> {
+        fun load(parent: MenuController): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, OpenTabController> {
             val fxml = load<VBox, OpenTabController>("menu/tabs/open/Root")
             fxml.controller.setup(parent)
             return fxml

@@ -10,8 +10,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Menu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.EditMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.FileMenu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.repository.RepositoryController" fx:id="root">
+    <top>
+        <MenuBar useSystemMenuBar="true">
+            <FileMenu fx:id="fileMenu">
+                <MenuItem text="%ui.menu.save" accelerator="Shortcut+S" onAction="#save"/>
+            </FileMenu>
+            <EditMenu fx:id="editMenu"/>
+            <ViewMenu fx:id="viewMenu"/>
+            <WindowMenu fx:id="windowMenu"/>
+            <Menu text="%ui.menu.help"/>
+        </MenuBar>
+    </top>
     <left>
         <VBox prefWidth="20" maxHeight="Infinity" styleClass="repository-tabs">
             <fx:define>

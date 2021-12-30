@@ -10,8 +10,8 @@
            fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController">
     <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"
                 SplitPane.resizableWithParent="false"/>
-    <TabPane fx:id="fileEditorTabs" styleClass="tab-bar">
-        <Tab>
+    <TabPane fx:id="fileEditorTabs" maxWidth="Infinity" styleClass="tab-bar">
+        <Tab closable="false">
             <VBox alignment="CENTER">
                 <Label text="%ui.repository.editor.no_file_open" styleClass="text, body"/>
             </VBox>

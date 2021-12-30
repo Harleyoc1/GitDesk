@@ -9,6 +9,7 @@ import java.io.File
 class FileTab: Tab() {
 
     private lateinit var file: File
+    private lateinit var saveCallback: () -> Unit
 
     init {
         this.isClosable = false // We use a custom close button.
@@ -19,5 +20,11 @@ class FileTab: Tab() {
     }
 
     fun getFile(): File = file
+
+    fun setSaveCallback(saveCallback: () -> Unit) {
+        this.saveCallback = saveCallback
+    }
+
+    fun getSaveCallback(): () -> Unit = saveCallback
 
 }

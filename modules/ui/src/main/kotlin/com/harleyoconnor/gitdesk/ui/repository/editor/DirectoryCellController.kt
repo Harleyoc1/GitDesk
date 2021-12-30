@@ -20,7 +20,7 @@ class DirectoryCellController : FileCellController() {
             directory: Directory,
             insetIndex: Int,
             parent: FileListController
-        ): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, DirectoryCellController> {
+        ): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, DirectoryCellController> {
             val fxml = load<VBox, DirectoryCellController>("repository/editor/DirectoryCell")
             fxml.controller.setup(directory, insetIndex, parent)
             return fxml

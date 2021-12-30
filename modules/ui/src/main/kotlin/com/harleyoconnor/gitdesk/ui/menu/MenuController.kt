@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.ui.menu.clone.CloneTab
 import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
 import com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController
 import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
+import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
@@ -25,10 +26,10 @@ import javafx.stage.Stage
 class MenuController {
 
     companion object {
-        fun load(parent: MenuWindow): BorderPane {
+        fun load(parent: MenuWindow): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<BorderPane, MenuController> {
             val fxml = load<BorderPane, MenuController>("menu/Root")
             fxml.controller.setup(parent)
-            return fxml.root
+            return fxml
         }
     }
 
@@ -36,6 +37,9 @@ class MenuController {
 
     @FXML
     private lateinit var openRecentItem: Menu
+
+    @FXML
+    private lateinit var fileMenu: FileMenu
 
     @FXML
     private lateinit var editMenu: EditMenu
@@ -99,6 +103,7 @@ class MenuController {
 
     fun setup(parent: MenuWindow) {
         this.parent = parent
+        this.fileMenu.setWindow(parent)
         this.editMenu.useSelectableAccess(parent.selectableAccess)
         this.viewMenu.setStage(parent.stage)
         this.windowMenu.setStage(parent.stage)
@@ -116,18 +121,15 @@ class MenuController {
         root.center = this.createTab.node
     }
 
-    @FXML
-    private fun selectCloneTab() {
+    fun selectCloneTab() {
         cloneTabButton.fire()
     }
 
-    @FXML
-    private fun selectCreateTab() {
+    fun selectCreateTab() {
         createTabButton.fire()
     }
 
-    @FXML
-    private fun selectLocal() {
+    fun selectImportLocal() {
         openTabFxml.controller.selectLocalRepository()
     }
 

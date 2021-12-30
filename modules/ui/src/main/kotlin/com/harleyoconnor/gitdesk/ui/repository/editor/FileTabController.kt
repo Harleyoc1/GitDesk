@@ -46,11 +46,15 @@ class FileTabController {
         this.fileCell = fileCell
 
         val file = fileCell.file
+        val fileEditorFxml = FileEditorController.load(file)
         this.root.setFile(file)
+        this.root.setSaveCallback {
+            fileEditorFxml.controller.saveToFile()
+        }
         icon.setupFromSvg(file.getIcon())
         label.text = file.name
         tooltip.text = file.absolutePath.replace(getUserHome(), "~")
-        root.content = FileEditorController.load(file)
+        root.content = fileEditorFxml.root
 
         root.setOnSelectionChanged {
             if (root.isSelected) {

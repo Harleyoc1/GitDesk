@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.node.CodeEditor
+import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
 import com.harleyoconnor.gitdesk.ui.util.load
 import javafx.fxml.FXML
 import javafx.scene.Node
@@ -13,10 +14,10 @@ import java.io.File
 class FileEditorController {
 
     companion object {
-        fun load(file: File): Node {
+        fun load(file: File): LoadedFXML<Node, FileEditorController> {
             val fxml = load<Node, FileEditorController>("repository/editor/FileEditor")
             fxml.controller.setFile(file)
-            return fxml.root
+            return fxml
         }
     }
 
@@ -37,7 +38,7 @@ class FileEditorController {
         this.editor.replaceText(file.readLines().joinToString(separator = "\n"))
     }
 
-    private fun saveToFile() {
+    fun saveToFile() {
         this.file.writeText(this.editor.text)
     }
 

@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox
 class RegisterController {
 
     companion object {
-        fun load(parent: RegisterTab): com.harleyoconnor.gitdesk.ui.util.FXML<VBox, RegisterController> {
+        fun load(parent: RegisterTab): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, RegisterController> {
             val fxml = load<VBox, RegisterController>("account/tabs/register/Root")
             fxml.controller.parent = parent
             return fxml

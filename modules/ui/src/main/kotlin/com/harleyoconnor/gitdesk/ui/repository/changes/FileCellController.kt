@@ -52,7 +52,6 @@ class FileCellController {
     private fun addToStage() {
         parent.repository.gitRepository.addToStage(file)
             .ifFailure {
-                stageCheckbox.isSelected = false
                 LogManager.getLogger().error("Failed to stage file `$file` with error `${it.error}`.")
             }
             .begin()
@@ -61,7 +60,6 @@ class FileCellController {
     private fun removeFromStage() {
         parent.repository.gitRepository.removeFromStage(file)
             .ifFailure {
-                stageCheckbox.isSelected = true
                 LogManager.getLogger().error("Failed to remove file `$file` from stage with error `${it.error}`.")
             }
             .begin()

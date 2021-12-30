@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.ui.window
 
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
+import com.harleyoconnor.gitdesk.ui.menubar.SelectableAccess
 import com.harleyoconnor.gitdesk.ui.style.DynamicStylesheetManager
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.StylesheetManager
@@ -15,7 +16,7 @@ import javafx.stage.Stage
  * @author Harley O'Connor
  */
 abstract class AbstractWindow(
-    val stage: Stage,
+    final override val stage: Stage,
     root: Parent,
     protected val manager: WindowManager
 ) : Window {
@@ -30,11 +31,11 @@ abstract class AbstractWindow(
 
     private val stylesheetManager: StylesheetManager = DynamicStylesheetManager(scene)
 
-    protected open val stylesheets: Array<Stylesheet> get() = arrayOf(Stylesheets.DEFAULT, Stylesheets.DEFAULT_THEMED)
+    override val selectableAccess: SelectableAccess = SelectableAccess(scene)
 
     init {
         this.setStageBounds()
-        stylesheetManager.registerSheets(*stylesheets)
+        stylesheetManager.registerSheets(*getStylesheets())
         stage.scene = scene
         scene.setOnKeyPressed {
             if (it.code == KeyCode.Q && it.isShortcutDown) { // TODO: Alt+F4 for Windows
@@ -46,6 +47,8 @@ abstract class AbstractWindow(
             postClose()
         }
     }
+
+    protected open fun getStylesheets(): Array<Stylesheet> = arrayOf(Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT)
 
     private fun setStageBounds() {
         this.stage.minWidth = this.minWidth
