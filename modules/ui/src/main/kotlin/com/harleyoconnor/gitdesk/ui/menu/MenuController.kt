@@ -53,7 +53,7 @@ class MenuController {
     }
 
     private val cloneTab: Tab by lazy {
-        CloneTab(parent.stage) {
+        CloneTab(parent) {
             root.center = it
         }
     }

@@ -22,7 +22,6 @@ class MenuWindow(
 
     init {
         root = MenuController.load(this)
-        scene.root = root
     }
 
     override fun postClose() {

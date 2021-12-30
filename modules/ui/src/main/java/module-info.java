@@ -25,6 +25,7 @@ module gitdesk.ui {
     opens com.harleyoconnor.gitdesk.ui.account to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.account.register to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu to javafx.fxml;
+    opens com.harleyoconnor.gitdesk.ui.clone to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.clone to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.create to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menu.open to javafx.fxml;

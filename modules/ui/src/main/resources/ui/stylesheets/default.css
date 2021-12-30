@@ -115,6 +115,18 @@
     -fx-background-color: -accent-color;
 }
 
+.progress-bar > .bar {
+    -fx-background-color: -accent-color;
+}
+
+.progress-bar > .track {
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-border-color: -primary-border-color;
+    -fx-background-color: -tertiary-background-color;
+    -fx-background-radius: 4px;
+}
+
 
 /* Common style classes */
 
@@ -309,4 +321,9 @@
 
 .no-padding {
     -fx-padding: 0;
+}
+
+.clone > .cell {
+    -fx-border-width: 1px;
+    -fx-border-color: -primary-border-color;
 }

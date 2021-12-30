@@ -57,7 +57,7 @@ class SelectLocationController {
     @FXML
     private fun openDirectoryChooser() {
         val directoryChooser = DirectoryChooser()
-        directoryChooser.showDialog(parent.stage)?.let {
+        directoryChooser.showDialog(parent.window.stage)?.let {
             this.locationField.text = Directory(it).path
         }
     }
@@ -75,7 +75,10 @@ class SelectLocationController {
     }
 
     fun clone() {
-
+        val destination = File(locationField.text)
+        destination.mkdirs()
+        CloneWindow(selectedRemote, Directory(destination)).open()
+        this.parent.window.close()
     }
 
     fun returnToRemoteSelection() {

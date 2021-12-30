@@ -51,14 +51,21 @@ class RepositoryWindow(
         this.repository.open = true
     }
 
-    override fun close() {
+    override fun postClose() {
         this.repository.close()
-        super.close()
+        super.postClose()
     }
 
     override fun closeAndSaveResources() {
         saveToWindowCache()
         Data.repositoryAccess.save(repository.directory, repository)
+    }
+
+    override fun onCloseAppRequested() {
+        // If close was requested from here repository was still open.
+        this.repository.open = true
+        this.closeAndSaveResources()
+        super.onCloseAppRequested()
     }
 
     private fun saveToWindowCache() {

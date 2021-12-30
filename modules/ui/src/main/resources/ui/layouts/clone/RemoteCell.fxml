@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.clone.RemoteCellController" fx:id="root" alignment="CENTER_LEFT"
+      styleClass="cell, remote-cell, top, bottom" spacing="5">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <Menu text="%ui.button.open_in">
+                    <MenuItem text="%ui.button.open_in.browser" onAction="#openInBrowser"/>
+                </Menu>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <Label fx:id="label" styleClass="text, heading-2"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <SVGIcon fx:id="languageIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
+    <SVGIcon fx:id="platformIcon" prefWidth="16" prefHeight="16" path="/ui/icons/web.svg" styleClass="icon"/>
+</HBox>

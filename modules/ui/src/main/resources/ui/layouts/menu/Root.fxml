@@ -15,9 +15,9 @@
     <top>
         <MenuBar useSystemMenuBar="true">
              <Menu text="%ui.menu.file">
-                 <MenuItem text="%ui.mnu.file.new" accelerator="Shortcut+N" onAction="#selectCreateTab"/>
-                 <MenuItem text="%ui.mnu.file.open" accelerator="Shortcut+O" onAction="#selectLocal"/>
-                 <MenuItem text="%ui.mnu.file.clone" accelerator="Shortcut+Ctrl+C" onAction="#selectCloneTab"/>
+                 <MenuItem text="%ui.menu.file.new" accelerator="Shortcut+N" onAction="#selectCreateTab"/>
+                 <MenuItem text="%ui.menu.file.open" accelerator="Shortcut+O" onAction="#selectLocal"/>
+                 <MenuItem text="%ui.menu.file.clone" accelerator="Shortcut+Ctrl+C" onAction="#selectCloneTab"/>
                  <OpenRecentMenu fx:id="openRecentItem" text="%ui.menu.file.open_recent"/>
                  <SeparatorMenuItem/>
                  <MenuItem text="%ui.menu.file.close_window" accelerator="Shortcut+W" onAction="#closeWindow"/>
