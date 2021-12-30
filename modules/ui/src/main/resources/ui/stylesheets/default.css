@@ -92,7 +92,7 @@
     -fx-font-size: 9;
 }
 
-.field > .text-field:error, .field > .password-field:error {
+.field .text-field:error, .field .password-field:error {
     -fx-border-color: -error-color;
 }
 

@@ -44,7 +44,7 @@ abstract class ValidatedField<N : TextField>: VBox() {
 
     @FXML
     private fun initialize() {
-        field.setOnKeyTyped {
+        field.textProperty().addListener { _, _, _ ->
             contentsUpdated(field.text)
         }
     }
@@ -73,6 +73,22 @@ abstract class ValidatedField<N : TextField>: VBox() {
 
     fun setLabelText(text: String) {
         label.text = text
+    }
+
+    fun getPromptText(): String {
+        return field.promptText
+    }
+
+    fun setPromptText(text: String) {
+        field.promptText = text
+    }
+
+    fun getFieldPrefHeight(): Double {
+        return field.prefHeight
+    }
+
+    fun setFieldPrefHeight(value: Double) {
+        field.prefHeight = value
     }
 
     fun getValidation(): String = ""

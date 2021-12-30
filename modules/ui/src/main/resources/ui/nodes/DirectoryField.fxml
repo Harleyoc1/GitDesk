@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<fx:root type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" spacing="8">
+    <HBox alignment="CENTER_LEFT" maxWidth="Infinity">
+        <Label fx:id="label" styleClass="text, body, label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="errorLabel" styleClass="text, sub-body-2, error-label"/>
+    </HBox>
+    <StackPane>
+        <TextField fx:id="field"/>
+        <Button onAction="#openDirectoryChooser" styleClass="icon-button" StackPane.alignment="CENTER_RIGHT">
+            <graphic>
+                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/directory.svg" styleClass="icon"/>
+            </graphic>
+        </Button>
+    </StackPane>
+</fx:root>

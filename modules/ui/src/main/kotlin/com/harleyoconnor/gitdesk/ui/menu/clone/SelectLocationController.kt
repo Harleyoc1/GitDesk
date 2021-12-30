@@ -2,16 +2,16 @@ package com.harleyoconnor.gitdesk.ui.menu.clone
 
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.git.repository.Remote
+import com.harleyoconnor.gitdesk.ui.node.DirectoryField
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.validation.FieldValidator
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.getUserHome
 import javafx.fxml.FXML
 import javafx.scene.control.Button
-import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
-import javafx.stage.DirectoryChooser
 import java.io.File
 
 /**
@@ -22,8 +22,7 @@ class SelectLocationController {
     companion object {
         fun load(remote: Remote, parent: CloneTab): VBox {
             val fxml = load<VBox, SelectLocationController>("menu/tabs/clone/SelectLocation")
-            fxml.controller.setRemote(remote)
-            fxml.controller.parent = parent
+            fxml.controller.setup(parent, remote)
             return fxml.root
         }
     }
@@ -33,33 +32,26 @@ class SelectLocationController {
     @FXML
     private lateinit var root: VBox
 
-    // TODO: Warn about existing directories.
     @FXML
-    private lateinit var locationField: TextField
+    private lateinit var locationField: DirectoryField
 
     @FXML
     private lateinit var cloneButton: Button
 
     private lateinit var selectedRemote: Remote
 
-    fun setRemote(remote: Remote) {
+    fun setup(parent: CloneTab, remote: Remote) {
+        this.parent = parent
         this.selectedRemote = remote
+        this.locationField.setStage(parent.window.stage)
         displayRemoteCell(remote)
         if (remote is RemoteRepository) {
-            locationField.text = getUserHome() + File.separator + remote.name.repositoryName
+            locationField.setText(getUserHome() + File.separator + remote.name.repositoryName)
         }
     }
 
     private fun displayRemoteCell(remote: Remote) {
         this.root.children.add(1, SelectedRemoteCellController.loadCell(this, remote))
-    }
-
-    @FXML
-    private fun openDirectoryChooser() {
-        val directoryChooser = DirectoryChooser()
-        directoryChooser.showDialog(parent.window.stage)?.let {
-            this.locationField.text = Directory(it).path
-        }
     }
 
     @FXML
@@ -75,10 +67,12 @@ class SelectLocationController {
     }
 
     fun clone() {
-        val destination = File(locationField.text)
-        destination.mkdirs()
-        CloneWindow(selectedRemote, Directory(destination)).open()
-        this.parent.window.close()
+        try {
+            val destination = File(locationField.getText())
+            destination.mkdirs()
+            CloneWindow(selectedRemote, Directory(destination)).open()
+            this.parent.window.close()
+        } catch (ignored: FieldValidator.InvalidException) { }
     }
 
     fun returnToRemoteSelection() {

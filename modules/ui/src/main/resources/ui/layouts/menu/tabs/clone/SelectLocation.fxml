@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import com.harleyoconnor.gitdesk.ui.node.DirectoryField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectLocationController" fx:id="root" onKeyPressed="#keyPressed"
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectLocationController" fx:id="root"
+      onKeyPressed="#keyPressed"
       styleClass="clone-tab">
     <padding>
         <Insets topRightBottomLeft="10"/>
@@ -21,20 +18,13 @@
         </padding>
     </Label>
     <!-- Remote cell programmatically inserted here. -->
-    <Label styleClass="text, heading-3, bold, padded" text="%ui.menu.tab.clone.label.location">
+    <DirectoryField fx:id="locationField" promptText="%ui.menu.tab.clone.location.prompt" prefWidth="Infinity"
+                    validation="LocationFree" labelText="%ui.menu.tab.clone.label.location" fieldPrefHeight="35"
+                    styleClass="field">
         <padding>
-            <Insets top="8" bottom="8"/>
+            <Insets top="8"/>
         </padding>
-    </Label>
-    <StackPane>
-        <TextField fx:id="locationField" promptText="%ui.menu.tab.clone.location.prompt" prefWidth="Infinity"
-                   prefHeight="35"/>
-        <Button onAction="#openDirectoryChooser" styleClass="icon-button" StackPane.alignment="CENTER_RIGHT">
-            <graphic>
-                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/directory.svg" styleClass="icon"/>
-            </graphic>
-        </Button>
-    </StackPane>
+    </DirectoryField>
     <Region VBox.vgrow="ALWAYS"/>
     <HBox alignment="CENTER_RIGHT" spacing="10">
         <VBox.margin>
