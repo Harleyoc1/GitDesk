@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.control.Menu?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
-<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
 <?import com.harleyoconnor.gitdesk.ui.menubar.EditMenu?>
 <?import com.harleyoconnor.gitdesk.ui.menubar.FileMenu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu?>
+<?import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu?>
+<?import com.harleyoconnor.gitdesk.ui.node.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.repository.RepositoryController" fx:id="root">
     <top>
@@ -88,13 +79,4 @@
             </RadioButton>
         </VBox>
     </left>
-    <center>
-        <SplitPane fx:id="centre">
-            <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"
-                        SplitPane.resizableWithParent="false"/>
-            <VBox alignment="CENTER">
-                <Label text="%ui.repository.editor.no_file_open" styleClass="text, body"/>
-            </VBox>
-        </SplitPane>
-    </center>
 </BorderPane>

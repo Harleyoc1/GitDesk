@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController">
-    <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" styleClass="side-bar"
-                SplitPane.resizableWithParent="false"/>
-    <TabPane fx:id="fileEditorTabs" maxWidth="Infinity" styleClass="tab-bar">
+           fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController" styleClass="editor-tab">
+    <VBox styleClass="side-bar">
+        <HBox alignment="CENTER_LEFT" minHeight="20" styleClass="tool-bar">
+            <Label fx:id="titleLabel" styleClass="text, body"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button onAction="#openBranchesWindow" styleClass="icon-button, no-padding">
+                <graphic>
+                    <HBox spacing="5" alignment="CENTER">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/branch.svg" styleClass="icon"/>
+                        <Label fx:id="branchNameLabel" styleClass="text, body"/>
+                    </HBox>
+                </graphic>
+            </Button>
+        </HBox>
+        <ScrollPane fx:id="fileList" minWidth="150" fitToWidth="true" VBox.vgrow="ALWAYS"
+                    SplitPane.resizableWithParent="false"/>
+    </VBox>
+    <TabPane fx:id="fileEditorTabs" maxWidth="Infinity" styleClass="tab-bar" prefHeight="20">
         <Tab closable="false">
             <VBox alignment="CENTER">
                 <Label text="%ui.repository.editor.no_file_open" styleClass="text, body"/>

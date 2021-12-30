@@ -127,6 +127,37 @@
     -fx-background-radius: 4px;
 }
 
+.context-menu {
+    -fx-padding: 0.333333em 0.25em 0.333333em 0.25em; /* 4 1 4 1 */
+    -fx-background-color: -secondary-background-color;
+    -fx-border-color: -primary-border-color;
+}
+
+.context-menu .menu > .right-container > .arrow {
+    -fx-background-color: -secondary-text-color;
+}
+
+.context-menu .menu:focused > .right-container > .arrow {
+    -fx-background-color: -secondary-accent-constrast-color;
+}
+
+.context-menu, .context-menu .menu-item {
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+.context-menu .menu-item > .label {
+    -fx-text-fill: -primary-text-color;
+}
+
+.context-menu .menu-item:focused {
+    -fx-background-color: -accent-color;
+}
+
+.context-menu .menu-item:focused > .label {
+    -fx-text-fill: -accent-contrast-color;
+}
+
 
 /* Common style classes */
 

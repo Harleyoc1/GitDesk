@@ -3,11 +3,9 @@ package com.harleyoconnor.gitdesk.ui.repository.editor
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
 import com.harleyoconnor.gitdesk.ui.util.load
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.SplitPane
-import javafx.scene.control.Tab
-import javafx.scene.control.TabPane
+import javafx.scene.control.*
 import javafx.stage.Stage
 
 /**
@@ -27,6 +25,12 @@ class EditorTabController {
     private lateinit var repository: LocalRepository
 
     @FXML
+    private lateinit var titleLabel: Label
+
+    @FXML
+    private lateinit var branchNameLabel: Label
+
+    @FXML
     private lateinit var fileList: ScrollPane
 
     @FXML
@@ -40,6 +44,8 @@ class EditorTabController {
     fun setup(stage: Stage, repository: LocalRepository) {
         this.stage = stage
         this.repository = repository
+        titleLabel.text = repository.id
+        branchNameLabel.text = repository.gitRepository.getCurrentBranch().name
         fileList.content = FileListController.load(repository, this)
     }
 
@@ -70,6 +76,11 @@ class EditorTabController {
         val tab = FileTabController.load(fileEditorTabs, file)
         fileEditorTabs.tabs.add(tab)
         return tab
+    }
+
+    @FXML
+    private fun openBranchesWindow(event: ActionEvent) {
+
     }
 
 }

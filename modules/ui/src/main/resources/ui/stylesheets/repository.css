@@ -56,8 +56,8 @@
 /* Tab Bar */
 
 .tab-bar {
-    -fx-tab-min-height: 1.6667em; /* 20 */
-    -fx-tab-max-height: 1.6667em; /* 20 */
+    -fx-tab-min-height: 20px;
+    -fx-tab-max-height: 20px;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
 }
@@ -103,6 +103,13 @@
     -fx-padding: 0;
 }
 
+
+.editor-tab .tool-bar {
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 0 0 1px 0;
+    -fx-background-color: -primary-background-color;
+    -fx-padding: 0 8px 0 8px;
+}
 
 .code-area {
     -fx-background-color: -secondary-background-color;
