@@ -8,10 +8,15 @@ import com.harleyoconnor.gitdesk.util.tree.Tree
  *
  * @author Harley O'Connor
  */
-class InOrderTraverser<E>(
-    visitor: ElementVisitor<E>,
-    nodeVisitor: NodeVisitor<E> = {}
-) : AbstractTreeTraverser<E>(visitor, nodeVisitor) {
+class InOrderTraverser<E> private constructor(visitor: NodeVisitor<E>) : AbstractTreeTraverser<E>(visitor) {
+
+    companion object {
+        internal fun <E> traverseNodes(visitor: NodeVisitor<E>): TreeTraverser<E> =
+            InOrderTraverser(visitor)
+
+        fun <E> traverse(visitor: ElementVisitor<E>): TreeTraverser<E> =
+            traverseNodes { visitor(it.get()) }
+    }
 
     override fun traverse(node: Tree.Node<E>) {
         if (node is Tree.ParentNode) {

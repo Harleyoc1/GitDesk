@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.ui.repository.RepositoryController
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.forFirst
@@ -60,9 +59,9 @@ class FileListController {
     }
 
     private fun showLastOpenDirectories() {
-        repository.openDirectories.traverse(PreOrderTraverser({ directory ->
+        repository.openDirectories.traverse(PreOrderTraverser.traverse { directory ->
             directoryCells[directory]?.setOpen()
-        }))
+        })
     }
 
     fun buildCells(directory: Directory, insetIndex: Int = 0): Array<Node> {

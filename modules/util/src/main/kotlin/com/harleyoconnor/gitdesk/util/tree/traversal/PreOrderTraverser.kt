@@ -7,10 +7,15 @@ import com.harleyoconnor.gitdesk.util.tree.Tree
  *
  * @author Harley O'Connor
  */
-class PreOrderTraverser<E>(
-    visitor: ElementVisitor<E>,
-    nodeVisitor: NodeVisitor<E> = {}
-) : AbstractTreeTraverser<E>(visitor, nodeVisitor) {
+class PreOrderTraverser<E> private constructor(visitor: NodeVisitor<E>) : AbstractTreeTraverser<E>(visitor) {
+
+    companion object {
+        internal fun <E> traverseNodes(visitor: NodeVisitor<E>): TreeTraverser<E> =
+            PreOrderTraverser(visitor)
+
+        fun <E> traverse(visitor: ElementVisitor<E>): TreeTraverser<E> =
+            traverseNodes { visitor(it.get()) }
+    }
 
     override fun traverse(node: Tree.Node<E>) {
         this.visit(node)

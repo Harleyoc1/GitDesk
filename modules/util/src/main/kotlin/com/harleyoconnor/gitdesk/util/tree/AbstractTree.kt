@@ -27,9 +27,9 @@ abstract class AbstractTree<E> : Tree<E> {
     @Suppress("UNCHECKED_CAST")
     override fun toArray(): Array<E> {
         val contents = mutableListOf<E>()
-        this.traverse(PreOrderTraverser({
+        this.traverse(PreOrderTraverser.traverse {
             contents.add(it)
-        }))
+        })
         return contents.stream().toArray { arrayOfNulls<Any>(contents.size) } as Array<E>
     }
 

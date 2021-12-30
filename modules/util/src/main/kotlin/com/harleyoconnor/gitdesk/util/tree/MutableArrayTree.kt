@@ -24,11 +24,11 @@ class MutableArrayTree<E> : AbstractTree<E>, MutableTree<E> {
 
     override fun addLeaf(parent: E, element: E): Boolean {
         var added = false
-        this.traverse(PreOrderTraverser({}, {
+        this.traverse(PreOrderTraverser.traverseNodes {
             if (it.get() == parent && this.addChild(it, element)) {
                 added = true
             }
-        }))
+        })
         return added
     }
 
@@ -44,11 +44,11 @@ class MutableArrayTree<E> : AbstractTree<E>, MutableTree<E> {
             throw IllegalArgumentException("Cannot remove root node.")
         }
         var removed = false
-        this.traverse(PreOrderTraverser({}, {
+        this.traverse(PreOrderTraverser.traverseNodes {
             if (it.get() == element && this.removeNode(it)) {
                 removed = true
             }
-        }))
+        })
         return removed
     }
 
