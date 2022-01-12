@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.BranchCellList?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.BranchesController">
+    <HBox prefHeight="50" styleClass="tool-bar">
+        <padding>
+            <Insets top="6" right="8" bottom="6" left="6"/>
+        </padding>
+        <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
+                   prefHeight="35" HBox.hgrow="ALWAYS"/>
+        <Button onAction="#toAddBranchView" styleClass="icon-button">
+            <graphic>
+                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/add.svg" styleClass="icon"/>
+            </graphic>
+        </Button>
+    </HBox>
+    <ScrollPane fitToWidth="true" styleClass="padded">
+        <BranchCellList fx:id="content"/>
+    </ScrollPane>
+</VBox>

@@ -7,7 +7,8 @@ import com.harleyoconnor.gitdesk.util.map
  */
 data class Branch(
     private val repository: Repository,
-    val name: String
+    val name: String,
+    val checkedOut: Boolean
 ) {
 
     fun getUpstream(): RemoteReference? {

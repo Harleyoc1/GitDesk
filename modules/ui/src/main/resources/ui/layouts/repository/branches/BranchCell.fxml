@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.BranchCellController" fx:id="root"
+      alignment="CENTER_LEFT" styleClass="cell, repository-cell" onMouseClicked="#onCellPressed" spacing="5">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <MenuItem fx:id="checkoutItem" text="%ui.button.checkout" onAction="#checkout" accelerator="Shortcut+Alt+C"/>
+                <Menu text="%ui.button.open_in">
+                    <MenuItem fx:id="openInBrowserItem" text="%ui.button.open_in.browser"/>
+                </Menu>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <SVGIcon fx:id="checkedOutIcon" prefWidth="12" prefHeight="12" path="/ui/icons/star.svg" styleClass="icon, checked-out-icon"/>
+    <Label fx:id="label" styleClass="text, heading-2"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="remoteLabel" styleClass="text, sub-body, padded-5"/>
+    <SVGIcon fx:id="remotePlatformIcon" prefWidth="16" prefHeight="16" path="/ui/icons/missing.svg" styleClass="icon"/>
+</HBox>
+

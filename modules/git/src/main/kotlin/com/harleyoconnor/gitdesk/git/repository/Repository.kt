@@ -22,7 +22,7 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
     }
 
     fun getCurrentBranch(): Branch {
-        return Branch(this, this.getCurrentBranchName())
+        return Branch(this, this.getCurrentBranchName(), true)
     }
 
     private fun getCurrentBranchName(): String {
@@ -31,6 +31,21 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .arguments("branch", "--show-current")
             .directory(directory)
             .beginAndWaitFor().result!!
+    }
+
+    fun getAllBranches(): FunctionalProcessBuilder<Array<Branch>> {
+        return FunctionalProcessBuilder {
+            val branches = mutableListOf<Branch>()
+            it.output.split("\n").forEach {
+                if (!it.contains(" -> ")) {
+                    branches.add(Branch(this, it.substring(2), it.startsWith("*")))
+                }
+            }
+            branches.toTypedArray()
+        }
+            .gitCommand()
+            .arguments("branch", "-a")
+            .directory(directory)
     }
 
     fun fetch(): ProceduralProcessBuilder {

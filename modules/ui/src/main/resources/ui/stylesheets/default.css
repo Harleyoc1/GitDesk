@@ -304,7 +304,7 @@
     -fx-border-width: 0;
 }
 
-.side-bar > .cell, .open-existing-tab .cell, .clone-tab .cell {
+.cell {
     -fx-border-color: -primary-border-color;
 }
 

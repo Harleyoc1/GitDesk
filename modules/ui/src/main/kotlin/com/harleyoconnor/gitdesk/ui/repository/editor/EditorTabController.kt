@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
 import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
 import com.harleyoconnor.gitdesk.ui.util.load
 import javafx.event.ActionEvent
@@ -80,7 +81,7 @@ class EditorTabController {
 
     @FXML
     private fun openBranchesWindow(event: ActionEvent) {
-
+        BranchesWindow(repository).open()
     }
 
 }
