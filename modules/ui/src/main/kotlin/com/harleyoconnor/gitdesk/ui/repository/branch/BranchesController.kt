@@ -8,6 +8,7 @@ import com.harleyoconnor.gitdesk.ui.util.addTopClass
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.removeBottomClass
 import com.harleyoconnor.gitdesk.ui.util.removeTopClass
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
@@ -66,8 +67,10 @@ class BranchesController {
         this.repository = repository
         repository.gitRepository.getAllBranches()
             .ifSuccessful { response ->
-                response.result?.let { branches = it }
-                displayBranches("")
+                Platform.runLater {
+                    response.result?.let { branches = it }
+                    displayBranches("")
+                }
             }
             .ifFailure {
                 LogManager.getLogger().error("Failed to get branches with error: " + it.error)
@@ -96,14 +99,16 @@ class BranchesController {
 
     private fun displayBranches(searchQuery: String) {
         branches.forEach {
-            if (matchesQuery(it.name, searchQuery)) {
+            if (searchQuery.isEmpty() || matchesQuery(it.name, searchQuery)) {
                 displayBranch(it)
             }
         }
     }
 
+    @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayBranch(branch: Branch) {
         val children = content.children
+        children.firstOrNull()?.removeTopClass()
         children.lastOrNull()?.removeBottomClass()
         content.addElement(branch, cellsCache.computeIfAbsent(branch) {
             BranchCellController.load(this, it)

@@ -157,10 +157,14 @@
     -fx-fill: -constant-color;
 }
 
-.checked-out-icon {
+.selection-cell-list > .cell .checked-out-icon, .selection-cell-list > .cell:selected .checked-out-icon {
     -fx-background-color: transparent;
 }
 
-.checked-out-icon:checked-out {
+.selection-cell-list > .cell .checked-out-icon:checked-out {
     -fx-background-color: -primary-text-color;
+}
+
+.selection-cell-list > .cell:selected .checked-out-icon:checked-out {
+    -fx-background-color: -accent-contrast-color;
 }

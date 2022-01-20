@@ -11,7 +11,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.BranchesController">
-    <HBox prefHeight="50" styleClass="tool-bar">
+    <HBox minHeight="50" prefHeight="50" styleClass="tool-bar">
         <padding>
             <Insets top="6" right="8" bottom="6" left="6"/>
         </padding>
