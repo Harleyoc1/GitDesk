@@ -52,7 +52,7 @@ class EditorTabController {
 
     fun open(fileCell: FileCellController) {
         if (fileEditorTabs.tabs.firstOrNull() !is FileTab) {
-            fileEditorTabs.tabs.removeFirst()
+            fileEditorTabs.tabs.removeFirstOrNull()
         }
         fileEditorTabs.selectionModel.select(
             getOrCreateTab(fileCell)
