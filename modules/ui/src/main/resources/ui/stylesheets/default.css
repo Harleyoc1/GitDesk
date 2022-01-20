@@ -251,17 +251,17 @@
     -fx-border-width: 0;
 }
 
-.cell.top {
+.cell:top {
     -fx-background-radius: 4px 4px 0 0;
     -fx-border-radius: 4px 4px 0 0;
 }
 
-.cell.bottom {
+.cell:bottom {
     -fx-background-radius: 0 0 4px 4px;
     -fx-border-radius: 0 0 4px 4px;
 }
 
-.cell.top.bottom {
+.cell:top:bottom {
     -fx-background-radius: 4px;
     -fx-border-radius: 4px;
 }
@@ -321,7 +321,7 @@
     -fx-border-width: 0 1px 1px 1px;
 }
 
-.repository-cell.top, .remote-cell.top, .repository-cell.top.bottom, .remote-cell.top.bottom {
+.repository-cell:top, .remote-cell:top, .repository-cell:top:bottom, .remote-cell:top:bottom {
     -fx-border-width: 1px;
 }
 

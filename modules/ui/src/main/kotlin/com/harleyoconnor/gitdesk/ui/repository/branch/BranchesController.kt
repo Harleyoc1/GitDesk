@@ -3,11 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository.branch
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
 import com.harleyoconnor.gitdesk.ui.node.BranchCellList
-import com.harleyoconnor.gitdesk.ui.util.addBottomClass
-import com.harleyoconnor.gitdesk.ui.util.addTopClass
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.util.removeBottomClass
-import com.harleyoconnor.gitdesk.ui.util.removeTopClass
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -90,10 +86,6 @@ class BranchesController {
     }
 
     private fun clearDisplayedBranches() {
-        this.content.children.forEach {
-            it.removeTopClass()
-            it.removeBottomClass()
-        }
         this.content.clear()
     }
 
@@ -107,14 +99,9 @@ class BranchesController {
 
     @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayBranch(branch: Branch) {
-        val children = content.children
-        children.firstOrNull()?.removeTopClass()
-        children.lastOrNull()?.removeBottomClass()
         content.addElement(branch, cellsCache.computeIfAbsent(branch) {
             BranchCellController.load(this, it)
         })
-        children.firstOrNull()?.addTopClass()
-        children.lastOrNull()?.addBottomClass()
     }
 
     @FXML

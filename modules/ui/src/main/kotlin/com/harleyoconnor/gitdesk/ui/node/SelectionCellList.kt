@@ -1,6 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.node
 
 import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.util.enableBottomClass
+import com.harleyoconnor.gitdesk.ui.util.enableTopClass
+import com.harleyoconnor.gitdesk.ui.util.disableBottomClass
+import com.harleyoconnor.gitdesk.ui.util.disableTopClass
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -61,14 +65,22 @@ abstract class SelectionCellList<E> : VBox() {
     }
 
     fun addElement(element: E, node: Node) {
+        children.firstOrNull()?.disableTopClass()
+        children.lastOrNull()?.disableBottomClass()
         if (children.isEmpty()) {
             this.selection = Selection(element, node)
         }
         this.elements.add(element)
         this.children.add(node)
+        children.firstOrNull()?.enableTopClass()
+        children.lastOrNull()?.enableBottomClass()
     }
 
     fun clear() {
+        this.children.forEach {
+            it.disableTopClass()
+            it.disableBottomClass()
+        }
         this.elements.clear()
         this.children.clear()
     }
