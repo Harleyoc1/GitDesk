@@ -49,6 +49,9 @@ class BranchCellController {
     private lateinit var openInBrowserItem: MenuItem
 
     @FXML
+    private lateinit var deleteItem: MenuItem
+
+    @FXML
     private lateinit var label: Label
 
     @FXML
@@ -63,6 +66,7 @@ class BranchCellController {
     @FXML
     fun initialize() {
         root.setOnContextMenuRequested {
+            deleteItem.isDisable = branch.isCheckedOut()
             contextMenu.show(root, it.screenX, it.screenY)
         }
     }
@@ -71,8 +75,11 @@ class BranchCellController {
         this.parent = parent
         this.branch = branch
         label.text = branch.name
-        checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.checkedOut)
+        checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.isCheckedOut())
         branch.getUpstream()?.let { updateUiWithUpstream(it) }
+        if (branch.isRemoteBranch()) {
+            contextMenu.items.remove(deleteItem)
+        }
     }
 
     private fun updateUiWithUpstream(upstream: RemoteBranch) {
@@ -112,6 +119,14 @@ class BranchCellController {
     private fun getBranchLink(upstream: RemoteBranch): String {
         return upstream.remote.remote.url.toURI().toString() +
                 File.separatorChar + "tree" + File.separatorChar + upstream.name
+    }
+
+    @FXML
+    private fun delete(event: ActionEvent) {
+        if (!branch.isCheckedOut()) {
+            branch.delete().begin()
+            parent.removeBranchCell(branch)
+        }
     }
 
 }

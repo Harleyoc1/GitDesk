@@ -10,10 +10,11 @@
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>
-                <MenuItem fx:id="checkoutItem" text="%ui.button.checkout" onAction="#checkout" accelerator="Shortcut+Alt+C"/>
+                <MenuItem fx:id="checkoutItem" text="%ui.button.checkout" onAction="#checkout"/>
                 <Menu text="%ui.button.open_in">
                     <MenuItem fx:id="openInBrowserItem" text="%ui.button.open_in.browser"/>
                 </Menu>
+                <MenuItem fx:id="deleteItem" text="%ui.button.delete" onAction="#delete"/>
             </items>
         </ContextMenu>
     </fx:define>

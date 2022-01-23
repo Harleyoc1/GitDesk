@@ -76,6 +76,18 @@ abstract class SelectionCellList<E> : VBox() {
         children.lastOrNull()?.enableBottomClass()
     }
 
+    fun removeElement(element: E, node: Node) {
+        children.firstOrNull()?.disableTopClass()
+        children.lastOrNull()?.disableBottomClass()
+        if (this.selection?.element == element) {
+            this.moveSelectionDown()
+        }
+        this.elements.remove(element)
+        this.children.remove(node)
+        children.firstOrNull()?.enableTopClass()
+        children.lastOrNull()?.enableBottomClass()
+    }
+
     fun clear() {
         this.children.forEach {
             it.disableTopClass()
@@ -104,21 +116,21 @@ abstract class SelectionCellList<E> : VBox() {
         /**
          * @return a new selection one down, or `null` if this is the last selection
          */
-        fun down(repositories: List<E>, nodes: List<Node>): Selection<E>? {
+        fun down(elements: List<E>, nodes: List<Node>): Selection<E>? {
             val index = index + 1
-            return if (index >= repositories.size) {
+            return if (index >= elements.size) {
                 null
-            } else Selection(repositories[index], nodes[index], index)
+            } else Selection(elements[index], nodes[index], index)
         }
 
         /**
          * @return a new selection one up, or `null` if this is the first selection
          */
-        fun up(repositories: List<E>, nodes: List<Node>): Selection<E>? {
+        fun up(elements: List<E>, nodes: List<Node>): Selection<E>? {
             val index = index - 1
             return if (index < 0) {
                 null
-            } else Selection(repositories[index], nodes[index], index)
+            } else Selection(elements[index], nodes[index], index)
         }
     }
 

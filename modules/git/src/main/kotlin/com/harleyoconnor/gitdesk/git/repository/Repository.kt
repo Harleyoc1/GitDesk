@@ -28,7 +28,7 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
 
     fun getCurrentBranch(): Branch {
         val branchName = this.getCurrentBranchName()
-        return Branch(this, branchName, true)
+        return Branch(this, branchName)
     }
 
     private fun getCurrentBranchName(): String {
@@ -40,7 +40,7 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
     }
 
     fun getBranch(name: String): Branch {
-        return Branch(this, name, getCurrentBranchName() == name)
+        return Branch(this, name)
     }
 
     fun getAllBranches(): FunctionalProcessBuilder<Array<Branch>> {
@@ -59,7 +59,7 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
     }
 
     private fun parseBranchData(verboseBranchData: String): Branch {
-        return Branch(this, verboseBranchData.substringUntil(2, ' '), verboseBranchData.startsWith("*"))
+        return Branch(this, verboseBranchData.substringUntil(2, ' '))
     }
 
     fun getRemoteBranches(): FunctionalProcessBuilder<Array<RemoteBranch>> {

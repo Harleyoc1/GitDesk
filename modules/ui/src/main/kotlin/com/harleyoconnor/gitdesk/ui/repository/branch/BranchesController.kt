@@ -106,6 +106,10 @@ class BranchesController {
         })
     }
 
+    fun removeBranchCell(branch: Branch) {
+        cellsCache[branch]?.let { content.removeElement(branch, it) }
+    }
+
     @FXML
     private fun toAddBranchView(event: ActionEvent) {
         parent.openAddView()

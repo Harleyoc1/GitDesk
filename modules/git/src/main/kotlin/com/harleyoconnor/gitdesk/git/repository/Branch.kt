@@ -11,9 +11,12 @@ import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
  */
 data class Branch(
     private val repository: Repository,
-    val name: String,
-    val checkedOut: Boolean
+    val name: String
 ) {
+
+    fun isCheckedOut(): Boolean {
+        return repository.getCurrentBranch().name == name
+    }
 
     fun checkOut(): ProceduralProcessBuilder {
         return if (isRemoteBranch()) {
@@ -40,6 +43,13 @@ data class Branch(
         return ProceduralProcessBuilder()
             .gitCommand()
             .arguments("branch", "-u", upstream.remote.name + "/" + upstream.name)
+            .directory(repository.directory)
+    }
+
+    fun delete(): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("branch", "-d", name)
             .directory(repository.directory)
     }
 

@@ -78,7 +78,7 @@ class CreateBranchController {
         var currentBranchName: String? = null
         baseField.items = FXCollections.observableArrayList(
             branches.map {
-                if (it.checkedOut) {
+                if (it.isCheckedOut()) {
                     currentBranchName = it.name
                 }
                 bases[it.name] = it
