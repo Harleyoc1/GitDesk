@@ -96,7 +96,7 @@ class RepositoryCellController {
             repository.gitRepository.getCurrentBranch().getUpstream()?.remote
         }, Application.getInstance().backgroundExecutor)
             .thenAccept {
-                queueUpdateUiForRemote(it)
+                queueUpdateUiForRemote(it?.remote)
             }
     }
 

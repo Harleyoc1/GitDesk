@@ -32,16 +32,16 @@ interface Remote {
             override val url: URL = url
         }
 
-        fun getUpstreamName(gitDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()
+        fun getUpstreamName(repoDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()
             .gitCommand()
             .arguments("config", "--get", "branch.$branchName.remote")
-            .directory(gitDirectory)
+            .directory(repoDirectory)
             .beginAndWaitFor().result
 
-        fun getUrl(gitDirectory: Directory, remoteName: String): URL? = FunctionalProcessBuilder.normal()
+        fun getUrl(repoDirectory: Directory, remoteName: String): URL? = FunctionalProcessBuilder.normal()
             .gitCommand()
             .arguments("config", "--get", "remote.$remoteName.url")
-            .directory(gitDirectory)
+            .directory(repoDirectory)
             .beginAndWaitFor().result?.map { URL(it) }
 
         private class Type(

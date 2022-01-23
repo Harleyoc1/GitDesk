@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 class ProceduralProcessBuilder : AbstractProcessBuilder<Response, ProceduralProcessBuilder>() {
 
     override fun begin(): ProceduralExecution {
-        return ProceduralExecution(builder.start(), ifSuccessAction, ifFailAction)
+        return ProceduralExecution(builder.command(), builder.start(), ifSuccessAction, ifFailAction)
     }
 
     override fun beginAndWaitFor(): Response {

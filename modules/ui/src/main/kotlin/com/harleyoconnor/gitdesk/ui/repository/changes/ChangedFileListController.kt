@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.ui.repository.changes
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.util.process.logFailure
 import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
 import javafx.application.Platform
@@ -43,6 +44,7 @@ class ChangedFileListController {
                 root.children.addAll(buildCells(response.result!!))
             }
         }
+        .ifFailure(::logFailure)
         .begin()
 
     private fun buildCells(changedFiles: Array<File>): Array<out Node> = changedFiles.stream()

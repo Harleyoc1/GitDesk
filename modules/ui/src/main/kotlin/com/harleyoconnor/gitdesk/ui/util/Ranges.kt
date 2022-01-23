@@ -16,8 +16,8 @@ fun parseIntRange(string: String): IntRange {
     }
     val separatorIndex = string.indexOf(',')
     return IntRange(
-        string.substring(1, separatorIndex).toInt(),
-        string.substring(separatorIndex + 1, string.length - 1).toInt()
+        string.substring(1, separatorIndex).ifBlank { "0" }.toInt(),
+        string.substring(separatorIndex + 1, string.length - 1).ifBlank { Int.MAX_VALUE.toString() }.toInt()
     )
 }
 

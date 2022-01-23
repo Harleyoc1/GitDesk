@@ -26,8 +26,15 @@ class BranchesWindow(val repository: LocalRepository) :
     )
 
     init {
-        stage.isAlwaysOnTop = true
-        root = BranchesController.load(repository)
+        openMainView()
+    }
+
+    fun openMainView() {
+        root = BranchesController.load(this, repository)
+    }
+
+    fun openAddView() {
+        root = CreateBranchController.load(this, repository)
     }
 
     override fun closeAndSaveResources() {

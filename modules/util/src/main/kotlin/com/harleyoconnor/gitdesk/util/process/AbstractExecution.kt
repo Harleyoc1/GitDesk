@@ -4,6 +4,7 @@ package com.harleyoconnor.gitdesk.util.process
  * @author Harley O'Connor
  */
 abstract class AbstractExecution<R : Response>(
+    protected val command: List<String>,
     protected val process: Process,
     private val ifSuccessAction: (R) -> Unit,
     private val ifFailAction: (R) -> Unit

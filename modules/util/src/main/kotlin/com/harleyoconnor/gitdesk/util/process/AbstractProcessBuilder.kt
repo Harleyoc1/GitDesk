@@ -40,9 +40,11 @@ abstract class AbstractProcessBuilder<R : Response, B : AbstractProcessBuilder<R
     }
 
     protected fun executeProcess(): Response {
+        val command = builder.command().joinToString(" ")
         val process = builder.start()
         process.waitFor()
         return Response(
+            command,
             process.exitValue(),
             process.readOutput(),
             process.readError()
@@ -50,9 +52,11 @@ abstract class AbstractProcessBuilder<R : Response, B : AbstractProcessBuilder<R
     }
 
     protected fun executeProcess(timeout: Long, unit: TimeUnit): Response {
+        val command = builder.command().joinToString(" ")
         val process = builder.start()
         process.waitFor(timeout, unit)
         return Response(
+            command,
             process.exitValue(),
             process.readOutput(),
             process.readError()

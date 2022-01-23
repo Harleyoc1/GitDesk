@@ -16,7 +16,7 @@ class FunctionalProcessBuilder<R>(
     }
 
     override fun begin(): FunctionalExecution<R> {
-        return FunctionalExecution(builder.start(), resultFunction, ifSuccessAction, ifFailAction)
+        return FunctionalExecution(builder.command(), builder.start(), resultFunction, ifSuccessAction, ifFailAction)
     }
 
     override fun beginAndWaitFor(): FunctionalResponse<R> {

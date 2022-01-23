@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository.branch
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubRemoteRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
+import com.harleyoconnor.gitdesk.git.repository.RemoteBranch
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
@@ -71,16 +72,16 @@ class BranchCellController {
         this.branch = branch
         label.text = branch.name
         checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.checkedOut)
-        branch.upstream?.let { updateUiWithUpstream(it) }
+        branch.getUpstream()?.let { updateUiWithUpstream(it) }
     }
 
-    private fun updateUiWithUpstream(upstream: Branch.Upstream) {
+    private fun updateUiWithUpstream(upstream: RemoteBranch) {
         updateUpstreamLabelAndIcon(upstream)
         openInBrowserItem.isDisable = false
         openInBrowserItem.setOnAction { openInBrowser(upstream) }
     }
 
-    private fun updateUpstreamLabelAndIcon(upstream: Branch.Upstream) {
+    private fun updateUpstreamLabelAndIcon(upstream: RemoteBranch) {
         val remote = upstream.remote.remote
         if (remote is RemoteRepository) {
             remoteLabel.text = remote.name.getFullName()
@@ -91,9 +92,7 @@ class BranchCellController {
             remoteLabel.text = remote.url.toGitDisplayUrl()
             remotePlatformIcon.setupFromSvg(SVGCache.getOrLoad(UIResource("/ui/icons/web.svg")))
         }
-        if (upstream.branch != null) {
-            remoteLabel.text += "/" + upstream.branch
-        }
+        remoteLabel.text += "/" + upstream.name
     }
 
     @FXML
@@ -106,15 +105,13 @@ class BranchCellController {
         branch.checkOut().begin()
     }
 
-    private fun openInBrowser(upstream: Branch.Upstream) {
+    private fun openInBrowser(upstream: RemoteBranch) {
         Application.getInstance().hostServices.showDocument(getBranchLink(upstream))
     }
 
-    private fun getBranchLink(upstream: Branch.Upstream): String {
+    private fun getBranchLink(upstream: RemoteBranch): String {
         return upstream.remote.remote.url.toURI().toString() +
-                if (upstream.branch != null)
-                    File.separatorChar + "tree" + File.separatorChar + upstream.branch
-                else ""
+                File.separatorChar + "tree" + File.separatorChar + upstream.name
     }
 
 }

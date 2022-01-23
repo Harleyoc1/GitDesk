@@ -109,16 +109,11 @@ abstract class ValidatedField<N : TextField>: VBox() {
 
     fun setOrAppendValidator(validator: FieldValidator) {
         this.validator = this.validator?.map {
-            it.and(validator)
+            it and validator
         } ?: validator
     }
 
     private fun contentsUpdated(text: String) {
-        if (text.isEmpty()) {
-            lastText = ""
-            updateViewWithoutError()
-            return
-        }
         if (text == lastText) {
             return
         }
