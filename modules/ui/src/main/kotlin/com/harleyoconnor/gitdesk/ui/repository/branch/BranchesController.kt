@@ -2,9 +2,9 @@ package com.harleyoconnor.gitdesk.ui.repository.branch
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
+import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.node.BranchCellList
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.window.Window
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.application.Platform
 import javafx.event.ActionEvent
@@ -108,6 +108,17 @@ class BranchesController {
 
     fun removeBranchCell(branch: Branch) {
         cellsCache[branch]?.let { content.removeElement(branch, it) }
+    }
+
+    fun updateRepositoryWindowForNewBranch() {
+        Application.getInstance().windowManager.get(parent.repository.id)?.let { window ->
+            window.close()
+            window.open()
+        }
+    }
+
+    fun closeWindow() {
+        parent.close()
     }
 
     @FXML

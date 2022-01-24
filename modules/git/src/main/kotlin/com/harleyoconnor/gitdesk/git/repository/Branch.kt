@@ -5,6 +5,8 @@ import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.map
 import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
+import com.harleyoconnor.gitdesk.util.process.logFailure
+import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor
@@ -20,7 +22,12 @@ data class Branch(
 
     fun checkOut(): ProceduralProcessBuilder {
         return if (isRemoteBranch()) {
-            repository.fetchRemoteBranch(asRemoteBranch(), name)
+            val localBranchName = name.substring(name.indexOf(2, '/') + 1)
+            repository.fetchRemoteBranch(asRemoteBranch(), localBranchName)
+                .ifSuccessful {
+                    Branch(repository, localBranchName).checkOut().beginAndWaitFor()
+                }
+                .ifFailure(::logFailure)
         } else {
             ProceduralProcessBuilder()
                 .gitCommand()

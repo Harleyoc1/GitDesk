@@ -10,8 +10,10 @@ import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.CHECKED_OUT_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.util.process.logFailure
 import com.harleyoconnor.gitdesk.util.toGitDisplayUrl
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.ContextMenu
@@ -104,12 +106,24 @@ class BranchCellController {
 
     @FXML
     private fun onCellPressed(event: MouseEvent) {
-
+        if (!event.isPrimaryButtonDown) {
+            return
+        }
+        branch.checkOut()
+            .ifSuccessful {
+                Platform.runLater {
+                    parent.closeWindow()
+                    parent.updateRepositoryWindowForNewBranch()
+                }
+            }
+            .ifFailure(::logFailure)
+            .begin()
     }
 
     @FXML
     private fun checkout(event: ActionEvent) {
-        branch.checkOut().begin()
+        branch.checkOut().ifFailure(::logFailure).begin()
+        parent.updateRepositoryWindowForNewBranch()
     }
 
     private fun openInBrowser(upstream: RemoteBranch) {

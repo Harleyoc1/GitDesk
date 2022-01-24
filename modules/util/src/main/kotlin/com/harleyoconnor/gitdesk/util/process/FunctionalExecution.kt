@@ -7,8 +7,8 @@ class FunctionalExecution<R>(
     command: List<String>,
     process: Process,
     private val resultFunction: (Response) -> R,
-    ifSuccessAction: (FunctionalResponse<R>) -> Unit,
-    ifFailAction: (FunctionalResponse<R>) -> Unit
+    ifSuccessAction: Array<(FunctionalResponse<R>) -> Unit>,
+    ifFailAction: Array<(FunctionalResponse<R>) -> Unit>
 ) : AbstractExecution<FunctionalResponse<R>>(command, process, ifSuccessAction, ifFailAction) {
 
     init {

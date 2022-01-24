@@ -6,9 +6,9 @@ package com.harleyoconnor.gitdesk.util.process
 class ProceduralExecution(
     command: List<String>,
     process: Process,
-    ifSuccessAction: (Response) -> Unit,
-    ifFailAction: (Response) -> Unit
-) : AbstractExecution<Response>(command, process, ifSuccessAction, ifFailAction) {
+    ifSuccessActions: Array<(Response) -> Unit>,
+    ifFailActions: Array<(Response) -> Unit>
+) : AbstractExecution<Response>(command, process, ifSuccessActions, ifFailActions) {
 
     init {
         process.onExit().thenRun { this.afterFinished() }

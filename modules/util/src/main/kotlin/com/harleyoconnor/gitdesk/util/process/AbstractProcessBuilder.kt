@@ -11,8 +11,8 @@ abstract class AbstractProcessBuilder<R : Response, B : AbstractProcessBuilder<R
 
     protected val builder: java.lang.ProcessBuilder = ProcessBuilder()
 
-    protected var ifSuccessAction: (R) -> Unit = {}
-    protected var ifFailAction: (R) -> Unit = {}
+    protected var ifSuccessActions: MutableList<(R) -> Unit> = mutableListOf()
+    protected var ifFailActions: MutableList<(R) -> Unit> = mutableListOf()
 
     override fun command(command: String): B {
         builder.command().add(0, command)
@@ -30,12 +30,12 @@ abstract class AbstractProcessBuilder<R : Response, B : AbstractProcessBuilder<R
     }
 
     override fun ifSuccessful(action: (R) -> Unit): B {
-        ifSuccessAction = action
+        ifSuccessActions.add(action)
         return this as B
     }
 
     override fun ifFailure(action: (R) -> Unit): B {
-        ifFailAction = action
+        ifFailActions.add(action)
         return this as B
     }
 

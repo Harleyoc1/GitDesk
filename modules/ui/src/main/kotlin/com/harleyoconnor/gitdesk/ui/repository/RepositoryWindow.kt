@@ -49,6 +49,7 @@ class RepositoryWindow(
     }
 
     override fun open() {
+        root = RepositoryController.load(this, repository)
         super.open()
         this.repository.open = true
     }
