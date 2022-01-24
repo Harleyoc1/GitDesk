@@ -4,9 +4,11 @@ import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.WindowCache
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
+import com.harleyoconnor.gitdesk.ui.window.Window
 import javafx.scene.layout.Region
 import javafx.stage.Stage
 
@@ -31,6 +33,8 @@ class RepositoryWindow(
 
     override val id: String get() = repository.id
 
+    private val branchesWindow: Window by lazy { BranchesWindow(repository) }
+
     override fun getStylesheets(): Array<Stylesheet> = arrayOf(
         Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY
     )
@@ -48,13 +52,18 @@ class RepositoryWindow(
         this.stage.isFullScreen = windowCache.fullScreen
     }
 
-    override fun open() {
+    fun refreshView() {
+        closeAndSaveResources()
         root = RepositoryController.load(this, repository)
+    }
+
+    override fun open() {
         super.open()
         this.repository.open = true
     }
 
     override fun postClose() {
+        branchesWindow.close()
         this.repository.close()
         super.postClose()
     }
@@ -79,6 +88,10 @@ class RepositoryWindow(
             this.stage.height,
             this.stage.isFullScreen
         )
+    }
+
+    fun openBranchesWindow() {
+        branchesWindow.open()
     }
 
 }

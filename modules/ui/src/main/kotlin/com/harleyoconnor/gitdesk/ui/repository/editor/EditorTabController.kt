@@ -1,9 +1,11 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
 import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.window.Window
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.*
@@ -15,14 +17,14 @@ import javafx.stage.Stage
 class EditorTabController {
 
     companion object {
-        fun load(stage: Stage, repository: LocalRepository): LoadedFXML<SplitPane, EditorTabController> {
+        fun load(window: RepositoryWindow, repository: LocalRepository): LoadedFXML<SplitPane, EditorTabController> {
             val fxml = load<SplitPane, EditorTabController>("repository/editor/Root")
-            fxml.controller.setup(stage, repository)
+            fxml.controller.setup(window, repository)
             return fxml
         }
     }
 
-    private lateinit var stage: Stage
+    private lateinit var window: RepositoryWindow
     private lateinit var repository: LocalRepository
 
     @FXML
@@ -42,8 +44,8 @@ class EditorTabController {
         fileEditorTabs.tabDragPolicy = TabPane.TabDragPolicy.REORDER
     }
 
-    fun setup(stage: Stage, repository: LocalRepository) {
-        this.stage = stage
+    fun setup(window: RepositoryWindow, repository: LocalRepository) {
+        this.window = window
         this.repository = repository
         titleLabel.text = repository.id
         branchNameLabel.text = repository.gitRepository.getCurrentBranch().name
@@ -81,7 +83,7 @@ class EditorTabController {
 
     @FXML
     private fun openBranchesWindow(event: ActionEvent) {
-        BranchesWindow(repository).open()
+        window.openBranchesWindow()
     }
 
 }

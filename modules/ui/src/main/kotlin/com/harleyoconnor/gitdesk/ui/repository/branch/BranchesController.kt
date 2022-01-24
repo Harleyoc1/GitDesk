@@ -4,6 +4,8 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.node.BranchCellList
+import com.harleyoconnor.gitdesk.ui.node.SelectionCellList
+import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.application.Platform
@@ -60,6 +62,27 @@ class BranchesController {
                 content.select()
             }
         ))
+        content.setOnElementSelected { event ->
+            checkOutBranch(event.element)
+            closeWindow()
+        }
+    }
+
+    fun checkOutBranch(branch: Branch) {
+        branch.checkOut()
+            .ifSuccessful {
+                Platform.runLater {
+                    updateRepositoryWindowForNewBranch()
+                }
+            }
+            .ifFailure(::logFailure)
+            .begin()
+    }
+
+    private fun updateRepositoryWindowForNewBranch() {
+        Application.getInstance().windowManager.get(parent.repository.id)?.let { window ->
+            (window as? RepositoryWindow)?.refreshView()
+        }
     }
 
     private fun setup(parent: BranchesWindow, repository: LocalRepository) {
@@ -108,13 +131,6 @@ class BranchesController {
 
     fun removeBranchCell(branch: Branch) {
         cellsCache[branch]?.let { content.removeElement(branch, it) }
-    }
-
-    fun updateRepositoryWindowForNewBranch() {
-        Application.getInstance().windowManager.get(parent.repository.id)?.let { window ->
-            window.close()
-            window.open()
-        }
     }
 
     fun closeWindow() {

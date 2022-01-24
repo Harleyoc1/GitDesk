@@ -10,15 +10,14 @@ import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.CHECKED_OUT_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.util.process.logFailure
 import com.harleyoconnor.gitdesk.util.toGitDisplayUrl
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
-import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
 import javafx.scene.control.MenuItem
+import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import java.io.File
@@ -106,26 +105,18 @@ class BranchCellController {
 
     @FXML
     private fun onCellPressed(event: MouseEvent) {
-        if (!event.isPrimaryButtonDown) {
-            return
+        if (event.button == MouseButton.PRIMARY) {
+            parent.checkOutBranch(branch)
+            parent.closeWindow()
         }
-        branch.checkOut()
-            .ifSuccessful {
-                Platform.runLater {
-                    parent.closeWindow()
-                    parent.updateRepositoryWindowForNewBranch()
-                }
-            }
-            .ifFailure(::logFailure)
-            .begin()
     }
 
     @FXML
     private fun checkout(event: ActionEvent) {
-        branch.checkOut().ifFailure(::logFailure).begin()
-        parent.updateRepositoryWindowForNewBranch()
+        parent.checkOutBranch(branch)
+        parent.closeWindow()
     }
-
+    
     private fun openInBrowser(upstream: RemoteBranch) {
         Application.getInstance().hostServices.showDocument(getBranchLink(upstream))
     }

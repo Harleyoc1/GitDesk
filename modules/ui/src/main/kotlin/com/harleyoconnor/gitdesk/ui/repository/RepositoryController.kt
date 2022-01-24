@@ -22,14 +22,14 @@ import javafx.scene.layout.BorderPane
 class RepositoryController {
 
     companion object {
-        fun load(parent: Window, repository: LocalRepository): BorderPane {
+        fun load(parent: RepositoryWindow, repository: LocalRepository): BorderPane {
             val fxml = load<BorderPane, RepositoryController>("repository/Root")
             fxml.controller.setup(parent, repository)
             return fxml.root
         }
     }
 
-    private lateinit var parent: Window
+    private lateinit var parent: RepositoryWindow
     private lateinit var repository: LocalRepository
 
     @FXML
@@ -62,7 +62,7 @@ class RepositoryController {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
-    private val editorTabFxml by lazy { EditorTabController.load(parent.stage, repository) }
+    private val editorTabFxml by lazy { EditorTabController.load(parent, repository) }
 
     private val editorTab: Tab by lazy {
         Tab(editorTabFxml.root) {
@@ -76,7 +76,7 @@ class RepositoryController {
         }
     }
 
-    fun setup(parent: Window, repository: LocalRepository) {
+    fun setup(parent: RepositoryWindow, repository: LocalRepository) {
         this.parent = parent
         this.repository = repository
 

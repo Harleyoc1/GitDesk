@@ -37,6 +37,11 @@ class BranchesWindow(val repository: LocalRepository) :
         root = CreateBranchController.load(this, repository)
     }
 
+    override fun open() {
+        openMainView()
+        super.open()
+    }
+
     override fun closeAndSaveResources() {
     }
 }
