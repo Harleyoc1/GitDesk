@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
 import com.harleyoconnor.gitdesk.ui.Application
-import com.harleyoconnor.gitdesk.ui.menubar.SelectableAccess
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import javafx.scene.layout.Region
 import javafx.stage.Stage
@@ -29,22 +28,22 @@ class MenuWindow(
 
     override val id: String get() = ID
 
-    private val rootFxml = MenuController.load(this)
+    private val rootView = MenuController.Loader.load(MenuController.Context(this))
 
     init {
-        root = rootFxml.root
+        root = rootView.root
     }
 
     fun selectCloneTab() {
-        rootFxml.controller.selectCloneTab()
+        rootView.controller.selectCloneTab()
     }
 
     fun selectCreateTab() {
-        rootFxml.controller.selectCreateTab()
+        rootView.controller.selectCreateTab()
     }
 
     fun selectImportLocal() {
-        rootFxml.controller.selectImportLocal()
+        rootView.controller.selectImportLocal()
     }
 
     override fun postClose() {

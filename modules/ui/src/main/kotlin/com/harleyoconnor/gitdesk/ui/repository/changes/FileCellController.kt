@@ -1,9 +1,12 @@
 package com.harleyoconnor.gitdesk.ui.repository.changes
 
+import com.harleyoconnor.gitdesk.git.repository.Repository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.getIcon
-import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnActions
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
@@ -16,19 +19,16 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class FileCellController {
+class FileCellController : ViewController<FileCellController.Context> {
 
-    companion object {
-        fun load(file: File, parent: ChangedFileListController): HBox {
-            val fxml = load<HBox, FileCellController>("repository/changes/FileCell")
-            fxml.controller.setup(file, parent)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, FileCellController, HBox>(
+        UIResource("/ui/layouts/repository/changes/FileCell.fxml")
+    )
 
+    class Context(val repository: Repository, val file: File): ViewController.Context
+
+    private lateinit var repository: Repository
     private lateinit var file: File
-
-    private lateinit var parent: ChangedFileListController
 
     @FXML
     private lateinit var cell: HBox
@@ -40,9 +40,9 @@ class FileCellController {
     @FXML
     private lateinit var nameLabel: Label
 
-    private fun setup(file: File, parent: ChangedFileListController) {
-        this.file = file
-        this.parent = parent
+    override fun setup(context: Context) {
+        this.repository = context.repository
+        this.file = context.file
 
         this.icon.setupFromSvg(file.getIcon())
         this.nameLabel.text = file.name
@@ -50,7 +50,7 @@ class FileCellController {
     }
 
     private fun addToStage() {
-        parent.repository.gitRepository.addToStage(file)
+        repository.addToStage(file)
             .ifFailure {
                 LogManager.getLogger().error("Failed to stage file `$file` with error `${it.error}`.")
             }
@@ -58,7 +58,7 @@ class FileCellController {
     }
 
     private fun removeFromStage() {
-        parent.repository.gitRepository.removeFromStage(file)
+        repository.removeFromStage(file)
             .ifFailure {
                 LogManager.getLogger().error("Failed to remove file `$file` from stage with error `${it.error}`.")
             }

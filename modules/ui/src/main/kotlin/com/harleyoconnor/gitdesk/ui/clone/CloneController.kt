@@ -2,9 +2,11 @@ package com.harleyoconnor.gitdesk.ui.clone
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.clone
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.clone.CloneWindow
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.application.Platform
 import javafx.fxml.FXML
@@ -14,24 +16,27 @@ import javafx.scene.layout.VBox
  *
  * @author Harley O'Connor
  */
-class CloneController {
+class CloneController : ViewController<CloneController.Context> {
 
-    companion object {
-        fun setup(parent: CloneWindow): VBox {
-            val fxml = load<VBox, CloneController>("clone/Root")
-            fxml.controller.setup(parent)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, CloneController, VBox>(
+        UIResource("/ui/layouts/clone/Root.fxml")
+    )
+
+    class Context(val parent: CloneWindow): ViewController.Context
 
     private lateinit var parent: CloneWindow
 
     @FXML
     private lateinit var root: VBox
 
-    private fun setup(parent: CloneWindow) {
-        this.parent = parent
-        this.root.children.add(1, RemoteCellController.loadCell(parent.remote))
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.root.children.add(
+            1,
+            RemoteCellController.Loader.load(
+                com.harleyoconnor.gitdesk.ui.menu.clone.RemoteCellController.Context(parent.remote)
+            ).root
+        )
         clone(parent.remote.url, parent.destination)
             .ifSuccessful {
                 queueOpenRepository()

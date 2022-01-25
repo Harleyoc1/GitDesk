@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.clone.CloneTab
 import com.harleyoconnor.gitdesk.ui.menu.create.CreateTabController
 import com.harleyoconnor.gitdesk.ui.menu.open.OpenTabController
@@ -10,8 +11,9 @@ import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.Tab
-import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Menu
@@ -23,17 +25,15 @@ import javafx.stage.Stage
 /**
  * @author Harley O'Connor
  */
-class MenuController {
+class MenuController : ViewController<MenuController.Context> {
 
-    companion object {
-        fun load(parent: MenuWindow): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<BorderPane, MenuController> {
-            val fxml = load<BorderPane, MenuController>("menu/Root")
-            fxml.controller.setup(parent)
-            return fxml
-        }
-    }
+    object Loader: ResourceViewLoader<Context, MenuController, BorderPane>(
+        UIResource("/ui/layouts/menu/Root.fxml")
+    )
 
-    private val openTabFxml by lazy { OpenTabController.load(this) }
+    class Context(val parent: MenuWindow): ViewController.Context
+
+    private val openTabFxml by lazy { OpenTabController.Loader.load(OpenTabController.Context(this)) }
 
     @FXML
     private lateinit var openRecentItem: Menu
@@ -63,12 +63,12 @@ class MenuController {
     }
 
     private val createTab: Tab by lazy {
-        Tab(CreateTabController.load(this)) {
+        Tab(CreateTabController.Loader.load(CreateTabController.Context(this)).root) {
             root.center = it
         }
     }
 
-    lateinit var parent: MenuWindow
+    private lateinit var parent: MenuWindow
 
     val stage: Stage get() = parent.stage
 
@@ -101,8 +101,8 @@ class MenuController {
         openTabButton.fire()
     }
 
-    fun setup(parent: MenuWindow) {
-        this.parent = parent
+    override fun setup(context: Context) {
+        this.parent = context.parent
         this.fileMenu.setWindow(parent)
         this.editMenu.useSelectableAccess(parent.selectableAccess)
         this.viewMenu.setStage(parent.stage)

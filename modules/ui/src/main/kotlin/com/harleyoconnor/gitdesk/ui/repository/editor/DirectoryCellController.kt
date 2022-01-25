@@ -1,31 +1,27 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.layout.VBox
-import java.io.File
 
 /**
  * @author Harley O'Connor
  */
-class DirectoryCellController : FileCellController() {
+class DirectoryCellController : FileCellController<DirectoryCellController.Context>() {
 
-    companion object {
-        fun load(
-            directory: Directory,
-            insetIndex: Int,
-            parent: FileListController
-        ): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, DirectoryCellController> {
-            val fxml = load<VBox, DirectoryCellController>("repository/editor/DirectoryCell")
-            fxml.controller.setup(directory, insetIndex, parent)
-            return fxml
-        }
-    }
+    object Loader : ResourceViewLoader<Context, DirectoryCellController, VBox>(
+        UIResource("/ui/layouts/repository/editor/DirectoryCell.fxml")
+    )
+
+    class Context(parent: FileListController, directory: Directory, insetIndex: Int) : FileCellController.Context(
+        parent, directory, insetIndex
+    )
 
     private lateinit var directory: Directory
 
@@ -41,12 +37,12 @@ class DirectoryCellController : FileCellController() {
 
     private lateinit var cells: Array<Node>
 
-    override fun setup(file: File, insetIndex: Int, parent: FileListController) {
-        assert(file is Directory)
-        directory = Directory(file)
-        this.insetIndex = insetIndex
-        this.cells = parent.buildCells(directory, insetIndex + 1)
-        super.setup(file, insetIndex, parent)
+    override fun setup(context: Context) {
+        assert(context.file is Directory)
+        directory = Directory(context.file)
+        this.insetIndex = context.insetIndex
+        this.cells = context.parent.buildCells(directory, insetIndex + 1)
+        super.setup(context)
     }
 
     override fun getPadding(insetIndex: Int): Insets =

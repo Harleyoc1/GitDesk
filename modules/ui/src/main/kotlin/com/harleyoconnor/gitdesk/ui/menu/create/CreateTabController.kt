@@ -2,8 +2,10 @@ package com.harleyoconnor.gitdesk.ui.menu.create
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.initRepository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.getUserHome
 import javafx.fxml.FXML
@@ -18,15 +20,13 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class CreateTabController {
+class CreateTabController : ViewController<CreateTabController.Context> {
 
-    companion object {
-        fun load(parent: MenuController): VBox {
-            val fxml = load<VBox, CreateTabController>("menu/tabs/create/Root")
-            fxml.controller.parent = parent
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, CreateTabController, VBox>(
+        UIResource("/ui/layouts/menu/tabs/create/Root.fxml")
+    )
+
+    class Context(val parent: MenuController): ViewController.Context
 
     private lateinit var parent: MenuController
 
@@ -42,6 +42,10 @@ class CreateTabController {
     @FXML
     private fun initialize() {
         clear()
+    }
+
+    override fun setup(context: Context) {
+        this.parent = context.parent
     }
 
     @FXML

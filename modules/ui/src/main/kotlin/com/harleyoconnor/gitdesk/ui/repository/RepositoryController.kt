@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
 import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
@@ -8,9 +9,9 @@ import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTabController
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
 import com.harleyoconnor.gitdesk.ui.util.Tab
-import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
-import com.harleyoconnor.gitdesk.ui.window.Window
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
@@ -19,15 +20,13 @@ import javafx.scene.layout.BorderPane
 /**
  * @author Harley O'Connor
  */
-class RepositoryController {
+class RepositoryController : ViewController<RepositoryController.Context> {
 
-    companion object {
-        fun load(parent: RepositoryWindow, repository: LocalRepository): BorderPane {
-            val fxml = load<BorderPane, RepositoryController>("repository/Root")
-            fxml.controller.setup(parent, repository)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, RepositoryController, BorderPane>(
+        UIResource("/ui/layouts/repository/Root.fxml")
+    )
+
+    class Context(val parent: RepositoryWindow, val repository: LocalRepository): ViewController.Context
 
     private lateinit var parent: RepositoryWindow
     private lateinit var repository: LocalRepository
@@ -62,7 +61,14 @@ class RepositoryController {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
-    private val editorTabFxml by lazy { EditorTabController.load(parent, repository) }
+    private val editorTabFxml by lazy {
+        EditorTabController.Loader.load(
+            EditorTabController.Context(
+                parent,
+                repository
+            )
+        )
+    }
 
     private val editorTab: Tab by lazy {
         Tab(editorTabFxml.root) {
@@ -71,14 +77,14 @@ class RepositoryController {
     }
 
     private val changesTab: Tab by lazy {
-        Tab(ChangesTabController.load(parent.stage, repository)) {
+        Tab(ChangesTabController.Loader.load(ChangesTabController.Context(parent.stage, repository)).root) {
             root.center = it
         }
     }
 
-    fun setup(parent: RepositoryWindow, repository: LocalRepository) {
-        this.parent = parent
-        this.repository = repository
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.repository = context.repository
 
         fileMenu.setWindow(parent)
         editMenu.useSelectableAccess(parent.selectableAccess)

@@ -3,7 +3,6 @@ package com.harleyoconnor.gitdesk.ui.menu.clone
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.clone.CloneController
-import com.harleyoconnor.gitdesk.ui.util.loadLayout
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.scene.layout.Region
@@ -24,7 +23,7 @@ class CloneWindow(val remote: Remote, val destination: Directory) :
         get() = "Clone"
 
     init {
-        this.root = CloneController.setup(this)
+        this.root = CloneController.Loader.load(CloneController.Context(this)).root
     }
 
     override fun closeAndSaveResources() {

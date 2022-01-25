@@ -4,11 +4,13 @@ import com.harleyoconnor.gitdesk.data.account.AccountCreationData
 import com.harleyoconnor.gitdesk.data.account.RegistrationData
 import com.harleyoconnor.gitdesk.data.account.VerificationData
 import com.harleyoconnor.gitdesk.data.account.registerRequest
-import com.harleyoconnor.gitdesk.ui.node.PasswordField
-import com.harleyoconnor.gitdesk.ui.node.TextField
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import com.harleyoconnor.gitdesk.ui.form.validation.MatchesFieldValidator
+import com.harleyoconnor.gitdesk.ui.node.PasswordField
+import com.harleyoconnor.gitdesk.ui.node.TextField
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -21,15 +23,13 @@ import javafx.scene.layout.VBox
  *
  * @author Harley O'Connor
  */
-class RegisterController {
+class RegisterController : ViewController<RegisterController.Context> {
 
-    companion object {
-        fun load(parent: RegisterTab): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, RegisterController> {
-            val fxml = load<VBox, RegisterController>("account/tabs/register/Root")
-            fxml.controller.parent = parent
-            return fxml
-        }
-    }
+    object Loader: ResourceViewLoader<Context, RegisterController, VBox>(
+        UIResource("/ui/layouts/account/tabs/register/Root.fxml")
+    )
+
+    class Context(val parent: RegisterTab): ViewController.Context
 
     private lateinit var parent: RegisterTab
 
@@ -53,6 +53,10 @@ class RegisterController {
         confirmPasswordField.setOrAppendValidator(
             MatchesFieldValidator({ passwordField.getTextUnvalidated() }, "validation.password_mismatch")
         )
+    }
+
+    override fun setup(context: Context) {
+        parent = context.parent
     }
 
     fun clearAllFields() {

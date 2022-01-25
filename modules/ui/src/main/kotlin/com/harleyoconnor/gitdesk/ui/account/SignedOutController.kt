@@ -1,10 +1,12 @@
 package com.harleyoconnor.gitdesk.ui.account
 
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.account.register.RegisterTab
 import com.harleyoconnor.gitdesk.ui.account.signin.SignInController
 import com.harleyoconnor.gitdesk.ui.util.Tab
-import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
 import javafx.scene.layout.BorderPane
@@ -13,15 +15,13 @@ import javafx.scene.layout.BorderPane
  *
  * @author Harley O'Connor
  */
-class SignedOutController {
+class SignedOutController : ViewController<SignedOutController.Context> {
 
-    companion object {
-        fun load(parent: AccountWindow): BorderPane {
-            val fxml = load<BorderPane, SignedOutController>("account/SignedOutRoot")
-            fxml.controller.setup(parent)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, SignedOutController, BorderPane>(
+        UIResource("/ui/layouts/account/SignedOutRoot.fxml")
+    )
+
+    class Context(val parent: AccountWindow): ViewController.Context
 
     private lateinit var parent: AccountWindow
 
@@ -41,13 +41,13 @@ class SignedOutController {
     }
 
     private val signInTab: Tab by lazy {
-        Tab(SignInController.load(this.parent::toSignedInView)) {
+        Tab(SignInController.Loader.load(SignInController.Context(this.parent::toSignedInView)).root) {
             root.center = it
         }
     }
 
-    fun setup(parent: AccountWindow) {
-        this.parent = parent
+    override fun setup(context: Context) {
+        this.parent = context.parent
         registerTabButton.setOnSelected {
             registerTab.open()
         }

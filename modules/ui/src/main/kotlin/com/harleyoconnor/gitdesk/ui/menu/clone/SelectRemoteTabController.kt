@@ -7,7 +7,8 @@ import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.RemoteCellList
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.application.Platform.runLater
@@ -29,15 +30,13 @@ import java.util.concurrent.Executors
 /**
  * @author Harley O'Connor
  */
-class SelectRemoteTabController {
+class SelectRemoteTabController : ViewController<SelectRemoteTabController.Context> {
 
-    companion object {
-        fun load(parent: CloneTab): VBox {
-            val fxml = load<VBox, SelectRemoteTabController>("menu/tabs/clone/SelectRemote")
-            fxml.controller.parent = parent
-            return fxml.root
-        }
-    }
+    object Loader : ResourceViewLoader<Context, SelectRemoteTabController, VBox>(
+        UIResource("/ui/layouts/menu/tabs/clone/SelectRemote.fxml")
+    )
+
+    class Context(val parent: CloneTab) : ViewController.Context
 
     private lateinit var parent: CloneTab
 
@@ -84,6 +83,10 @@ class SelectRemoteTabController {
                 platform.cellLoader.loadMore(this, searchBar.text)
             }
         }
+    }
+
+    override fun setup(context: Context) {
+        this.parent = context.parent
     }
 
     @FXML
@@ -199,7 +202,12 @@ class SelectRemoteTabController {
 
         private fun displayResults(controller: SelectRemoteTabController, remotes: Array<RemoteRepository>) {
             remotes.map {
-                it to SelectableRemoteCellController.loadCell(controller.parent, it)
+                it to SelectableRemoteCellController.Loader.load(
+                    SelectableRemoteCellController.Context(
+                        controller.parent,
+                        it
+                    )
+                ).root
             }.forEach {
                 controller.content.addElement(it.first, it.second)
             }
@@ -236,7 +244,12 @@ class SelectRemoteTabController {
                 val remote = Remote.getRemote(url)
                 controller.content.addElement(
                     remote,
-                    SelectableRemoteCellController.loadCell(controller.parent, remote)
+                    SelectableRemoteCellController.Loader.load(
+                        SelectableRemoteCellController.Context(
+                            controller.parent,
+                            remote
+                        )
+                    ).root
                 )
             }
         }

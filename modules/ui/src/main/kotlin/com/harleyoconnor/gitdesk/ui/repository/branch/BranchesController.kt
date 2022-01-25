@@ -2,10 +2,10 @@ package com.harleyoconnor.gitdesk.ui.repository.branch
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
-import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.BranchCellList
-import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.application.Platform
 import javafx.event.ActionEvent
@@ -23,15 +23,13 @@ import org.fxmisc.wellbehaved.event.Nodes
  *
  * @author Harley O'Connor
  */
-class BranchesController {
+class BranchesController : ViewController<BranchesController.Context> {
 
-    companion object {
-        fun load(parent: BranchesWindow, repository: LocalRepository): VBox {
-            val fxml = load<VBox, BranchesController>("repository/branches/Root")
-            fxml.controller.setup(parent, repository)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, BranchesController, VBox>(
+        UIResource("/ui/layouts/repository/branches/Root.fxml")
+    )
+
+    class Context(val parent: BranchesWindow, val repository: LocalRepository): ViewController.Context
 
     private lateinit var parent: BranchesWindow
 
@@ -67,9 +65,9 @@ class BranchesController {
         }
     }
 
-    private fun setup(parent: BranchesWindow, repository: LocalRepository) {
-        this.parent = parent
-        this.repository = repository
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.repository = context.repository
         repository.gitRepository.getAllBranches()
             .ifSuccessful { response ->
                 Platform.runLater {
@@ -130,7 +128,7 @@ class BranchesController {
     @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayBranch(branch: Branch) {
         content.addElement(branch, cellsCache.computeIfAbsent(branch) {
-            BranchCellController.load(this, it)
+            BranchCellController.Loader.load(BranchCellController.Context(this, it)).root
         })
     }
 

@@ -40,7 +40,7 @@ class RepositoryWindow(
     )
 
     init {
-        root = RepositoryController.load(this, repository)
+        root = RepositoryController.Loader.load(RepositoryController.Context(this, repository)).root
         loadFromWindowCache(repository.windowCache)
     }
 
@@ -54,7 +54,7 @@ class RepositoryWindow(
 
     fun refreshView() {
         closeAndSaveResources()
-        root = RepositoryController.load(this, repository)
+        root = RepositoryController.Loader.load(RepositoryController.Context(this, repository)).root
     }
 
     override fun open() {

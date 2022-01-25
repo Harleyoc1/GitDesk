@@ -32,15 +32,19 @@ class BranchesWindow(val parent: RepositoryWindow, val repository: LocalReposito
     }
 
     fun openMainView() {
-        root = BranchesController.load(this, repository)
+        root = BranchesController.Loader.load(BranchesController.Context(this, repository)).root
     }
 
     fun openAddView() {
-        root = CreateBranchController.load(this, repository.gitRepository)
+        root = CreateBranchController.Loader.load(
+            CreateBranchController.Context(this, repository.gitRepository)
+        ).root
     }
 
     fun openEditView(branch: Branch) {
-        root = EditBranchController.load(this, repository.gitRepository, branch)
+        root = EditBranchController.Loader.load(
+            EditBranchController.Context(this, repository.gitRepository, branch)
+        ).root
     }
 
     fun refreshRepositoryWindow() {

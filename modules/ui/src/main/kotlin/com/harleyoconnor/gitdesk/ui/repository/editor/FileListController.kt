@@ -1,7 +1,9 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.forFirst
 import com.harleyoconnor.gitdesk.util.forSecond
@@ -18,29 +20,26 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class FileListController {
+class FileListController : ViewController<FileListController.Context> {
 
-    companion object {
-        fun load(repository: LocalRepository, parent: EditorTabController): VBox {
-            val fxml = load<VBox, FileListController>("repository/editor/FileList")
-            fxml.controller.setup(repository, parent)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, FileListController, VBox>(
+        UIResource("/ui/layouts/repository/editor/FileList.fxml")
+    )
 
-    private lateinit var repository: LocalRepository
+    class Context(val parent: EditorTabController, val repository: LocalRepository): ViewController.Context
 
     private lateinit var parent: EditorTabController
+    private lateinit var repository: LocalRepository
 
     @FXML
     private lateinit var root: VBox
 
-    var selected: FileCellController? = null
+    var selected: FileCellController<*>? = null
         set(value) {
             selected?.deselect()
             field = value
         }
-    var open: FileCellController? = null
+    var open: FileCellController<*>? = null
         set(value) {
             open?.displayAsClosed()
             field = value
@@ -51,9 +50,9 @@ class FileListController {
 
     private val directoryCells: MutableMap<Directory, DirectoryCellController> = mutableMapOf()
 
-    private fun setup(repository: LocalRepository, parent: EditorTabController) {
-        this.repository = repository
-        this.parent = parent
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.repository = context.repository
         root.children.addAll(buildCells(repository.directory))
         showLastOpenDirectories()
     }
@@ -89,7 +88,9 @@ class FileListController {
     }
 
     private fun createDirectoryCell(directory: Directory, insetIndex: Int): VBox {
-        val cell = DirectoryCellController.load(directory, insetIndex, this)
+        val cell = DirectoryCellController.Loader.load(
+            DirectoryCellController.Context(this, directory, insetIndex)
+        )
         directoryCells[directory] = cell.controller
         return cell.root
     }
@@ -100,7 +101,9 @@ class FileListController {
         }.toTypedArray()
     }
 
-    private fun createFileCell(file: File, insetIndex: Int) = FileCellController.load(file, insetIndex, this)
+    private fun createFileCell(file: File, insetIndex: Int) = FileCellController.Loader.load(
+        FileCellController.Context(this, file, insetIndex)
+    ).root
 
     private fun shouldShowFile(file: File): Boolean = !file.name.startsWith(".")
 

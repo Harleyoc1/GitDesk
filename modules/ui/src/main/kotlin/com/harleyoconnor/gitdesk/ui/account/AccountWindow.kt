@@ -4,7 +4,6 @@ import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
-import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Region
 import javafx.stage.Stage
 
@@ -19,7 +18,9 @@ class AccountWindow(stage: Stage) :
     override val minHeight: Double get() = 400.0
     override val id: String get() = "Account"
 
-    private val signedOutView: BorderPane by lazy { SignedOutController.load(this) }
+    private val signedOutView by lazy {
+        SignedOutController.Loader.load(SignedOutController.Context(this))
+    }
 
     init {
         val session = Session.load()
@@ -32,11 +33,11 @@ class AccountWindow(stage: Stage) :
     }
 
     fun toSignedInView(account: Account) {
-        root = SignedInController.load(this, account)
+        root = SignedInController.Loader.load(SignedInController.Context(this, account)).root
     }
 
     fun toSignedOutView() {
-        root = signedOutView
+        root = signedOutView.root
     }
 
     override fun closeAndSaveResources() {

@@ -3,10 +3,12 @@ package com.harleyoconnor.gitdesk.ui.account.signin
 import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.AccountCredentials
 import com.harleyoconnor.gitdesk.data.account.signInRequest
+import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import com.harleyoconnor.gitdesk.ui.node.PasswordField
 import com.harleyoconnor.gitdesk.ui.node.TextField
-import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -20,15 +22,13 @@ import java.util.function.Consumer
  *
  * @author Harley O'Connor
  */
-class SignInController {
+class SignInController : ViewController<SignInController.Context> {
 
-    companion object {
-        fun load(openSignedInViewCallback: Consumer<Account>): VBox {
-            val fxml = load<VBox, SignInController>("account/tabs/sign_in/Root")
-            fxml.controller.openSignedInViewCallback = openSignedInViewCallback
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, SignInController, VBox>(
+        UIResource("/ui/layouts/account/tabs/sign_in/Root.fxml")
+    )
+
+    class Context(val openSignedInViewCallback: Consumer<Account>): ViewController.Context
 
     private lateinit var openSignedInViewCallback: Consumer<Account>
 
@@ -39,6 +39,10 @@ class SignInController {
 
     @FXML
     private lateinit var signInButton: Button
+
+    override fun setup(context: Context) {
+        openSignedInViewCallback = context.openSignedInViewCallback
+    }
 
     @FXML
     private fun clear() {

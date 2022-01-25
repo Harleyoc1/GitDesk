@@ -9,7 +9,8 @@ import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.CHECKED_OUT_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.toGitDisplayUrl
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.event.ActionEvent
@@ -26,15 +27,13 @@ import java.io.File
  *
  * @author Harley O'Connor
  */
-class BranchCellController {
+class BranchCellController : ViewController<BranchCellController.Context> {
 
-    companion object {
-        fun load(parent: BranchesController, branch: Branch): HBox {
-            val fxml = load<HBox, BranchCellController>("repository/branches/BranchCell")
-            fxml.controller.setup(parent, branch)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, BranchCellController, HBox>(
+        UIResource("/ui/layouts/repository/branches/BranchCell.fxml")
+    )
+
+    class Context(val parent: BranchesController, val branch: Branch): ViewController.Context
 
     private lateinit var parent: BranchesController
 
@@ -75,9 +74,9 @@ class BranchCellController {
         }
     }
 
-    private fun setup(parent: BranchesController, branch: Branch) {
-        this.parent = parent
-        this.branch = branch
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.branch = context.branch
         label.text = branch.name
         checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.isCheckedOut())
         branch.getUpstream()?.let { updateUiWithUpstream(it) }

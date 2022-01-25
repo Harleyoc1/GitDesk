@@ -4,9 +4,11 @@ import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.RepositoryCellList
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
@@ -23,15 +25,13 @@ import org.fxmisc.wellbehaved.event.Nodes
 /**
  * @author Harley O'Connor
  */
-class OpenTabController {
+class OpenTabController : ViewController<OpenTabController.Context> {
 
-    companion object {
-        fun load(parent: MenuController): com.harleyoconnor.gitdesk.ui.util.LoadedFXML<VBox, OpenTabController> {
-            val fxml = load<VBox, OpenTabController>("menu/tabs/open/Root")
-            fxml.controller.setup(parent)
-            return fxml
-        }
-    }
+    object Loader: ResourceViewLoader<Context, OpenTabController, VBox>(
+        UIResource("/ui/layouts/menu/tabs/open/Root.fxml")
+    )
+
+    class Context(val parent: MenuController): ViewController.Context
 
     private lateinit var parent: MenuController
 
@@ -59,8 +59,8 @@ class OpenTabController {
         ))
     }
 
-    private fun setup(parent: MenuController) {
-        this.parent = parent
+    override fun setup(context: Context) {
+        this.parent = context.parent
         this.content.setOnElementSelected { event ->
             parent.openRepository(event.element)
         }
@@ -107,7 +107,7 @@ class OpenTabController {
     @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayRepository(repository: LocalRepository) {
         content.addElement(repository, cellsCache.computeIfAbsent(repository) {
-            RepositoryCellController.loadCell(this.parent, it)
+            RepositoryCellController.Loader.load(RepositoryCellController.Context(this.parent, it)).root
         })
     }
 

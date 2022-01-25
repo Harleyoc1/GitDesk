@@ -1,9 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.Data
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.CodeEditor
-import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.fxml.FXML
 import javafx.scene.Node
 import java.io.File
@@ -11,23 +12,21 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class FileEditorController {
+class FileEditorController : ViewController<FileEditorController.Context> {
 
-    companion object {
-        fun load(file: File): LoadedFXML<Node, FileEditorController> {
-            val fxml = load<Node, FileEditorController>("repository/editor/FileEditor")
-            fxml.controller.setFile(file)
-            return fxml
-        }
-    }
+    object Loader: ResourceViewLoader<Context, FileEditorController, Node>(
+        UIResource("/ui/layouts/repository/editor/FileEditor.fxml")
+    )
+
+    class Context(val file: File): ViewController.Context
 
     private lateinit var file: File
 
     @FXML
     private lateinit var editor: CodeEditor
 
-    private fun setFile(file: File) {
-        this.file = file
+    override fun setup(context: Context) {
+        this.file = context.file
         loadFromFile(file)
     }
 

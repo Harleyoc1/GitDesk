@@ -1,11 +1,12 @@
 package com.harleyoconnor.gitdesk.ui.repository.branch
 
 import com.harleyoconnor.gitdesk.git.repository.Branch
-import com.harleyoconnor.gitdesk.git.repository.RemoteBranch
 import com.harleyoconnor.gitdesk.git.repository.Repository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.form.validation.BranchNameAvailableValidator
 import com.harleyoconnor.gitdesk.ui.node.TextField
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -17,15 +18,13 @@ import javafx.scene.layout.VBox
 /**
  * @author Harley O'Connor
  */
-class EditBranchController {
+class EditBranchController : ViewController<EditBranchController.Context> {
 
-    companion object {
-        fun load(parent: BranchesWindow, repository: Repository, branch: Branch): VBox {
-            val fxml = load<VBox, EditBranchController>("repository/branches/EditBranch")
-            fxml.controller.setup(parent, repository, branch)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, EditBranchController, VBox>(
+        UIResource("/ui/layouts/repository/branches/EditBranch.fxml")
+    )
+
+    class Context(val parent: BranchesWindow, val repository: Repository, val branch: Branch): ViewController.Context
 
     private lateinit var parent: BranchesWindow
 
@@ -40,12 +39,12 @@ class EditBranchController {
     @FXML
     private lateinit var saveButton: Button
 
-    private fun setup(parent: BranchesWindow, repository: Repository, branch: Branch) {
-        this.parent = parent
-        this.branch = branch
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.branch = context.branch
         nameField.setText(branch.name)
-        nameField.setOrAppendValidator(BranchNameAvailableValidator(repository, branch.name))
-        upstreamField.loadChoices(repository)
+        nameField.setOrAppendValidator(BranchNameAvailableValidator(context.repository, branch.name))
+        upstreamField.loadChoices(context.repository)
         selectCurrentUpstream()
     }
 

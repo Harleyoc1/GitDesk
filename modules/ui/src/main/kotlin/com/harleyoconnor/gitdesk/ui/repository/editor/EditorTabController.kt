@@ -1,28 +1,28 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
-import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
-import com.harleyoconnor.gitdesk.ui.util.LoadedFXML
-import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.window.Window
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.control.*
-import javafx.stage.Stage
+import javafx.scene.control.Label
+import javafx.scene.control.ScrollPane
+import javafx.scene.control.SplitPane
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
 
 /**
  * @author Harley O'Connor
  */
-class EditorTabController {
+class EditorTabController : ViewController<EditorTabController.Context> {
 
-    companion object {
-        fun load(window: RepositoryWindow, repository: LocalRepository): LoadedFXML<SplitPane, EditorTabController> {
-            val fxml = load<SplitPane, EditorTabController>("repository/editor/Root")
-            fxml.controller.setup(window, repository)
-            return fxml
-        }
-    }
+    object Loader: ResourceViewLoader<Context, EditorTabController, SplitPane>(
+        UIResource("/ui/layouts/repository/editor/Root.fxml")
+    )
+
+    class Context(val window: RepositoryWindow, val repository: LocalRepository): ViewController.Context
 
     private lateinit var window: RepositoryWindow
     private lateinit var repository: LocalRepository
@@ -44,15 +44,15 @@ class EditorTabController {
         fileEditorTabs.tabDragPolicy = TabPane.TabDragPolicy.REORDER
     }
 
-    fun setup(window: RepositoryWindow, repository: LocalRepository) {
-        this.window = window
-        this.repository = repository
+    override fun setup(context: Context) {
+        this.window = context.window
+        this.repository = context.repository
         titleLabel.text = repository.id
         branchNameLabel.text = repository.gitRepository.getCurrentBranch().name
-        fileList.content = FileListController.load(repository, this)
+        fileList.content = FileListController.Loader.load(FileListController.Context(this, repository)).root
     }
 
-    fun open(fileCell: FileCellController) {
+    fun open(fileCell: FileCellController<*>) {
         if (fileEditorTabs.tabs.firstOrNull() !is FileTab) {
             fileEditorTabs.tabs.removeFirstOrNull()
         }
@@ -68,15 +68,15 @@ class EditorTabController {
         }
     }
 
-    private fun getOrCreateTab(fileCell: FileCellController) = fileEditorTabs.tabs.stream()
+    private fun getOrCreateTab(fileCell: FileCellController<*>) = fileEditorTabs.tabs.stream()
         .filter { it is FileTab && it.getFile() == fileCell.file }
         .findFirst()
         .orElseGet {
             createTab(fileCell)
         }
 
-    private fun createTab(file: FileCellController): Tab {
-        val tab = FileTabController.load(fileEditorTabs, file)
+    private fun createTab(file: FileCellController<*>): Tab {
+        val tab = FileTabController.Loader.load(FileTabController.Context(fileEditorTabs, file)).root
         fileEditorTabs.tabs.add(tab)
         return tab
     }

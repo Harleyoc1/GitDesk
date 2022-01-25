@@ -10,7 +10,8 @@ import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.getIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.getUserHome
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
@@ -29,17 +30,17 @@ import java.util.concurrent.CompletableFuture
  *
  * @author Harley O'Connor
  */
-class RepositoryCellController {
+class RepositoryCellController : ViewController<RepositoryCellController.Context> {
 
-    companion object {
-        fun loadCell(menuController: MenuController, repository: LocalRepository): HBox {
-            val fxml = load<HBox, RepositoryCellController>("menu/tabs/open/RepositoryCell")
-            fxml.controller.setup(menuController, repository)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, RepositoryCellController, HBox>(
+        UIResource("/ui/layouts/menu/tabs/open/RepositoryCell.fxml")
+    )
 
-    private lateinit var menuController: MenuController
+    class Context(val menuView: MenuController, val repository: LocalRepository): ViewController.Context
+
+    private lateinit var menuView: MenuController
+
+    private lateinit var repository: LocalRepository
 
     @FXML
     private lateinit var root: HBox
@@ -62,8 +63,6 @@ class RepositoryCellController {
     @FXML
     lateinit var remotePlatformIcon: SVGIcon
 
-    private lateinit var repository: LocalRepository
-
     private var remote: Remote? = null
 
     @FXML
@@ -73,9 +72,9 @@ class RepositoryCellController {
         }
     }
 
-    private fun setup(menuController: MenuController, repository: LocalRepository) {
-        this.menuController = menuController
-        this.repository = repository
+    override fun setup(context: Context) {
+        this.menuView = context.menuView
+        this.repository = context.repository
         label.text = repository.id
         updateUiWithPath(repository.directory.path)
         queueUpdateUiWithRemoteTask(repository)
@@ -146,7 +145,7 @@ class RepositoryCellController {
 
     @FXML
     private fun openRepository() {
-        menuController.openRepository(repository)
+        menuView.openRepository(repository)
     }
 
     @FXML

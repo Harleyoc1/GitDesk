@@ -15,18 +15,20 @@ class CloneTab(
     val window: MenuWindow, setter: (Node) -> Unit
 ) : Tab(Region(), setter) {
 
-    private val remoteSelectionView = SelectRemoteTabController.load(this)
+    private val remoteSelectionView = SelectRemoteTabController.Loader.load(
+        SelectRemoteTabController.Context(this)
+    )
 
     init {
-        this.node = remoteSelectionView
+        this.node = remoteSelectionView.root
     }
 
     fun returnToRemoteSelection() {
-        this.node = remoteSelectionView
+        this.node = remoteSelectionView.root
     }
 
     fun toLocationSelection(remote: Remote) {
-        this.node = SelectLocationController.load(remote, this)
+        this.node = SelectLocationController.Loader.load(SelectLocationController.Context(this, remote)).root
     }
 
 }

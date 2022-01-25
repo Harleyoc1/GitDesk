@@ -2,9 +2,11 @@ package com.harleyoconnor.gitdesk.ui.account.register
 
 import com.harleyoconnor.gitdesk.data.account.VerificationData
 import com.harleyoconnor.gitdesk.data.account.verifyEmailRequest
-import com.harleyoconnor.gitdesk.ui.node.TextField
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
+import com.harleyoconnor.gitdesk.ui.node.TextField
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -16,16 +18,13 @@ import javafx.scene.layout.VBox
 /**
  * @author Harley O'Connor
  */
-class VerifyEmailController {
+class VerifyEmailController : ViewController<VerifyEmailController.Context> {
 
-    companion object {
-        fun load(parent: RegisterTab, verificationData: VerificationData): VBox {
-            val fxml = load<VBox, VerifyEmailController>("account/tabs/register/VerifyEmail")
-            fxml.controller.parent = parent
-            fxml.controller.verificationData = verificationData
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, VerifyEmailController, VBox>(
+        UIResource("/ui/layouts/account/tabs/register/VerifyEmail.fxml")
+    )
+
+    class Context(val parent: RegisterTab, val verificationData: VerificationData): ViewController.Context
 
     private lateinit var parent: RegisterTab
 
@@ -36,6 +35,11 @@ class VerifyEmailController {
 
     @FXML
     private lateinit var verificationCodeField: TextField
+
+    override fun setup(context: Context) {
+        parent = context.parent
+        verificationData = context.verificationData
+    }
 
     @FXML
     private fun cancel(event: ActionEvent) {

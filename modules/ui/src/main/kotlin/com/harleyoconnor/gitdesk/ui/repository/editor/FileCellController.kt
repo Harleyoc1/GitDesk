@@ -1,10 +1,12 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import javafx.event.ActionEvent
 import javafx.event.Event
@@ -20,18 +22,15 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-open class FileCellController {
+open class FileCellController<C : FileCellController.Context> : ViewController<C> {
 
-    companion object {
-        fun load(file: File, insetIndex: Int, parent: FileListController): HBox {
-            val fxml = load<HBox, FileCellController>("repository/editor/FileCell")
-            fxml.controller.setup(file, insetIndex, parent)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, FileCellController<Context>, HBox>(
+        UIResource("/ui/layouts/repository/editor/FileCell.fxml")
+    )
+
+    open class Context(val parent: FileListController, val file: File, val insetIndex: Int): ViewController.Context
 
     lateinit var file: File
-
     protected lateinit var parent: FileListController
 
     @FXML
@@ -46,10 +45,10 @@ open class FileCellController {
     @FXML
     private lateinit var nameLabel: Label
 
-    internal open fun setup(file: File, insetIndex: Int, parent: FileListController) {
-        this.file = file
-        this.parent = parent
-        cell.padding = getPadding(insetIndex)
+    override fun setup(context: C) {
+        this.file = context.file
+        this.parent = context.parent
+        cell.padding = getPadding(context.insetIndex)
         icon.setupFromSvg(file.getIcon())
         nameLabel.text = file.name
     }

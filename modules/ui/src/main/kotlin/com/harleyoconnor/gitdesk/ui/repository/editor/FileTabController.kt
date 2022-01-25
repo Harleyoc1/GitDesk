@@ -1,8 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.repository.editor
 
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.util.getIcon
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.getUserHome
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import javafx.event.ActionEvent
@@ -15,19 +17,16 @@ import javafx.scene.control.Tooltip
 /**
  * @author Harley O'Connor
  */
-class FileTabController {
+class FileTabController : ViewController<FileTabController.Context> {
 
-    companion object {
-        fun load(parent: TabPane, fileCell: FileCellController): Tab {
-            val fxml = load<Tab, FileTabController>("repository/editor/FileTab")
-            fxml.controller.setup(parent, fileCell)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, FileTabController, Tab>(
+        UIResource("/ui/layouts/repository/editor/FileTab.fxml")
+    )
+
+    class Context(val parent: TabPane, val fileCell: FileCellController<*>): ViewController.Context
 
     private lateinit var parent: TabPane
-
-    private lateinit var fileCell: FileCellController
+    private lateinit var fileCell: FileCellController<*>
 
     @FXML
     private lateinit var root: FileTab
@@ -41,12 +40,12 @@ class FileTabController {
     @FXML
     private lateinit var label: Label
 
-    private fun setup(parent: TabPane, fileCell: FileCellController) {
-        this.parent = parent
-        this.fileCell = fileCell
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.fileCell = context.fileCell
 
         val file = fileCell.file
-        val fileEditorFxml = FileEditorController.load(file)
+        val fileEditorFxml = FileEditorController.Loader.load(FileEditorController.Context(file))
         this.root.setFile(file)
         this.root.setSaveCallback {
             fileEditorFxml.controller.saveToFile()

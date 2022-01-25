@@ -1,9 +1,11 @@
 package com.harleyoconnor.gitdesk.ui.repository.branch
 
 import com.harleyoconnor.gitdesk.git.repository.Repository
+import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.form.validation.BranchNameAvailableValidator
 import com.harleyoconnor.gitdesk.ui.node.TextField
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -15,15 +17,13 @@ import javafx.scene.layout.VBox
 /**
  * @author Harley O'Connor
  */
-class CreateBranchController {
+class CreateBranchController : ViewController<CreateBranchController.Context> {
 
-    companion object {
-        fun load(parent: BranchesWindow, repository: Repository): VBox {
-            val fxml = load<VBox, CreateBranchController>("repository/branches/CreateBranch")
-            fxml.controller.setup(parent, repository)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, CreateBranchController, VBox>(
+        UIResource("/ui/layouts/repository/branches/CreateBranch.fxml")
+    )
+
+    class Context(val parent: BranchesWindow, val repository: Repository): ViewController.Context
 
     private lateinit var parent: BranchesWindow
 
@@ -41,9 +41,9 @@ class CreateBranchController {
     @FXML
     private lateinit var createButton: Button
 
-    private fun setup(parent: BranchesWindow, repository: Repository) {
-        this.parent = parent
-        this.repository = repository
+    override fun setup(context: Context) {
+        this.parent = context.parent
+        this.repository = context.repository
         baseField.loadChoices(repository)
         baseField.selectionModel.selectFirst()
         nameField.setOrAppendValidator(BranchNameAvailableValidator(repository))

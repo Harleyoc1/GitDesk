@@ -15,14 +15,14 @@ class RegisterTab(
     setter: (Node) -> Unit
 ) : Tab(Region(), setter) {
 
-    private val rootView = RegisterController.load(this)
+    private val rootView = RegisterController.Loader.load(RegisterController.Context(this))
 
     init {
         this.node = rootView.root
     }
 
     fun toEmailVerification(verificationData: VerificationData) {
-        this.node = VerifyEmailController.load(this, verificationData)
+        this.node = VerifyEmailController.Loader.load(VerifyEmailController.Context(this, verificationData)).root
     }
 
     fun toRoot() {

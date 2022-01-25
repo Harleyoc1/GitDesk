@@ -1,7 +1,9 @@
 package com.harleyoconnor.gitdesk.ui.repository.changes
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.fxml.FXML
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.SplitPane
@@ -11,15 +13,13 @@ import javafx.stage.Stage
 /**
  * @author Harley O'Connor
  */
-class ChangesTabController {
+class ChangesTabController : ViewController<ChangesTabController.Context> {
 
-    companion object {
-        fun load(stage: Stage, repository: LocalRepository): SplitPane {
-            val fxml = load<SplitPane, ChangesTabController>("repository/changes/Root")
-            fxml.controller.setup(stage, repository)
-            return fxml.root
-        }
-    }
+    object Loader: ResourceViewLoader<Context, ChangesTabController, SplitPane>(
+        UIResource("/ui/layouts/repository/changes/Root.fxml")
+    )
+
+    class Context(val stage: Stage, val repository: LocalRepository): ViewController.Context
 
     private lateinit var stage: Stage
     private lateinit var repository: LocalRepository
@@ -38,10 +38,12 @@ class ChangesTabController {
         fileTabs.tabDragPolicy = TabPane.TabDragPolicy.REORDER
     }
 
-    fun setup(stage: Stage, repository: LocalRepository) {
-        this.stage = stage
-        this.repository = repository
-        fileList.content = ChangedFileListController.load(repository, this)
+    override fun setup(context: Context) {
+        this.stage = context.stage
+        this.repository = context.repository
+        fileList.content = ChangedFileListController.Loader.load(
+            ChangedFileListController.Context(this, repository)
+        ).root
     }
 
 

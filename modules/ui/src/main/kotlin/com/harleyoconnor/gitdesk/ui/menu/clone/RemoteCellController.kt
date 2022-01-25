@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -16,7 +17,9 @@ import java.io.FileNotFoundException
 /**
  * @author Harley O'Connor
  */
-abstract class RemoteCellController {
+abstract class RemoteCellController<C : RemoteCellController.Context> : ViewController<C> {
+
+    open class Context(val remote: Remote): ViewController.Context
 
     @FXML
     protected lateinit var root: HBox
@@ -39,11 +42,11 @@ abstract class RemoteCellController {
         }
     }
 
-    protected open fun initializeWithRemote(remote: Remote) {
-        this.remote = remote
-        if (remote is RemoteRepository) {
-            label.text = remote.name.getFullName()
-            tryGetLanguageIconPath(remote)?.let {
+    override fun setup(context: C) {
+        this.remote = context.remote
+        if (context.remote is RemoteRepository) {
+            label.text = context.remote.name.getFullName()
+            tryGetLanguageIconPath(context.remote)?.let {
                 languageIcon.setPath(it)
             }
         } else {
