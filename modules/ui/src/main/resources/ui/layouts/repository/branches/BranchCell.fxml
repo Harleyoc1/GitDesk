@@ -14,6 +14,7 @@
                 <Menu text="%ui.button.open_in">
                     <MenuItem fx:id="openInBrowserItem" text="%ui.button.open_in.browser"/>
                 </Menu>
+                <MenuItem fx:id="editItem" text="%ui.button.edit" onAction="#edit"/>
                 <MenuItem fx:id="deleteItem" text="%ui.button.delete" onAction="#delete"/>
             </items>
         </ContextMenu>

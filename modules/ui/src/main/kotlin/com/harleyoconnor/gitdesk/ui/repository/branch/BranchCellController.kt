@@ -50,6 +50,9 @@ class BranchCellController {
     private lateinit var openInBrowserItem: MenuItem
 
     @FXML
+    private lateinit var editItem: MenuItem
+
+    @FXML
     private lateinit var deleteItem: MenuItem
 
     @FXML
@@ -79,6 +82,7 @@ class BranchCellController {
         checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.isCheckedOut())
         branch.getUpstream()?.let { updateUiWithUpstream(it) }
         if (branch.isRemoteBranch()) {
+            contextMenu.items.remove(editItem)
             contextMenu.items.remove(deleteItem)
         }
     }
@@ -116,7 +120,7 @@ class BranchCellController {
         parent.checkOutBranch(branch)
         parent.closeWindow()
     }
-    
+
     private fun openInBrowser(upstream: RemoteBranch) {
         Application.getInstance().hostServices.showDocument(getBranchLink(upstream))
     }
@@ -124,6 +128,11 @@ class BranchCellController {
     private fun getBranchLink(upstream: RemoteBranch): String {
         return upstream.remote.remote.url.toURI().toString() +
                 File.separatorChar + "tree" + File.separatorChar + upstream.name
+    }
+
+    @FXML
+    private fun edit(event: ActionEvent) {
+        parent.openEditBranchView(branch)
     }
 
     @FXML

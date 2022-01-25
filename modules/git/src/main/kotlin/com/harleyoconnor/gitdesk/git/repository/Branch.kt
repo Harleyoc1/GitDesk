@@ -16,6 +16,15 @@ data class Branch(
     val name: String
 ) {
 
+    fun rename(name: String): FunctionalProcessBuilder<Branch> {
+        return FunctionalProcessBuilder {
+            Branch(repository, name)
+        }
+            .gitCommand()
+            .arguments("branch", "-m", this.name, name)
+            .directory(repository.directory)
+    }
+
     fun isCheckedOut(): Boolean {
         return repository.getCurrentBranch().name == name
     }

@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.validation
+package com.harleyoconnor.gitdesk.ui.form.validation
 
 import com.harleyoconnor.gitdesk.ui.util.parseIntRange
 import com.harleyoconnor.gitdesk.util.Patterns

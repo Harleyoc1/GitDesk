@@ -7,7 +7,7 @@ import com.harleyoconnor.gitdesk.util.Directory
  *
  * @author Harley O'Connor
  */
-class RemoteReference(
+data class RemoteReference(
     val name: String,
     val remote: Remote
 ) {

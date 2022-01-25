@@ -30,6 +30,14 @@ interface Remote {
 
         private fun createRawRemote(url: URL): Remote = object : Remote {
             override val url: URL = url
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+
+                other as Remote
+                return other.url != other.url
+            }
         }
 
         fun getUpstreamName(repoDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()

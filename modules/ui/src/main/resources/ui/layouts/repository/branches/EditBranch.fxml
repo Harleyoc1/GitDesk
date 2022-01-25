@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.harleyoconnor.gitdesk.ui.node.TextField?>
+<?import com.harleyoconnor.gitdesk.ui.repository.branch.UpstreamChoiceBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import com.harleyoconnor.gitdesk.ui.node.TextField?>
-<?import javafx.scene.control.Label?>
-<?import com.harleyoconnor.gitdesk.ui.repository.branch.UpstreamChoiceBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.CreateBranchController" onKeyPressed="#keyPressed"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.EditBranchController" onKeyPressed="#keyPressed"
       spacing="8">
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
-    <VBox spacing="8" styleClass="field">
-        <Label text="%ui.repository.branches.create.field.base.label" styleClass="label"/>
-        <ChoiceBox fx:id="baseField" prefHeight="35" maxWidth="Infinity"/>
-    </VBox>
-    <TextField fx:id="nameField" labelText="%ui.repository.branches.create.field.name.label" fieldPrefHeight="35"
+    <TextField fx:id="nameField" labelText="%ui.repository.branches.edit.field.name.label" fieldPrefHeight="35"
                validation="Length [1,]"
                styleClass="field"/> <!-- BranchNameAvailableValidator added programmatically -->
     <VBox spacing="8" styleClass="field">
@@ -32,7 +27,6 @@
             <Insets bottom="5"/>
         </VBox.margin>
         <Button onAction="#cancel" text="%ui.button.cancel"/>
-        <Button onAction="#createAndCheckout" text="%ui.button.create_and_checkout"/>
-        <Button fx:id="createButton" onAction="#create" text="%ui.button.create" styleClass="enter-button"/>
+        <Button fx:id="saveButton" onAction="#save" text="%ui.button.save" styleClass="enter-button"/>
     </HBox>
 </VBox>

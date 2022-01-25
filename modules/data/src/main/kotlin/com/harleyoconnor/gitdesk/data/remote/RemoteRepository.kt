@@ -35,7 +35,7 @@ interface RemoteRepository : Remote {
 
     // TODO: Issues and PRs
 
-    class Name(
+    data class Name(
         val ownerName: String,
         val repositoryName: String
     ) {

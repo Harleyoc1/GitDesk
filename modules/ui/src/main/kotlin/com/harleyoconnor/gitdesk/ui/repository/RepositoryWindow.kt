@@ -33,7 +33,7 @@ class RepositoryWindow(
 
     override val id: String get() = repository.id
 
-    private val branchesWindow: Window by lazy { BranchesWindow(repository) }
+    private val branchesWindow: Window by lazy { BranchesWindow(this, repository) }
 
     override fun getStylesheets(): Array<Stylesheet> = arrayOf(
         Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY

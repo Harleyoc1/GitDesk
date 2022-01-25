@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.validation
+package com.harleyoconnor.gitdesk.ui.form.validation
 
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import java.util.regex.Pattern

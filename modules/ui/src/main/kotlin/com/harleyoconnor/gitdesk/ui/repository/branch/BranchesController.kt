@@ -4,7 +4,6 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.node.BranchCellList
-import com.harleyoconnor.gitdesk.ui.node.SelectionCellList
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.process.logFailure
@@ -72,17 +71,11 @@ class BranchesController {
         branch.checkOut()
             .ifSuccessful {
                 Platform.runLater {
-                    updateRepositoryWindowForNewBranch()
+                    parent.refreshRepositoryWindow()
                 }
             }
             .ifFailure(::logFailure)
             .begin()
-    }
-
-    private fun updateRepositoryWindowForNewBranch() {
-        Application.getInstance().windowManager.get(parent.repository.id)?.let { window ->
-            (window as? RepositoryWindow)?.refreshView()
-        }
     }
 
     private fun setup(parent: BranchesWindow, repository: LocalRepository) {
@@ -135,6 +128,10 @@ class BranchesController {
 
     fun closeWindow() {
         parent.close()
+    }
+
+    fun openEditBranchView(branch: Branch) {
+        parent.openEditView(branch)
     }
 
     @FXML
