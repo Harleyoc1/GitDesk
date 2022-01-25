@@ -30,18 +30,26 @@ interface Remote {
 
         private fun createRawRemote(url: URL): Remote = object : Remote {
             override val url: URL = url
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+
+                other as Remote
+                return other.url != other.url
+            }
         }
 
-        fun getUpstreamName(gitDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()
+        fun getUpstreamName(repoDirectory: Directory, branchName: String): String? = FunctionalProcessBuilder.normal()
             .gitCommand()
             .arguments("config", "--get", "branch.$branchName.remote")
-            .directory(gitDirectory)
+            .directory(repoDirectory)
             .beginAndWaitFor().result
 
-        fun getUrl(gitDirectory: Directory, remoteName: String): URL? = FunctionalProcessBuilder.normal()
+        fun getUrl(repoDirectory: Directory, remoteName: String): URL? = FunctionalProcessBuilder.normal()
             .gitCommand()
             .arguments("config", "--get", "remote.$remoteName.url")
-            .directory(gitDirectory)
+            .directory(repoDirectory)
             .beginAndWaitFor().result?.map { URL(it) }
 
         private class Type(

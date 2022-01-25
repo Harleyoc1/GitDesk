@@ -4,7 +4,7 @@ import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.node.DirectoryField
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.validation.FieldValidator
+import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.getUserHome
 import javafx.fxml.FXML

@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.validation
+package com.harleyoconnor.gitdesk.ui.form.validation
 
 import kotlin.jvm.Throws
 

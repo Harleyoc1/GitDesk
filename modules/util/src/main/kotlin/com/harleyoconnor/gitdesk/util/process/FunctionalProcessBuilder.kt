@@ -16,7 +16,13 @@ class FunctionalProcessBuilder<R>(
     }
 
     override fun begin(): FunctionalExecution<R> {
-        return FunctionalExecution(builder.start(), resultFunction, ifSuccessAction, ifFailAction)
+        return FunctionalExecution(
+            builder.command(),
+            builder.start(),
+            resultFunction,
+            ifSuccessActions.toTypedArray(),
+            ifFailActions.toTypedArray()
+        )
     }
 
     override fun beginAndWaitFor(): FunctionalResponse<R> {
@@ -39,13 +45,17 @@ class FunctionalProcessBuilder<R>(
 
     private fun succeeded(response: Response): FunctionalResponse<R> {
         val functionalResponse = response.map(resultFunction)
-        ifSuccessAction(functionalResponse)
+        ifSuccessActions.forEach {
+            it(functionalResponse)
+        }
         return functionalResponse
     }
 
     private fun failed(response: Response): FunctionalResponse<R> {
         val functionalResponse: FunctionalResponse<R> = response.map { null }
-        ifFailAction(functionalResponse)
+        ifFailActions.forEach {
+            it(functionalResponse)
+        }
         return functionalResponse
     }
 

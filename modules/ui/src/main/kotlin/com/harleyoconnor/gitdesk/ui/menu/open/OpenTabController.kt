@@ -6,7 +6,7 @@ import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.RepositoryCellList
-import com.harleyoconnor.gitdesk.ui.util.*
+import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.Directory
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
@@ -93,10 +93,6 @@ class OpenTabController {
     }
 
     private fun clearDisplayedRepositories() {
-        this.content.children.forEach {
-            it.removeTopClass()
-            it.removeBottomClass()
-        }
         this.content.clear()
     }
 
@@ -110,13 +106,9 @@ class OpenTabController {
 
     @Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
     private fun displayRepository(repository: LocalRepository) {
-        val children = content.children
-        children.lastOrNull()?.removeBottomClass()
         content.addElement(repository, cellsCache.computeIfAbsent(repository) {
             RepositoryCellController.loadCell(this.parent, it)
         })
-        children.firstOrNull()?.addTopClass()
-        children.lastOrNull()?.addBottomClass()
     }
 
     private fun matchesQuery(name: String, query: String) = name.lowercase().contains(query.lowercase())

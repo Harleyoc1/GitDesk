@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.validation
+package com.harleyoconnor.gitdesk.ui.form.validation
 
 /**
  * A field validator that checks multiple child [validators]. This will only deem the text valid if all child validators

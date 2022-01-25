@@ -1,6 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.node
 
 import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.util.enableBottomClass
+import com.harleyoconnor.gitdesk.ui.util.enableTopClass
+import com.harleyoconnor.gitdesk.ui.util.disableBottomClass
+import com.harleyoconnor.gitdesk.ui.util.disableTopClass
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -61,14 +65,34 @@ abstract class SelectionCellList<E> : VBox() {
     }
 
     fun addElement(element: E, node: Node) {
+        children.firstOrNull()?.disableTopClass()
+        children.lastOrNull()?.disableBottomClass()
         if (children.isEmpty()) {
             this.selection = Selection(element, node)
         }
         this.elements.add(element)
         this.children.add(node)
+        children.firstOrNull()?.enableTopClass()
+        children.lastOrNull()?.enableBottomClass()
+    }
+
+    fun removeElement(element: E, node: Node) {
+        children.firstOrNull()?.disableTopClass()
+        children.lastOrNull()?.disableBottomClass()
+        if (this.selection?.element == element) {
+            this.moveSelectionDown()
+        }
+        this.elements.remove(element)
+        this.children.remove(node)
+        children.firstOrNull()?.enableTopClass()
+        children.lastOrNull()?.enableBottomClass()
     }
 
     fun clear() {
+        this.children.forEach {
+            it.disableTopClass()
+            it.disableBottomClass()
+        }
         this.elements.clear()
         this.children.clear()
     }
@@ -92,21 +116,21 @@ abstract class SelectionCellList<E> : VBox() {
         /**
          * @return a new selection one down, or `null` if this is the last selection
          */
-        fun down(repositories: List<E>, nodes: List<Node>): Selection<E>? {
+        fun down(elements: List<E>, nodes: List<Node>): Selection<E>? {
             val index = index + 1
-            return if (index >= repositories.size) {
+            return if (index >= elements.size) {
                 null
-            } else Selection(repositories[index], nodes[index], index)
+            } else Selection(elements[index], nodes[index], index)
         }
 
         /**
          * @return a new selection one up, or `null` if this is the first selection
          */
-        fun up(repositories: List<E>, nodes: List<Node>): Selection<E>? {
+        fun up(elements: List<E>, nodes: List<Node>): Selection<E>? {
             val index = index - 1
             return if (index < 0) {
                 null
-            } else Selection(repositories[index], nodes[index], index)
+            } else Selection(elements[index], nodes[index], index)
         }
     }
 

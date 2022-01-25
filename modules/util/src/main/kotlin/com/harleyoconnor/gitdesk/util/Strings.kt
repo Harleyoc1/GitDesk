@@ -1,5 +1,7 @@
 package com.harleyoconnor.gitdesk.util
 
+import java.net.URL
+
 /**
  * Finds the index of the `n`th [occurrence] of the specified [char] in this sequence.
  *
@@ -21,4 +23,11 @@ fun CharSequence.indexOf(occurrence: Int, char: Char): Int {
     }
 
     return -1
+}
+
+fun URL.toGitDisplayUrl(): String =
+    this.toExternalForm().substringAfter('@').removePrefix("https://").removeSuffix(".git")
+
+fun String.substringUntil(startIndex: Int, endChar: Char): String {
+    return substring(startIndex).substringBefore(endChar)
 }

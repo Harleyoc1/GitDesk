@@ -4,9 +4,10 @@ package com.harleyoconnor.gitdesk.util.process
  * @author Harley O'Connor
  */
 abstract class AbstractExecution<R : Response>(
+    protected val command: List<String>,
     protected val process: Process,
-    private val ifSuccessAction: (R) -> Unit,
-    private val ifFailAction: (R) -> Unit
+    private val ifSuccessActions: Array<(R) -> Unit>,
+    private val ifFailActions: Array<(R) -> Unit>
 ) : Execution<R> {
 
     private var response: R? = null
@@ -24,10 +25,14 @@ abstract class AbstractExecution<R : Response>(
     }
 
     protected fun succeeded() {
-        ifSuccessAction(response!!)
+        ifSuccessActions.forEach {
+            it(response!!)
+        }
     }
 
     protected fun failed() {
-        ifFailAction(response!!)
+        ifFailActions.forEach {
+            it(response!!)
+        }
     }
 }

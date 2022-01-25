@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.git.clone
 import com.harleyoconnor.gitdesk.ui.menu.clone.CloneWindow
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.util.load
+import com.harleyoconnor.gitdesk.util.process.logFailure
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.layout.VBox
@@ -35,9 +36,7 @@ class CloneController {
             .ifSuccessful {
                 queueOpenRepository()
             }
-            .ifFailure {
-                // TODO: Display error
-            }
+            .ifFailure(::logFailure)
             .begin()
     }
 

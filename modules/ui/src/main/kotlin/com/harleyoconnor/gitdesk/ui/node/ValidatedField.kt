@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.node
 
 import com.harleyoconnor.gitdesk.ui.style.ERROR_PSEUDO_CLASS
-import com.harleyoconnor.gitdesk.ui.validation.FieldValidator
-import com.harleyoconnor.gitdesk.ui.validation.FieldValidators
+import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
+import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidators
 import com.harleyoconnor.gitdesk.util.concurrent.VariableTaskExecutor
 import com.harleyoconnor.gitdesk.util.map
 import javafx.application.Platform
@@ -18,7 +18,7 @@ import java.time.Duration
  *
  * @author Harley O'Connor
  */
-abstract class ValidatedField<N : TextField>: VBox() {
+abstract class ValidatedField<N : TextField> : VBox() {
 
     companion object {
         @JvmStatic
@@ -32,8 +32,10 @@ abstract class ValidatedField<N : TextField>: VBox() {
 
     @FXML
     private lateinit var label: Label
+
     @FXML
     private lateinit var errorLabel: Label
+
     @FXML
     private lateinit var field: N
 
@@ -53,6 +55,17 @@ abstract class ValidatedField<N : TextField>: VBox() {
     fun getText(): String {
         this.validator?.validate(field.text)
         return field.text
+    }
+
+    /**
+     * @return the field's current text, or `null` if it is invalid
+     */
+    fun getTextOrNull(): String? {
+        return try {
+            getText()
+        } catch (e: FieldValidator.InvalidException) {
+            null
+        }
     }
 
     fun getTextUnvalidated(): String {
@@ -109,16 +122,11 @@ abstract class ValidatedField<N : TextField>: VBox() {
 
     fun setOrAppendValidator(validator: FieldValidator) {
         this.validator = this.validator?.map {
-            it.and(validator)
+            it and validator
         } ?: validator
     }
 
     private fun contentsUpdated(text: String) {
-        if (text.isEmpty()) {
-            lastText = ""
-            updateViewWithoutError()
-            return
-        }
         if (text == lastText) {
             return
         }

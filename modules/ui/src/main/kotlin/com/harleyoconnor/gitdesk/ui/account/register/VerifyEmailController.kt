@@ -4,7 +4,7 @@ import com.harleyoconnor.gitdesk.data.account.VerificationData
 import com.harleyoconnor.gitdesk.data.account.verifyEmailRequest
 import com.harleyoconnor.gitdesk.ui.node.TextField
 import com.harleyoconnor.gitdesk.ui.util.load
-import com.harleyoconnor.gitdesk.ui.validation.FieldValidator
+import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
