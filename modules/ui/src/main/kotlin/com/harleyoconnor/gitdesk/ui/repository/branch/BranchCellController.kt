@@ -82,6 +82,7 @@ class BranchCellController {
         checkedOutIcon.pseudoClassStateChanged(CHECKED_OUT_PSEUDO_CLASS, branch.isCheckedOut())
         branch.getUpstream()?.let { updateUiWithUpstream(it) }
         if (branch.isRemoteBranch()) {
+            updateUiWithUpstream(branch.asRemoteBranch())
             contextMenu.items.remove(editItem)
             contextMenu.items.remove(deleteItem)
         }

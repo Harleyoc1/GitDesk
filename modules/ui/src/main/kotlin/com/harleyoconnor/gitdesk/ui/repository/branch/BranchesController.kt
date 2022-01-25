@@ -67,17 +67,6 @@ class BranchesController {
         }
     }
 
-    fun checkOutBranch(branch: Branch) {
-        branch.checkOut()
-            .ifSuccessful {
-                Platform.runLater {
-                    parent.refreshRepositoryWindow()
-                }
-            }
-            .ifFailure(::logFailure)
-            .begin()
-    }
-
     private fun setup(parent: BranchesWindow, repository: LocalRepository) {
         this.parent = parent
         this.repository = repository
@@ -90,6 +79,29 @@ class BranchesController {
             }
             .ifFailure(::logFailure)
             .begin()
+    }
+
+    fun checkOutBranch(branch: Branch) {
+        branch.checkOut()
+            .ifSuccessful {
+                Platform.runLater {
+                    parent.refreshRepositoryWindow()
+                }
+            }
+            .ifFailure(::logFailure)
+            .begin()
+    }
+
+    fun removeBranchCell(branch: Branch) {
+        cellsCache[branch]?.let { content.removeElement(branch, it) }
+    }
+
+    fun closeWindow() {
+        parent.close()
+    }
+
+    fun openEditBranchView(branch: Branch) {
+        parent.openEditView(branch)
     }
 
     @FXML
@@ -120,18 +132,6 @@ class BranchesController {
         content.addElement(branch, cellsCache.computeIfAbsent(branch) {
             BranchCellController.load(this, it)
         })
-    }
-
-    fun removeBranchCell(branch: Branch) {
-        cellsCache[branch]?.let { content.removeElement(branch, it) }
-    }
-
-    fun closeWindow() {
-        parent.close()
-    }
-
-    fun openEditBranchView(branch: Branch) {
-        parent.openEditView(branch)
     }
 
     @FXML
