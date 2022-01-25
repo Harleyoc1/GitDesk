@@ -1,17 +1,13 @@
 package com.harleyoconnor.gitdesk.ui.repository.branch
 
-import com.harleyoconnor.gitdesk.git.repository.Branch
 import com.harleyoconnor.gitdesk.git.repository.Repository
 import com.harleyoconnor.gitdesk.ui.form.validation.BranchNameAvailableValidator
 import com.harleyoconnor.gitdesk.ui.node.TextField
 import com.harleyoconnor.gitdesk.ui.util.load
 import com.harleyoconnor.gitdesk.util.process.logFailure
-import javafx.application.Platform
-import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
-import javafx.scene.control.ChoiceBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
@@ -34,7 +30,7 @@ class CreateBranchController {
     private lateinit var repository: Repository
 
     @FXML
-    private lateinit var baseField: ChoiceBox<String>
+    private lateinit var baseField: BranchChoiceBox
 
     @FXML
     private lateinit var nameField: TextField
@@ -45,35 +41,14 @@ class CreateBranchController {
     @FXML
     private lateinit var createButton: Button
 
-    private val bases: MutableMap<String, Branch> = mutableMapOf()
-
     private fun setup(parent: BranchesWindow, repository: Repository) {
         this.parent = parent
         this.repository = repository
-        repository.getAllBranches().ifSuccessful {
-            it.result?.let { branches ->
-                Platform.runLater {
-                    populateBaseField(branches)
-                }
-            }
-        }.ifFailure(::logFailure).begin()
+        baseField.loadChoices(repository)
+        baseField.selectionModel.selectFirst()
+        nameField.setOrAppendValidator(BranchNameAvailableValidator(repository))
         upstreamField.loadChoices(this.repository)
         upstreamField.selectionModel.selectFirst()
-        nameField.setOrAppendValidator(BranchNameAvailableValidator(repository))
-    }
-
-    private fun populateBaseField(branches: Array<Branch>) {
-        var currentBranchName: String? = null
-        baseField.items = FXCollections.observableArrayList(
-            branches.map {
-                if (it.isCheckedOut()) {
-                    currentBranchName = it.name
-                }
-                bases[it.name] = it
-                return@map it.name
-            }
-        )
-        baseField.selectionModel.select(currentBranchName)
     }
 
     @FXML
@@ -98,18 +73,14 @@ class CreateBranchController {
 
     private fun createBranch(name: String) {
         val selection = upstreamField.selectionModel.selectedItem.get()
+        val baseBranch = baseField.selectionModel.selectedItem.get()!!
         if (selection != null) {
-            repository.createBranchWithUpstream(getBaseSelection(), name, selection)
+            repository.createBranchWithUpstream(baseBranch, name, selection)
                 .ifFailure(::logFailure)
                 .beginAndWaitFor()
         } else {
-            repository.createBranch(getBaseSelection(), name).ifFailure(::logFailure).beginAndWaitFor()
+            repository.createBranch(baseBranch, name).ifFailure(::logFailure).beginAndWaitFor()
         }
-    }
-
-    private fun getBaseSelection(): Branch {
-        val branchName = baseField.selectionModel.selectedItem
-        return bases[branchName]!!
     }
 
     fun keyPressed(event: KeyEvent) {
