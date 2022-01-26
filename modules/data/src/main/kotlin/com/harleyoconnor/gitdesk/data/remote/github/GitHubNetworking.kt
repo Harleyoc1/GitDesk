@@ -1,8 +1,10 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.remote.License
+import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.PlatformNetworking
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
@@ -39,18 +41,23 @@ object GitHubNetworking : PlatformNetworking {
     private fun getRemoteRepositoryUrl(username: String, repository: String) = "$url/repos/$username/$repository"
 
     override fun getRemoteRepository(url: URL): RemoteRepository? {
-        val name = extractRepositoryName(url)
+        val name = extractRemoteRepositoryName(url)
         return getRemoteRepository(name.ownerName, name.repositoryName)
     }
 
-    private fun extractRepositoryName(url: URL): RemoteRepository.Name {
+    override fun getRemoteRepositoryReference(url: URL): RemoteRepositoryReference {
+        val name = extractRemoteRepositoryName(url)
+        return RemoteRepositoryReference(url, Platform.GITHUB, name)
+    }
+
+    private fun extractRemoteRepositoryName(url: URL): RemoteRepository.Name {
         assert(repositoryUrlPattern.matcher(url.toExternalForm()).matches()) {
             IllegalArgumentException("$url not a valid GitHub repository URL.")
         }
-        return extractRepositoryName(url.toExternalForm().removeSuffix("/").removeSuffix(".git"))
+        return extractRemoteRepositoryName(url.toExternalForm().removeSuffix("/").removeSuffix(".git"))
     }
 
-    private fun extractRepositoryName(url: String): RemoteRepository.Name {
+    private fun extractRemoteRepositoryName(url: String): RemoteRepository.Name {
         val indexOfFourthSlash = url.indexOf(4, '/')
         val username = url.substring(url.indexOf(3, '/') + 1, indexOfFourthSlash)
         val repository = url.substring(indexOfFourthSlash + 1)
@@ -68,7 +75,7 @@ object GitHubNetworking : PlatformNetworking {
 
     fun registerTypes() {
         Remote.registerType(repositoryUrlPattern) { url ->
-            getRemoteRepository(url)
+            getRemoteRepositoryReference(url)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu.clone
 
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
@@ -43,10 +44,16 @@ abstract class RemoteCellController<C : RemoteCellController.Context> : ViewCont
     }
 
     override fun setup(context: C) {
-        this.remote = context.remote
-        if (context.remote is RemoteRepository) {
-            label.text = context.remote.name.getFullName()
-            tryGetLanguageIconPath(context.remote)?.let {
+        this.remote = if (context.remote is RemoteRepositoryReference)
+            context.remote.getRemoteRepository() ?: context.remote
+        else context.remote
+        this.setContentFor(remote)
+    }
+
+    private fun setContentFor(remote: Remote) {
+        if (remote is RemoteRepository) {
+            label.text = remote.name.getFullName()
+            tryGetLanguageIconPath(remote)?.let {
                 languageIcon.setPath(it)
             }
         } else {

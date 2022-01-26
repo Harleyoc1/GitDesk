@@ -13,6 +13,8 @@ interface PlatformNetworking {
 
     fun getRemoteRepository(url: URL): RemoteRepository?
 
+    fun getRemoteRepositoryReference(url: URL): RemoteRepositoryReference?
+
     fun getLicense(key: String): License?
 
 }

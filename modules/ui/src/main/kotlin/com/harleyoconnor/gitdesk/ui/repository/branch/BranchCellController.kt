@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository.branch
 
+import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubRemoteRepository
 import com.harleyoconnor.gitdesk.git.repository.Branch
 import com.harleyoconnor.gitdesk.git.repository.RemoteBranch
@@ -95,10 +97,10 @@ class BranchCellController : ViewController<BranchCellController.Context> {
 
     private fun updateUpstreamLabelAndIcon(upstream: RemoteBranch) {
         val remote = upstream.remote.remote
-        if (remote is RemoteRepository) {
+        if (remote is RemoteRepositoryReference) {
             remoteLabel.text = remote.name.getFullName()
-            if (remote is GitHubRemoteRepository) {
-                remotePlatformIcon.setupFromSvg(remote.getIcon())
+            if (remote.platform == Platform.GITHUB) {
+                remotePlatformIcon.setupFromSvg(remote.platform.getIcon())
             }
         } else {
             remoteLabel.text = remote.url.toGitDisplayUrl()

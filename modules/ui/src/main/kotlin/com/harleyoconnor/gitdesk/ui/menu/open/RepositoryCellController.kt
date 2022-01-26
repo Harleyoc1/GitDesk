@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.menu.open
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.data.remote.github.GitHubRemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.Platform.GITHUB
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
@@ -119,10 +119,10 @@ class RepositoryCellController : ViewController<RepositoryCellController.Context
     }
 
     private fun updateRemoteLabelAndIcon(remote: Remote) {
-        if (remote is RemoteRepository) {
+        if (remote is RemoteRepositoryReference) {
             remoteLabel.text = remote.name.getFullName()
-            if (remote is GitHubRemoteRepository) {
-                remotePlatformIcon.setupFromSvg(remote.getIcon())
+            if (remote.platform == GITHUB) {
+                remotePlatformIcon.setupFromSvg(remote.platform.getIcon())
             }
         } else {
             remoteLabel.text = remote.url.toExternalForm().substringAfter('@')
