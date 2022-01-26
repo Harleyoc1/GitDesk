@@ -3,6 +3,9 @@ package com.harleyoconnor.gitdesk.ui.account
 import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.account.link.GitHubLinkTab
+import com.harleyoconnor.gitdesk.ui.util.Tab
+import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
@@ -24,7 +27,6 @@ class SignedInController : ViewController<SignedInController.Context> {
     class Context(val parent: AccountWindow, val account: Account): ViewController.Context
 
     private lateinit var parent: AccountWindow
-
     private lateinit var account: Account
 
     @FXML
@@ -34,23 +36,25 @@ class SignedInController : ViewController<SignedInController.Context> {
     private lateinit var detailsTabButton: RadioButton
 
     @FXML
+    private lateinit var gitHubLinkTabButton: RadioButton
+
+    private val gitHubLinkTab: Tab by lazy {
+        GitHubLinkTab(account) {
+            root.center = it
+        }
+    }
+
+    @FXML
     private lateinit var usernameLabel: Label
 
     override fun setup(context: Context) {
         this.parent = context.parent
         this.account = context.account
         usernameLabel.text = account.username
+        gitHubLinkTabButton.setOnSelected {
+            gitHubLinkTab.open()
+        }
         detailsTabButton.fire()
-    }
-
-    @FXML
-    private fun openDetailsTab(event: ActionEvent) {
-
-    }
-
-    @FXML
-    private fun openGitHubTab(event: ActionEvent) {
-
     }
 
     @FXML

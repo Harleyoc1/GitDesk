@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
-import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.License
 import com.squareup.moshi.Json

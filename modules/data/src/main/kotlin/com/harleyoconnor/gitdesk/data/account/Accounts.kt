@@ -188,6 +188,77 @@ private fun createDeleteSessionRequest(session: Session): HttpRequest {
         .build()
 }
 
+fun getGitHubAccountRequest(session: Session): CompletableFuture<Response<GitHubAccount>> {
+    val request = createGetGitHubAccountRequest(session)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { json -> GitHubAccount.ADAPTER.fromJson(json) } }
+}
+
+private fun createGetGitHubAccountRequest(session: Session): HttpRequest {
+    return HttpRequest.newBuilder()
+        .GET()
+        .uri(
+            startBuildingUri()
+                .append("link/github/credentials/")
+                .build()
+        )
+        .header(HttpHeader.SESSION_KEY, session.key)
+        .header(HttpHeader.ACCEPT, HttpHeader.JSON)
+        .build()
+}
+
+class GitHubLinkingData(
+    val username: String,
+    val state: String,
+    val code: String
+) {
+    companion object {
+        val ADAPTER: JsonAdapter<GitHubLinkingData> = MOSHI.adapter(GitHubLinkingData::class.java)
+    }
+}
+
+fun linkGitHubRequest(username: String, session: Session): CompletableFuture<Response<GitHubLinkingData>> {
+    val request = createLinkGitHubRequest(username, session)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { json -> GitHubLinkingData.ADAPTER.fromJson(json) } }
+}
+
+private fun createLinkGitHubRequest(username: String, session: Session): HttpRequest {
+    return HttpRequest.newBuilder()
+        .POST(
+            HttpRequest.BodyPublishers.ofString(
+                mapOf("username" to username).toHttpFormData()
+            )
+        )
+        .uri(
+            startBuildingUri()
+                .append("link/github/")
+                .build()
+        )
+        .header(HttpHeader.SESSION_KEY, session.key)
+        .header(HttpHeader.CONTENT_TYPE, HttpHeader.FORM_ENCODED)
+        .header(HttpHeader.ACCEPT, HttpHeader.JSON)
+        .build()
+}
+
+fun unlinkGitHubRequest(session: Session): CompletableFuture<Response<Unit>> {
+    val request = createUnlinkGitHubRequest(session)
+    return CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply { Response.from(it).map { } }
+}
+
+private fun createUnlinkGitHubRequest(session: Session): HttpRequest {
+    return HttpRequest.newBuilder()
+        .DELETE()
+        .uri(
+            startBuildingUri()
+                .append("link/github/")
+                .build()
+        )
+        .header(HttpHeader.SESSION_KEY, session.key)
+        .build()
+}
+
 private fun startBuildingUri(): URIBuilder {
     return URIBuilder()
         .https()

@@ -53,5 +53,5 @@ class AccountsTests {
     }
 
     fun isSessionKeySet(): Boolean = System.getProperty("gitdesk.session_key") != null
-
+// https://harleyoconnor.com/gitdesk/auth/?error=redirect_uri_mismatch&error_description=The+redirect_uri+MUST+match+the+registered+callback+URL+for+this+application.&error_uri=https%3A%2F%2Fdocs.github.com%2Fapps%2Fmanaging-oauth-apps%2Ftroubleshooting-authorization-request-errors%2F%23redirect-uri-mismatch&state=4bc0f8f4ca3cc562f97f6fb62529a16334d509e4
 }

@@ -1,5 +1,7 @@
 package com.harleyoconnor.gitdesk.util.network
 
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.util.StackLocatorUtil
 import java.net.http.HttpResponse
 
 /**
@@ -51,6 +53,13 @@ class Response<B>(
     fun ifError(action: (Int) -> Unit): Response<B> {
         if (wasError()) {
             action(code)
+        }
+        return this
+    }
+
+    fun logIfError(prefixMessage: String): Response<B> {
+        if (wasError()) {
+            LogManager.getLogger(StackLocatorUtil.getCallerClass(2)).error(prefixMessage + " \nStatus Code: $code")
         }
         return this
     }

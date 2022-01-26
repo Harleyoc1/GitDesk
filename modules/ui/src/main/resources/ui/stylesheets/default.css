@@ -87,8 +87,11 @@
     -fx-font-size: 12;
 }
 
-.field .error-label {
+.error-label {
     -fx-text-fill: -error-color;
+}
+
+.field .error-label {
     -fx-font-size: 9;
 }
 
@@ -283,7 +286,7 @@
     -fx-padding: 0.3334em 0.6667em;
 }
 
-.side-bar > .cell.top {
+.side-bar > .cell:top {
     -fx-padding: 0.3334em;
 }
 
@@ -312,16 +315,17 @@
     -fx-padding: 0.6667em 0.8889em;
 }
 
-.repository-cell, .remote-cell {
+.repository-cell, .remote-cell, .github-user-cell {
     -fx-background-color: -tertiary-background-color;
     -fx-border-width: 0 1px 1px 1px;
 }
 
-.repository-cell.bottom, .remote-cell.bottom {
+.repository-cell:bottom, .remote-cell:bottom, .github-user-cell:bottom {
     -fx-border-width: 0 1px 1px 1px;
 }
 
-.repository-cell:top, .remote-cell:top, .repository-cell:top:bottom, .remote-cell:top:bottom {
+.repository-cell:top, .remote-cell:top, .github-user-cell:bottom,
+.repository-cell:top:bottom, .remote-cell:top:bottom, .github-user-cell:top:bottom {
     -fx-border-width: 1px;
 }
 
@@ -355,6 +359,11 @@
 }
 
 .clone > .cell {
+    -fx-border-width: 1px;
+    -fx-border-color: -primary-border-color;
+}
+
+.bordered {
     -fx-border-width: 1px;
     -fx-border-color: -primary-border-color;
 }

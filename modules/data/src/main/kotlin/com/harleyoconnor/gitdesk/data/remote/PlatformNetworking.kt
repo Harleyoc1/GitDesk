@@ -7,6 +7,8 @@ import java.net.URL
  */
 interface PlatformNetworking {
 
+    fun getUser(username: String): User?
+
     fun getRemoteRepository(username: String, repository: String): RemoteRepository?
 
     fun getRemoteRepository(url: URL): RemoteRepository?

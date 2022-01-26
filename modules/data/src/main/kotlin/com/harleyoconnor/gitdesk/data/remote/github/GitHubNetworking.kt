@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.data.remote.github
 import com.harleyoconnor.gitdesk.data.remote.License
 import com.harleyoconnor.gitdesk.data.remote.PlatformNetworking
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
@@ -18,6 +19,15 @@ object GitHubNetworking : PlatformNetworking {
 
     private val repositoryUrlPattern =
         Pattern.compile("http(s?)://(.*@)?(www\\.)?github\\.com/[$acceptableUsernameRange]{4,}/[$acceptableRepositoryRange]+/?")
+
+    override fun getUser(username: String): User? {
+        val response = getJsonAt(URI.create(getUserUrl(username)))
+        return if (response.statusCode() in 200 until 300) {
+            GitHubUser.ADAPTER.fromJson(response.body())
+        } else null
+    }
+
+    private fun getUserUrl(username: String) = "$url/users/$username"
 
     override fun getRemoteRepository(username: String, repository: String): RemoteRepository? {
         val response = getJsonAt(URI.create(getRemoteRepositoryUrl(username, repository)))

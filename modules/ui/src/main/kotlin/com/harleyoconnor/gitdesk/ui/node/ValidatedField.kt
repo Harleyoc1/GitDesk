@@ -80,6 +80,12 @@ abstract class ValidatedField<N : TextField> : VBox() {
         field.text = ""
     }
 
+    fun onTextChanged(action: (String, String) -> Unit) {
+        field.textProperty().addListener { _, oldValue, newValue ->
+            action(oldValue, newValue)
+        }
+    }
+
     fun getLabelText(): String {
         return label.text
     }
