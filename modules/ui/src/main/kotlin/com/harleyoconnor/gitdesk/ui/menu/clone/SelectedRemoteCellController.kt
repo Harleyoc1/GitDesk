@@ -3,6 +3,8 @@ package com.harleyoconnor.gitdesk.ui.menu.clone
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.style.BOTTOM_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.TOP_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import javafx.fxml.FXML
@@ -23,6 +25,12 @@ class SelectedRemoteCellController: RemoteCellController<SelectedRemoteCellContr
 
     @FXML
     private lateinit var platformIcon: SVGIcon
+
+    @FXML
+    override fun initialize() {
+        root.pseudoClassStateChanged(TOP_PSEUDO_CLASS, true)
+        root.pseudoClassStateChanged(BOTTOM_PSEUDO_CLASS, true)
+    }
 
     override fun setup(context: Context) {
         super.setup(context)
