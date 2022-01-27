@@ -14,6 +14,7 @@ module gitdesk.ui {
     requires reactfx;
     requires wellbehavedfx;
     requires org.apache.logging.log4j;
+    requires kotlin.stdlib.jdk7;
 
     exports com.harleyoconnor.gitdesk.ui;
     exports com.harleyoconnor.gitdesk.ui.highlighting;

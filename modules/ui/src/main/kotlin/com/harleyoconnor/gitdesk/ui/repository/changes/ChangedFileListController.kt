@@ -33,10 +33,10 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
     override fun setup(context: Context) {
         this.repository = context.repository
         this.parent = context.parent
-        startRefresh()
+        refresh()
     }
 
-    private fun startRefresh() = this.repository.gitRepository.getChangedFiles()
+    fun refresh() = this.repository.gitRepository.getChangedFiles()
         .ifSuccessful { response ->
             Platform.runLater {
                 root.children.clear()

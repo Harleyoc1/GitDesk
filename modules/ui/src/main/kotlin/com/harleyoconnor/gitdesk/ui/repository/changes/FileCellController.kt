@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.util.setOnActions
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.getUserHome
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
@@ -21,11 +22,11 @@ import java.io.File
  */
 class FileCellController : ViewController<FileCellController.Context> {
 
-    object Loader: ResourceViewLoader<Context, FileCellController, HBox>(
+    object Loader : ResourceViewLoader<Context, FileCellController, HBox>(
         UIResource("/ui/layouts/repository/changes/FileCell.fxml")
     )
 
-    class Context(val repository: Repository, val file: File): ViewController.Context
+    class Context(val repository: Repository, val file: File) : ViewController.Context
 
     private lateinit var repository: Repository
     private lateinit var file: File
@@ -35,8 +36,10 @@ class FileCellController : ViewController<FileCellController.Context> {
 
     @FXML
     private lateinit var stageCheckbox: CheckBox
+
     @FXML
     private lateinit var icon: SVGIcon
+
     @FXML
     private lateinit var nameLabel: Label
 
@@ -44,9 +47,10 @@ class FileCellController : ViewController<FileCellController.Context> {
         this.repository = context.repository
         this.file = context.file
 
+        this.stageCheckbox.setOnActions(this::addToStage, this::removeFromStage)
         this.icon.setupFromSvg(file.getIcon())
         this.nameLabel.text = file.name
-        this.stageCheckbox.setOnActions(this::addToStage, this::removeFromStage)
+        this.nameLabel.tooltip.text = file.absolutePath.replace(getUserHome(), "~")
     }
 
     private fun addToStage() {

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.changes.FileCellController" fx:id="cell"
       alignment="CENTER_LEFT" styleClass="cell, file-cell" spacing="5" onMousePressed="#select">
@@ -27,5 +23,9 @@
     </padding>
     <CheckBox fx:id="stageCheckbox" styleClass="stage-check-box"/>
     <SVGIcon fx:id="icon" prefWidth="12" prefHeight="12" path="/ui/icons/missing.svg" styleClass="icon"/>
-    <Label fx:id="nameLabel" styleClass="text, body"/>
+    <Label fx:id="nameLabel" styleClass="text, body">
+        <tooltip>
+            <Tooltip/>
+        </tooltip>
+    </Label>
 </HBox>
