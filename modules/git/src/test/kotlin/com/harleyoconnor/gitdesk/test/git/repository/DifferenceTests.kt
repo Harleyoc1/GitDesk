@@ -17,7 +17,7 @@ class DifferenceTests {
     fun `test getting list of changed files`() {
         val repository = Repository(Directory(File(".").canonicalFile.parentFile.parentFile))
         println(
-            repository.getChangedFiless().beginAndWaitFor(30, TimeUnit.SECONDS).result?.contentToString()
+            repository.getChangedFiles().beginAndWaitFor(30, TimeUnit.SECONDS).result?.contentToString()
         )
     }
 
@@ -25,9 +25,9 @@ class DifferenceTests {
     @Test
     fun `test parsing difference`() {
         val repository = Repository(Directory(File(".").canonicalFile.parentFile.parentFile))
-        repository.getChangedFiless().beginAndWaitFor(30, TimeUnit.SECONDS).result?.let {
+        repository.getChangedFiles().beginAndWaitFor(30, TimeUnit.SECONDS).result?.let {
             it.forEach { changedFile ->
-                println(repository.getDifference(changedFile).beginAndWaitFor(30, TimeUnit.SECONDS).result)
+                println(repository.getDifference(changedFile.file).beginAndWaitFor(30, TimeUnit.SECONDS).result)
             }
         }
     }
