@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.changes.ChangedFileListController" fx:id="root"
       spacing="2">
     <padding>
         <Insets top="10" left="8" bottom="10" right="8"/>
     </padding>
+    <HBox styleClass="cell" spacing="5">
+        <padding>
+            <Insets top="2" right="8" bottom="2" left="8"/>
+        </padding>
+        <CheckBox fx:id="stageAllCheckbox" styleClass="stage-check-box"/>
+        <Label fx:id="changedFilesLabel" styleClass="text, body">
+            <padding>
+                <Insets left="3"/>
+            </padding>
+        </Label>
+    </HBox>
 </VBox>

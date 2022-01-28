@@ -36,9 +36,6 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
     private lateinit var fileList: ScrollPane
 
     @FXML
-    private lateinit var commitArea: ScrollPane
-
-    @FXML
     private lateinit var fileTabs: TabPane
 
     private val changedFilesListView by lazy {
@@ -57,7 +54,9 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
         this.repository = context.repository
         titleLabel.text = repository.id
         fileList.content = changedFilesListView.root
-        sideBar.items.add(CommitController.Loader.load(CommitController.Context(this, repository.gitRepository)).root)
+        sideBar.items.add(
+            CommitController.Loader.load(CommitController.Context(this, repository.gitRepository)).root
+        )
         sideBar.setDividerPositions(0.6)
     }
 

@@ -15,7 +15,6 @@ import javafx.scene.control.Label
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import org.apache.logging.log4j.LogManager
-import java.io.File
 
 /**
  * @author Harley O'Connor
@@ -26,10 +25,12 @@ class FileCellController : ViewController<FileCellController.Context> {
         UIResource("/ui/layouts/repository/changes/FileCell.fxml")
     )
 
-    class Context(val repository: Repository, val file: Repository.ChangedFile) : ViewController.Context
+    class Context(val repository: Repository, val file: Repository.ChangedFile, val stagedListener: StagedListener) :
+        ViewController.Context
 
     private lateinit var repository: Repository
     private lateinit var file: Repository.ChangedFile
+    private lateinit var stagedListener: StagedListener
 
     @FXML
     private lateinit var cell: HBox
@@ -46,6 +47,7 @@ class FileCellController : ViewController<FileCellController.Context> {
     override fun setup(context: Context) {
         this.repository = context.repository
         this.file = context.file
+        this.stagedListener = context.stagedListener
 
         this.stageCheckbox.isSelected = file.staged
         this.stageCheckbox.setOnActions(this::addToStage, this::removeFromStage)
@@ -56,6 +58,9 @@ class FileCellController : ViewController<FileCellController.Context> {
 
     private fun addToStage() {
         repository.addToStage(file.file)
+            .ifSuccessful {
+                stagedListener.onFileStaged()
+            }
             .ifFailure {
                 LogManager.getLogger().error("Failed to stage file `${file.file}` with error `${it.error}`.")
             }
@@ -64,8 +69,12 @@ class FileCellController : ViewController<FileCellController.Context> {
 
     private fun removeFromStage() {
         repository.removeFromStage(file.file)
+            .ifSuccessful {
+                stagedListener.onFileUnStaged()
+            }
             .ifFailure {
-                LogManager.getLogger().error("Failed to remove file `${file.file}` from stage with error `${it.error}`.")
+                LogManager.getLogger()
+                    .error("Failed to remove file `${file.file}` from stage with error `${it.error}`.")
             }
             .begin()
     }

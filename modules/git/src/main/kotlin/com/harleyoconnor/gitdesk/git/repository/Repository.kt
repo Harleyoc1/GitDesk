@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.Response
 import com.harleyoconnor.gitdesk.util.substringUntil
+import com.harleyoconnor.gitdesk.util.toTypedArray
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -165,6 +166,34 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
                 ChangedFile.parseChangedFile(line, directory)
             }.toTypedArray()
         }.result!!
+    }
+
+    fun stageAllFiles(): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("add", ".")
+            .directory(directory)
+    }
+
+    fun unStageAllFiles(): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("reset", "HEAD", "--", ".")
+            .directory(directory)
+    }
+
+    fun getUnStagedFiles(): FunctionalProcessBuilder<Array<File>> {
+        return FunctionalProcessBuilder(this::mapChangedFilesResponse)
+            .gitCommand()
+            .arguments("diff", "--name-only")
+            .directory(directory)
+    }
+
+    private fun mapChangedFilesResponse(response: Response): Array<File> {
+        return response.output.split("\n").stream()
+            .filter { it.isNotEmpty() }
+            .map { relativePath -> File(directory.absolutePath + File.separatorChar + relativePath) }
+            .toTypedArray()
     }
 
     fun getDifference(file: File): FunctionalProcessBuilder<Difference> {

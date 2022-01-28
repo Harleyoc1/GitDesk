@@ -41,16 +41,16 @@
     -fx-background-color: -accent-contrast-color;
 }
 
-.file-cell > .stage-check-box {
+.stage-check-box {
     -fx-padding: 0 5px 0 0;
 }
 
-.file-cell > .stage-check-box:selected > .box {
+.stage-check-box:selected > .box {
     -fx-background-color: -accent-color;
 }
 
-.file-cell > .stage-check-box:selected > .box > .mark {
-    -fx-background-color: -tertiary-background-color;
+.stage-check-box:selected > .box > .mark {
+    -fx-background-color: -accent-contrast-color;
 }
 
 /* Tab Bar */

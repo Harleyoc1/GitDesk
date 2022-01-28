@@ -1,8 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.changes
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.git.repository.Repository
-import com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import javafx.scene.Node
 import javafx.scene.layout.Region

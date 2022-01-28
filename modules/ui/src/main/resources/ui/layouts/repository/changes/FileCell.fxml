@@ -19,7 +19,7 @@
         </ContextMenu>
     </fx:define>
     <padding>
-        <Insets top="2" right="8" bottom="2" left="8"/>
+        <Insets top="2" right="8" bottom="2" left="25"/>
     </padding>
     <CheckBox fx:id="stageCheckbox" styleClass="stage-check-box"/>
     <SVGIcon fx:id="icon" prefWidth="12" prefHeight="12" path="/ui/icons/missing.svg" styleClass="icon"/>
