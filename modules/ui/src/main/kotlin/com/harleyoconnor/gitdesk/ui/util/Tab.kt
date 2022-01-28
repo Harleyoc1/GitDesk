@@ -10,11 +10,11 @@ open class Tab(
     node: Node,
     protected val setter: (Node) -> Unit
 ) {
-    var node: Node = node
+    open var node: Node = node
         protected set(value) {
             field = value
-            setter(value)
+            open()
         }
 
-    fun open() = setter(node)
+    open fun open() = setter(node)
 }

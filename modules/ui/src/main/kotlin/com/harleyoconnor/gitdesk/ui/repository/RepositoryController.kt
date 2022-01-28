@@ -6,7 +6,7 @@ import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
 import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
-import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTabController
+import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTab
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
@@ -77,7 +77,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private val changesTab: Tab by lazy {
-        Tab(ChangesTabController.Loader.load(ChangesTabController.Context(parent.stage, repository)).root) {
+        ChangesTab(parent.stage, repository) {
             root.center = it
         }
     }

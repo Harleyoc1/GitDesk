@@ -26,10 +26,10 @@ class FileCellController : ViewController<FileCellController.Context> {
         UIResource("/ui/layouts/repository/changes/FileCell.fxml")
     )
 
-    class Context(val repository: Repository, val file: File) : ViewController.Context
+    class Context(val repository: Repository, val file: Repository.ChangedFile) : ViewController.Context
 
     private lateinit var repository: Repository
-    private lateinit var file: File
+    private lateinit var file: Repository.ChangedFile
 
     @FXML
     private lateinit var cell: HBox
@@ -47,24 +47,25 @@ class FileCellController : ViewController<FileCellController.Context> {
         this.repository = context.repository
         this.file = context.file
 
+        this.stageCheckbox.isSelected = file.staged
         this.stageCheckbox.setOnActions(this::addToStage, this::removeFromStage)
-        this.icon.setupFromSvg(file.getIcon())
-        this.nameLabel.text = file.name
-        this.nameLabel.tooltip.text = file.absolutePath.replace(getUserHome(), "~")
+        this.icon.setupFromSvg(file.file.getIcon())
+        this.nameLabel.text = file.file.name
+        this.nameLabel.tooltip.text = file.file.absolutePath.replace(getUserHome(), "~")
     }
 
     private fun addToStage() {
-        repository.addToStage(file)
+        repository.addToStage(file.file)
             .ifFailure {
-                LogManager.getLogger().error("Failed to stage file `$file` with error `${it.error}`.")
+                LogManager.getLogger().error("Failed to stage file `${file.file}` with error `${it.error}`.")
             }
             .begin()
     }
 
     private fun removeFromStage() {
-        repository.removeFromStage(file)
+        repository.removeFromStage(file.file)
             .ifFailure {
-                LogManager.getLogger().error("Failed to remove file `$file` from stage with error `${it.error}`.")
+                LogManager.getLogger().error("Failed to remove file `${file.file}` from stage with error `${it.error}`.")
             }
             .begin()
     }

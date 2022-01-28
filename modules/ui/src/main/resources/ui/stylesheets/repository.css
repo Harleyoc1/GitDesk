@@ -168,3 +168,7 @@
 .selection-cell-list > .cell:selected .checked-out-icon:checked-out {
     -fx-background-color: -accent-contrast-color;
 }
+
+.commit-view {
+    -fx-background-color: -primary-background-color;
+}

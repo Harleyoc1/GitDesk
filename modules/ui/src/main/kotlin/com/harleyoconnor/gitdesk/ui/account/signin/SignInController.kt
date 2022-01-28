@@ -62,7 +62,7 @@ class SignInController : ViewController<SignInController.Context> {
                             openSignedInViewCallback.accept(account)
                         }
                     }
-                }
+                }.logIfError("Signing in.")
             }.join()
         } catch (ignored: FieldValidator.InvalidException) {}
     }

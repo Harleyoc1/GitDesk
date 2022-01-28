@@ -7,8 +7,8 @@ import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.Response
 import com.harleyoconnor.gitdesk.util.substringUntil
-import com.harleyoconnor.gitdesk.util.toTypedArray
 import java.io.File
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
@@ -152,18 +152,19 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
         .arguments("reset", "HEAD", "--", file.canonicalFile.relativeTo(directory).path)
         .directory(directory)
 
-    fun getChangedFiles(): FunctionalProcessBuilder<Array<File>> {
-        return FunctionalProcessBuilder(this::mapChangedFilesResponse)
+    fun getChangedFiles(): FunctionalProcessBuilder<Array<ChangedFile>> {
+        return FunctionalProcessBuilder(this::mapStatusResponse)
             .gitCommand()
-            .arguments("diff", "--name-only")
+            .arguments("status", "--porcelain=v1")
             .directory(directory)
     }
 
-    private fun mapChangedFilesResponse(response: Response): Array<File> {
-        return response.output.split("\n").stream()
-            .filter { it.isNotEmpty() }
-            .map { relativePath -> File(directory.absolutePath + File.separatorChar + relativePath) }
-            .toTypedArray()
+    private fun mapStatusResponse(response: Response): Array<ChangedFile> {
+        return response.map {
+            it.output.split("\n").mapNotNull { line ->
+                ChangedFile.parseChangedFile(line, directory)
+            }.toTypedArray()
+        }.result!!
     }
 
     fun getDifference(file: File): FunctionalProcessBuilder<Difference> {
@@ -175,10 +176,70 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .directory(directory)
     }
 
+    fun commit(summary: String, description: String): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("commit", "-m", summary, "-m", description)
+            .directory(directory)
+    }
+
     @Throws(NoSuchRepositoryException::class)
     private fun throwIfDoesNotExist() {
         if (!repositoryExistsAt(directory)) {
             throw NoSuchRepositoryException("Git repository does not exist at \"${directory.path}\".")
+        }
+    }
+
+    class ChangedFile(
+        val file: File,
+        val staged: Boolean,
+        val changeType: ChangeType
+    ) {
+        enum class ChangeType {
+            MODIFIED, ADDED;
+
+            companion object {
+                fun getFor(char: Char): ChangeType? {
+                    return when (char) {
+                        'M' -> MODIFIED
+                        'A' -> ADDED
+                        else -> null
+                    }
+                }
+            }
+        }
+
+        companion object {
+            private val CHANGED_FILE_STATUS_PATTERN = Pattern.compile("([MA ])([MA ]) (.*)")
+
+            /**
+             * Parses a line from the status command's porcelain v1 output.
+             */
+            fun parseChangedFile(line: String, repositoryDirectory: Directory): ChangedFile? {
+                val matcher = CHANGED_FILE_STATUS_PATTERN.matcher(line)
+                if (matcher.find()) {
+                    return parseFromGroups(matcher, repositoryDirectory)
+                }
+                throw RuntimeException("Could not parse changed file line: $line")
+            }
+
+            private fun parseFromGroups(
+                matcher: Matcher,
+                repositoryDirectory: Directory
+            ): ChangedFile? {
+                var staged = true
+                var state = matcher.group(1)[0]
+                if (state == ' ') {
+                    staged = false
+                    state = matcher.group(2)[0]
+                }
+                val relativePath = matcher.group(3)
+                return ChangedFile(
+                    File(repositoryDirectory.absolutePath + File.separatorChar + relativePath),
+                    staged,
+                    ChangeType.getFor(state) ?: return null
+                )
+            }
         }
     }
 

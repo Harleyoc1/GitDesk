@@ -1,6 +1,16 @@
 package com.harleyoconnor.gitdesk.util
 
-inline fun <reified T : Comparable<T>> sort(
+inline fun <reified T> sort(
+    array: Array<T>,
+    comparator: Comparator<T>
+): Array<T> {
+    return mergeSort(array, comparator)
+        .stream()
+        .map { it }
+        .toTypedArray()
+}
+
+inline fun <reified T : Comparable<T>> sortComparable(
     array: Array<T>,
     comparator: Comparator<T> = naturalOrder()
 ): Array<T> {

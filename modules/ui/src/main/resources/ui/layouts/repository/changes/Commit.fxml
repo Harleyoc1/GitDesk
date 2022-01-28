@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.changes.CommitController" spacing="8"
+      onKeyPressed="#keyPressed" styleClass="commit-view">
+    <padding>
+        <Insets topRightBottomLeft="8"/>
+    </padding>
+    <TextField fx:id="summaryField" promptText="%ui.field.summary.prompt" prefHeight="35"/>
+    <TextArea fx:id="descriptionField" promptText="%ui.field.description.prompt"/>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button onAction="#commitAndPush" text="%ui.button.commit_and_push"/>
+        <Button fx:id="commitButton" onAction="#commit" text="%ui.button.commit" styleClass="enter-button"/>
+    </HBox>
+</VBox>

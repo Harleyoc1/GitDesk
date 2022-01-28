@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.changes
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.git.repository.Repository
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -11,7 +12,6 @@ import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.layout.VBox
-import java.io.File
 
 /**
  * @author Harley O'Connor
@@ -37,16 +37,20 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
     }
 
     fun refresh() = this.repository.gitRepository.getChangedFiles()
-        .ifSuccessful { response ->
-            Platform.runLater {
-                root.children.clear()
-                root.children.addAll(buildCells(response.result!!))
-            }
+        .ifSuccessful {
+            refreshCells(it.result!!)
         }
         .ifFailure(::logFailure)
         .begin()
 
-    private fun buildCells(changedFiles: Array<File>): Array<out Node> = changedFiles.stream()
+    private fun refreshCells(changedFiles: Array<Repository.ChangedFile>) {
+        Platform.runLater {
+            root.children.clear()
+            root.children.addAll(buildCells(changedFiles))
+        }
+    }
+
+    private fun buildCells(changedFiles: Array<Repository.ChangedFile>): Array<out Node> = changedFiles.stream()
         .map { FileCellController.Loader.load(FileCellController.Context(this.repository.gitRepository, it)).root }
         .toTypedArray()
 

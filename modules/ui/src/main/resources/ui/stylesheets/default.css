@@ -9,14 +9,18 @@
 
 /* Default node styles */
 
-.text-field, .choice-box {
+.text-field, .choice-box, .text-area {
     -fx-text-fill: -primary-text-color;
     -fx-background-color: -tertiary-background-color;
     -fx-border-color: -primary-border-color;
     -fx-border-radius: 4px;
 }
 
-.text-field:focused, .choice-box:focused {
+.text-area .content {
+    -fx-background-color: -tertiary-background-color;
+}
+
+.text-field:focused, .choice-box:focused, .text-area:focused {
     -fx-border-color: -accent-color;
 }
 

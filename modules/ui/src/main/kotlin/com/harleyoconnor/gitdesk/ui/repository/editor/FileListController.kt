@@ -7,7 +7,7 @@ import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.forFirst
 import com.harleyoconnor.gitdesk.util.forSecond
-import com.harleyoconnor.gitdesk.util.sort
+import com.harleyoconnor.gitdesk.util.sortComparable
 import com.harleyoconnor.gitdesk.util.splitToPair
 import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
@@ -70,12 +70,12 @@ class FileListController : ViewController<FileListController.Context> {
             .splitToPair { it.isDirectory }
             .forFirst { directories ->
                 cells.addAll(
-                    buildDirectoryCells(sort(directories.map { Directory(it) }.toTypedArray()), insetIndex)
+                    buildDirectoryCells(sortComparable(directories.map { Directory(it) }.toTypedArray()), insetIndex)
                 )
             }
             .forSecond { files ->
                 cells.addAll(
-                    buildFileCells(sort(files.toTypedArray()), insetIndex)
+                    buildFileCells(sortComparable(files.toTypedArray()), insetIndex)
                 )
             }
         return cells.toTypedArray()

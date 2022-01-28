@@ -27,6 +27,9 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
     private lateinit var repository: LocalRepository
 
     @FXML
+    private lateinit var sideBar: SplitPane
+
+    @FXML
     private lateinit var titleLabel: Label
 
     @FXML
@@ -54,10 +57,11 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
         this.repository = context.repository
         titleLabel.text = repository.id
         fileList.content = changedFilesListView.root
+        sideBar.items.add(CommitController.Loader.load(CommitController.Context(this, repository.gitRepository)).root)
+        sideBar.setDividerPositions(0.6)
     }
 
-    @FXML
-    private fun refresh(event: ActionEvent) {
+    fun refresh() {
         changedFilesListView.controller.refresh()
     }
 
