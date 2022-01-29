@@ -24,6 +24,10 @@
     -fx-border-color: -accent-color;
 }
 
+.text-area {
+    -fx-padding: 0.3334em 0;
+}
+
 .button {
     -fx-text-fill: -primary-text-color;
     -fx-background-color: -tertiary-background-color;

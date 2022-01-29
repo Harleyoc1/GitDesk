@@ -7,7 +7,6 @@ import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.setOnActions
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
-import com.harleyoconnor.gitdesk.util.process.FunctionalResponse
 import com.harleyoconnor.gitdesk.util.process.logFailure
 import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
@@ -22,7 +21,7 @@ import java.io.File
 /**
  * @author Harley O'Connor
  */
-class ChangedFileListController : ViewController<ChangedFileListController.Context>, StagedListener {
+class ChangedFileListController : ViewController<ChangedFileListController.Context>, ChangedFileListener {
 
     object Loader : ResourceViewLoader<Context, ChangedFileListController, VBox>(
         UIResource("/ui/layouts/repository/changes/ChangedFileList.fxml")
@@ -57,20 +56,22 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
     }
 
     override fun onFileStaged() {
+        updateStageAllCheckbox()
+    }
+
+    private fun updateStageAllCheckbox() {
         repository.gitRepository.getUnStagedFiles()
             .ifSuccessful {
-                updateIfAllFilesStaged(it)
+                it.result?.let { unStagedFiles -> updateStageAllCheckbox(unStagedFiles) }
             }
             .ifFailure(::logFailure)
             .begin()
     }
 
-    private fun updateIfAllFilesStaged(it: FunctionalResponse<Array<File>>) {
-        if (it.result?.size == 0) {
-            Platform.runLater {
-                forcedStageAllCheckboxUpdate = true
-                stageAllCheckbox.isSelected = true
-            }
+    private fun updateStageAllCheckbox(unStagedFiles: Array<File>) {
+        Platform.runLater {
+            forcedStageAllCheckboxUpdate = true
+            stageAllCheckbox.isSelected = unStagedFiles.isEmpty()
         }
     }
 
@@ -79,6 +80,10 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
             forcedStageAllCheckboxUpdate = true
             stageAllCheckbox.isSelected = false
         }
+    }
+
+    override fun onFileReset() {
+        refresh()
     }
 
     private fun stageAll() {
@@ -123,8 +128,10 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
             root.children.remove(1, root.children.size)
             val cells = buildCells(changedFiles)
             root.children.addAll(cells)
+            stageAllCheckbox.isDisable = cells.isEmpty()
             changedFilesLabel.text = TRANSLATIONS_BUNDLE.getString("ui.repository.tab.changes.changed_files")
                 .replaceFirst("{}", cells.size.toString())
+            updateStageAllCheckbox()
         }
     }
 

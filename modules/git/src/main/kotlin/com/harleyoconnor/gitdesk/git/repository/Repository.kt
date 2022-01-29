@@ -153,6 +153,16 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
         .arguments("reset", "HEAD", "--", file.canonicalFile.relativeTo(directory).path)
         .directory(directory)
 
+    fun rollback(file: File): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("checkout", "HEAD", "--", file.canonicalFile.relativeTo(directory).path)
+        .directory(directory)
+
+    fun rollbackAll(): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("checkout", "HEAD", "--", ".")
+        .directory(directory)
+
     fun getChangedFiles(): FunctionalProcessBuilder<Array<ChangedFile>> {
         return FunctionalProcessBuilder(this::mapStatusResponse)
             .gitCommand()
@@ -162,9 +172,11 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
 
     private fun mapStatusResponse(response: Response): Array<ChangedFile> {
         return response.map {
-            it.output.split("\n").mapNotNull { line ->
-                ChangedFile.parseChangedFile(line, directory)
-            }.toTypedArray()
+            it.output.split("\n")
+                .filter { it.isNotEmpty() }.
+                mapNotNull { line ->
+                    ChangedFile.parseChangedFile(line, directory)
+                }.toTypedArray()
         }.result!!
     }
 

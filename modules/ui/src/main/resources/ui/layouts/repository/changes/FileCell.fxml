@@ -12,9 +12,12 @@
             <items>
                 <MenuItem text="%ui.button.open" accelerator="Shortcut+O" onAction="#open"/>
                 <Menu text="%ui.button.open_in">
+                    <MenuItem text="%ui.button.open_in.editor" accelerator="Shortcut+Ctrl+O"
+                              onAction="#openInEditor"/>
                     <MenuItem text="%ui.button.open_in.file_browser" accelerator="Shortcut+Alt+O"
                               onAction="#openInFileBrowser"/>
                 </Menu>
+                <MenuItem text="%ui.button.rollback" accelerator="Shortcut+Alt+R" onAction="#rollback"/>
             </items>
         </ContextMenu>
     </fx:define>

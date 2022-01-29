@@ -4,6 +4,8 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.process.logFailure
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Label
@@ -62,6 +64,18 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
 
     fun refresh() {
         changedFilesListView.controller.refresh()
+    }
+
+    @FXML
+    private fun rollbackAll(event: ActionEvent) {
+        repository.gitRepository.rollbackAll()
+            .ifSuccessful {
+                Platform.runLater {
+                    refresh()
+                }
+            }
+            .ifFailure(::logFailure)
+            .begin()
     }
 
 

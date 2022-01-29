@@ -18,6 +18,14 @@
                         <Tooltip text="%ui.tooltip.refresh"/>
                     </tooltip>
                 </Button>
+                <Button onAction="#rollbackAll" styleClass="icon-button, no-padding">
+                    <graphic>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/undo.svg" styleClass="icon"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%ui.tooltip.rollback_all"/>
+                    </tooltip>
+                </Button>
             </HBox>
             <ScrollPane fx:id="fileList" fitToWidth="true"/>
         </VBox>

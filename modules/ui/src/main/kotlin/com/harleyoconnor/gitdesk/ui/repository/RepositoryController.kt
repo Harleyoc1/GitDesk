@@ -61,7 +61,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
-    private val editorTabFxml by lazy {
+    private val editorTabView by lazy {
         EditorTabController.Loader.load(
             EditorTabController.Context(
                 parent,
@@ -71,12 +71,12 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private val editorTab: Tab by lazy {
-        Tab(editorTabFxml.root) {
+        Tab(editorTabView.root) {
             root.center = it
         }
     }
 
-    private val changesTab: Tab by lazy {
+    private val changesTab by lazy {
         ChangesTab(parent.stage, repository) {
             root.center = it
         }
@@ -103,7 +103,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     @FXML
     private fun save(event: ActionEvent) {
         if (editorTabButton.isSelected) {
-            editorTabFxml.controller.save()
+            editorTabView.controller.save()
         }
     }
 }
