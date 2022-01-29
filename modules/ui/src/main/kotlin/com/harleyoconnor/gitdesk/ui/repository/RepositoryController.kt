@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
 import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
@@ -16,6 +17,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.VBox
 
 /**
  * @author Harley O'Connor
@@ -45,6 +47,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     @FXML
     private lateinit var windowMenu: WindowMenu
+
+    @FXML
+    private lateinit var tabs: VBox
 
     @FXML
     private lateinit var editorTabButton: RadioButton
@@ -98,6 +103,23 @@ class RepositoryController : ViewController<RepositoryController.Context> {
             changesTab.open()
         }
         editorTabButton.fire()
+
+        removeIssuesTabIfDisabled()
+    }
+
+    private fun removeIssuesTabIfDisabled() {
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()?.remote?.remote
+        if (remote is RemoteRepositoryReference) {
+            remote.getRemoteRepository()?.let {
+                if (!it.hasIssues) {
+                    removeIssuesTab()
+                }
+            }
+        }
+    }
+
+    private fun removeIssuesTab() {
+        tabs.children.remove(issuesTabButton)
     }
 
     @FXML
