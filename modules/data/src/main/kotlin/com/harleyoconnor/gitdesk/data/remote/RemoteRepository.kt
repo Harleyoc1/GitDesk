@@ -33,6 +33,8 @@ interface RemoteRepository : Remote {
 
     val license: License?
 
+    val hasIssues: Boolean
+
     // TODO: Issues and PRs
 
     data class Name(

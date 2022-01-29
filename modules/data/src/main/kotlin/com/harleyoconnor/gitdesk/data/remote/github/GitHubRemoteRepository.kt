@@ -27,6 +27,7 @@ class GitHubRemoteRepository(
     override val language: String?,
     @Json(name = "forks_count") override val forks: Int,
     override val license: GitHubLicense?,
+    @Json(name = "has_issues") override val hasIssues: Boolean,
     @Json(name = "parent") private val parentData: ParentRepository?
 ) : GitHubNode, RemoteRepository {
 

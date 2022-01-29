@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.serialisation.adapter
 
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.DirectoryTree
+import com.harleyoconnor.gitdesk.data.serialisation.qualifier.HexColour
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.tree.MutableTree
 import com.squareup.moshi.Moshi
@@ -30,6 +31,11 @@ fun Moshi.Builder.addExtraAdapters(): Moshi.Builder {
     this.add(MutableTreeAdapter.FACTORY)
     this.add(TreeAdapter.FACTORY)
     this.add(RepositoryNameAdapter)
+    this.add(
+        Int::class.java,
+        HexColour::class.java,
+        HexColourAdapter
+    )
     this.add(
         Types.newParameterizedType(MutableTree::class.java, Directory::class.java),
         DirectoryTree::class.java,
