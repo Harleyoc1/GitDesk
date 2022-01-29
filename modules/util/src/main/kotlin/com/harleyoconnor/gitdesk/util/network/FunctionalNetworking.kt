@@ -19,3 +19,15 @@ fun getJsonAt(uri: URI): HttpResponse<String> {
         HttpResponse.BodyHandlers.ofString()
     )
 }
+
+fun getJsonAt(uri: URI, authHeader: String): HttpResponse<String> {
+    return CLIENT.send(
+        HttpRequest.newBuilder()
+            .GET()
+            .uri(uri)
+            .setHeader(HttpHeader.ACCEPT, HttpHeader.JSON)
+            .setHeader(HttpHeader.AUTHORIZATION, authHeader)
+            .build(),
+        HttpResponse.BodyHandlers.ofString()
+    )
+}

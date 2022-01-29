@@ -1,16 +1,13 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
-import com.harleyoconnor.gitdesk.data.remote.License
-import com.harleyoconnor.gitdesk.data.remote.Platform
-import com.harleyoconnor.gitdesk.data.remote.PlatformNetworking
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
-import com.harleyoconnor.gitdesk.data.remote.User
+import com.harleyoconnor.gitdesk.data.account.Session
+import com.harleyoconnor.gitdesk.data.remote.*
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
 import java.net.URI
 import java.net.URL
+import java.net.http.HttpResponse
 import java.util.regex.Pattern
 
 object GitHubNetworking : PlatformNetworking {
@@ -72,6 +69,13 @@ object GitHubNetworking : PlatformNetworking {
     }
 
     private fun getLicenseUrl(key: String) = "$url/licenses/$key"
+
+    private fun getJsonAt(uri: URI): HttpResponse<String> {
+        Session.getOrLoad()?.getGitHubAccount()?.let {
+            return getJsonAt(uri, "token ${it.accessToken}")
+        }
+        return com.harleyoconnor.gitdesk.util.network.getJsonAt(uri)
+    }
 
     fun registerTypes() {
         Remote.registerType(repositoryUrlPattern) { url ->

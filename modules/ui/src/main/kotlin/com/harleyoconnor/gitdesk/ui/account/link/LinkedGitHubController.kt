@@ -67,7 +67,7 @@ class LinkedGitHubController : ViewController<LinkedGitHubController.Context> {
 
     @FXML
     private fun unlink(event: ActionEvent) {
-        unlinkGitHubRequest(Session.load()!!).join()
+        unlinkGitHubRequest(Session.getOrLoad()!!).join()
             .apply {
                 parent.toUnlinkedView()
             }.logIfError("Unlinking GitHub account.")

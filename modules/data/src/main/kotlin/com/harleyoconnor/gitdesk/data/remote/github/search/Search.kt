@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote.github.search
 
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubNetworking
 import com.harleyoconnor.gitdesk.util.network.CLIENT
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
@@ -54,10 +55,8 @@ abstract class Search<E>(
     }
 
     private fun getAuthHeader(): String {
-        return ""
-        // TODO: Re-implement local auth data
-//        val account = Account.get() ?: return ""
-//        return "token " + account.gitHubAccessToken
+        val account = Session.getOrLoad()?.getGitHubAccount() ?: return ""
+        return "token " + account.accessToken
     }
 
     private fun buildUri(): URI = URIBuilder()

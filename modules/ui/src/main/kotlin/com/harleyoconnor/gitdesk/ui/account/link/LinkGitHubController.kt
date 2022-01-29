@@ -19,7 +19,6 @@ import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
-import javafx.scene.shape.Circle
 import java.net.URI
 
 /**
@@ -69,7 +68,7 @@ class LinkGitHubController : ViewController<LinkGitHubController.Context> {
     @FXML
     private fun link(event: ActionEvent) {
         val username = usernameField.getTextOrNull() ?: return
-        linkGitHubRequest(username, Session.load()!!)
+        linkGitHubRequest(username, Session.getOrLoad()!!)
             .thenAccept { response ->
                 response.apply {
                     Platform.runLater {

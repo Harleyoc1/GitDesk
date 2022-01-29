@@ -23,7 +23,7 @@ class AccountWindow(stage: Stage) :
     }
 
     init {
-        val session = Session.load()
+        val session = Session.getOrLoad()
         val account = session?.getAccount()
         if (session != null && account != null) {
             toSignedInView(account)

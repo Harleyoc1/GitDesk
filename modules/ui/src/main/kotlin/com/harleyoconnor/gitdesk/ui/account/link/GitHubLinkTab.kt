@@ -6,7 +6,6 @@ import com.harleyoconnor.gitdesk.data.account.GitHubLinkingData
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.account.getGitHubAccountRequest
 import com.harleyoconnor.gitdesk.ui.util.Tab
-import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
 import javafx.scene.layout.Region
 
@@ -23,7 +22,7 @@ class GitHubLinkTab(
     }
 
     init {
-        node = getGitHubAccountRequest(Session.load()!!).join()
+        node = getGitHubAccountRequest(Session.getOrLoad()!!).join()
             .applyOrElse(
                 { loadLinkedView(it).root },
                 linkView.root
