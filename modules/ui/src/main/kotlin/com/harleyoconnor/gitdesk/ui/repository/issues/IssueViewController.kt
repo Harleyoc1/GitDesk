@@ -6,6 +6,7 @@ import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
@@ -81,10 +82,12 @@ class IssueViewController : ViewController<IssueViewController.Context> {
         }
         stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.state.toString().lowercase())
 
-        subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString("ui.repository.tab.issues.view.subheading")
-            .replaceFirst("{}", issue.author.username)
-            .replaceFirst("{}", CREATED_AT_FORMAT.format(issue.createdAt))
-            .replaceFirst("{}", issue.comments.toString())
+        subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString(
+            "ui.repository.tab.issues.view.subheading",
+            issue.author.username,
+            CREATED_AT_FORMAT.format(issue.createdAt),
+            issue.comments.toString()
+        )
     }
 
     private fun setupUIForOpenIssue() {

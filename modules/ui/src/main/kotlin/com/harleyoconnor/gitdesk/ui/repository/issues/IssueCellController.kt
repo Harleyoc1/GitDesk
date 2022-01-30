@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
@@ -56,10 +57,12 @@ class IssueCellController : ViewController<IssueCellController.Context> {
             issueIcon.setPath("/ui/icons/closed_issue.svg")
         }
         titleLabel.text = issue.title
-        otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString("ui.repository.tab.issues.cell.info")
-            .replaceFirst("{}", issue.number.toString())
-            .replaceFirst("{}", CREATED_AT_FORMAT.format(issue.createdAt))
-            .replaceFirst("{}", issue.author.username)
+        otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
+            "ui.repository.tab.issues.cell.info",
+            issue.number.toString(),
+            CREATED_AT_FORMAT.format(issue.createdAt),
+            issue.author.username
+        )
         issue.assignees.firstOrNull()?.let {
             assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
         }

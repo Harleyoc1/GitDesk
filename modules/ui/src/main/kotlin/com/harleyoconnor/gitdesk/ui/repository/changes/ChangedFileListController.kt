@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.repository.Repository
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.setOnActions
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -129,8 +130,8 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
             val cells = buildCells(changedFiles)
             root.children.addAll(cells)
             stageAllCheckbox.isDisable = cells.isEmpty()
-            changedFilesLabel.text = TRANSLATIONS_BUNDLE.getString("ui.repository.tab.changes.changed_files")
-                .replaceFirst("{}", cells.size.toString())
+            changedFilesLabel.text =
+                TRANSLATIONS_BUNDLE.getString("ui.repository.tab.changes.changed_files", cells.size.toString())
             updateStageAllCheckbox()
         }
     }

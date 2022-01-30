@@ -16,3 +16,11 @@ private fun getMainBundle() = try {
 } catch (e: MissingResourceException) {
     ResourceBundle.getBundle(MAIN_BUNDLE, Locale.UK)
 }
+
+fun ResourceBundle.getString(key: String, vararg arguments: String): String {
+    var string = getString(key)
+    for (argument in arguments) {
+        string = string.replaceFirst("{}", argument)
+    }
+    return string
+}
