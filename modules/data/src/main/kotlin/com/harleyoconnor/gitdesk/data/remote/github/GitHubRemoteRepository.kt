@@ -1,11 +1,16 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.MOSHI
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.asGitHubId
+import com.harleyoconnor.gitdesk.data.remote.github.search.IssueSearch
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * @author Harley O'Connor
@@ -40,6 +45,21 @@ class GitHubRemoteRepository(
             parentData!!.name.ownerName,
             parentData.name.repositoryName
         ) else null
+
+    override fun getIssues(
+        query: String,
+        sort: String,
+        order: RemoteRepository.Order,
+        executor: Executor
+    ): CompletableFuture<Array<Issue>> {
+        return CompletableFuture.supplyAsync({
+            val query = "repo:${name.getFullName()} is:issue " + query
+            println(query)
+            IssueSearch(query, sort, order.asGitHubId()).run()?.let {
+                it.items as Array<Issue>
+            }
+        }, executor)
+    }
 
     class ParentRepository(val name: RemoteRepository.Name)
 

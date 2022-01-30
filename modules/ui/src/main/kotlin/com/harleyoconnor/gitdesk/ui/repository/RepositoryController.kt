@@ -9,6 +9,7 @@ import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTab
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
+import com.harleyoconnor.gitdesk.ui.repository.issues.IssuesTabController
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
@@ -87,6 +88,18 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         }
     }
 
+    private val issuesTabView by lazy {
+        IssuesTabController.Loader.load(
+            IssuesTabController.Context(parent.stage, repository)
+        )
+    }
+
+    private val issuesTab by lazy {
+        Tab(issuesTabView.root) {
+            root.center = it
+        }
+    }
+
     override fun setup(context: Context) {
         this.parent = context.parent
         this.repository = context.repository
@@ -101,6 +114,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         }
         changesTabButton.setOnSelected {
             changesTab.open()
+        }
+        issuesTabButton.setOnSelected {
+            issuesTab.open()
         }
         editorTabButton.fire()
 

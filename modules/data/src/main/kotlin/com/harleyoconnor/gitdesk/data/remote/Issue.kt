@@ -1,5 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote
 
+import com.squareup.moshi.Json
+import java.net.URL
 import java.util.*
 
 /**
@@ -14,11 +16,13 @@ interface Issue {
 
     val author: User
 
-    val labels: Array<Label>
+    val url: URL
+
+    val labels: Array<out Label>
 
     val state: State
 
-    val assignees: List<User>
+    val assignees: Array<out User>
 
     val createdAt: Date
 
@@ -29,7 +33,9 @@ interface Issue {
     val body: String
 
     enum class State {
-        OPEN, CLOSED, ALL
+        @Json(name = "open") OPEN,
+        @Json(name = "closed") CLOSED,
+        @Json(name = "all") ALL
     }
 
 }

@@ -3,6 +3,8 @@ package com.harleyoconnor.gitdesk.data.remote
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import java.net.URL
 import java.util.Date
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * A [Remote] Git repository containing additional context from the server.
@@ -35,12 +37,18 @@ interface RemoteRepository : Remote {
 
     val hasIssues: Boolean
 
-    // TODO: Issues and PRs
+    fun getIssues(query: String, sort: String, order: Order, executor: Executor): CompletableFuture<Array<Issue>>
+
+    // TODO: PRs
 
     data class Name(
         val ownerName: String,
         val repositoryName: String
     ) {
         fun getFullName(): String = "$ownerName/$repositoryName"
+    }
+
+    enum class Order {
+        ASCENDING, DESCENDING
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.IssueCellList?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssuesListController" fx:id="root"
+      spacing="2">
+    <padding>
+        <Insets top="10" left="8" bottom="10" right="8"/>
+    </padding>
+    <TextField fx:id="searchBar" promptText="%ui.search.prompt" prefHeight="35" maxWidth="Infinity">
+        is:open
+    </TextField>
+    <Region prefHeight="8"/>
+    <ScrollPane minWidth="150" fitToWidth="true" VBox.vgrow="ALWAYS">
+        <IssueCellList fx:id="content"/>
+    </ScrollPane>
+</VBox>

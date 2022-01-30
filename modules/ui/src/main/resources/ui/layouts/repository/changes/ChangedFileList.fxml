@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.changes.ChangedFileListController" fx:id="root"
-      spacing="2">
+      spacing="2" styleClass="borderless-cell-list">
     <padding>
         <Insets top="10" left="8" bottom="10" right="8"/>
     </padding>

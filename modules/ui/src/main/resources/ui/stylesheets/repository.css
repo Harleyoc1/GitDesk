@@ -18,26 +18,26 @@
     -fx-border-width: 0;
 }
 
-.side-bar .cell {
+borderless-cell-list > .cell {
     -fx-border-width: 1px;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
     -fx-border-color: transparent;
 }
 
-.side-bar .cell:selected {
+borderless-cell-list > .cell:selected {
     -fx-border-color: -accent-color;
 }
 
-.side-bar .cell:open {
+borderless-cell-list > .cell:open {
     -fx-background-color: -accent-color;
 }
 
-.side-bar .cell:open .text {
+borderless-cell-list > .cell:open .text {
     -fx-text-fill: -accent-contrast-color;
 }
 
-.side-bar .cell:open .icon {
+borderless-cell-list > .cell:open .icon {
     -fx-background-color: -accent-contrast-color;
 }
 

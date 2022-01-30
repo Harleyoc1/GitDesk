@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueCellController"
+      alignment="CENTER_LEFT" styleClass="cell, issue-cell" spacing="8" onMousePressed="#select">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <MenuItem text="%ui.button.open" onAction="#open"/>
+                <Menu text="%ui.button.open_in">
+                    <MenuItem text="%ui.button.open_in.browser" onAction="#openInBrowser"/>
+                </Menu>
+                <MenuItem text="%ui.button.close" onAction="#close"/>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <SVGIcon fx:id="issueIcon" prefWidth="12" prefHeight="12" path="/ui/icons/issue.svg" styleClass="icon"/>
+    <VBox>
+        <Label fx:id="titleLabel" styleClass="text, heading-2">
+            <tooltip>
+                <Tooltip/>
+            </tooltip>
+        </Label>
+        <Label fx:id="otherInfoLabel" styleClass="body, secondary-text"/>
+    </VBox>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Circle fx:id="assigneeAvatar" styleClass="bordered" radius="10"/>
+</HBox>
