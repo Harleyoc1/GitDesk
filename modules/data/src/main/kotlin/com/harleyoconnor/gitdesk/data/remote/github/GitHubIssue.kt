@@ -5,7 +5,7 @@ import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
-import java.util.*
+import java.util.Date
 
 /**
  *
@@ -22,7 +22,8 @@ class GitHubIssue(
     @Json(name = "created_at") override val createdAt: Date,
     @Json(name = "updated_at") override val updatedAt: Date,
     @Json(name = "closed_at") override val closedAt: Date?,
-    override val body: String,
+    override val body: String?,
+    override val comments: Int,
     @Json(name = "node_id") override val nodeId: String,
 ) : Issue, GitHubNode {
 

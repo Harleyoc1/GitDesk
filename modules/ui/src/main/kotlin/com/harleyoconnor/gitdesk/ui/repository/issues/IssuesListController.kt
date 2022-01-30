@@ -44,6 +44,11 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     override fun setup(context: Context) {
         parent = context.parent
         remote = context.remote
+
+        content.setOnElementSelected {
+            parent.setShownIssue(it.element)
+        }
+
         registerSearchBarInputs()
         updateSearchResults(searchBar.text)
     }
@@ -51,22 +56,25 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     private fun registerSearchBarInputs() {
         Nodes.addInputMap(searchBar, InputMap.sequence(
             InputMap.consume(EventPattern.keyPressed(KeyCode.ENTER)) {
-                updateSearchResults(searchBar.text)
+                if (!updateSearchResults(searchBar.text)) {
+                    content.select()
+                }
             },
             InputMap.consume(EventPattern.keyPressed(KeyCode.UP)) {
                 content.moveSelectionUp()
-                content.select()
             },
             InputMap.consume(EventPattern.keyPressed(KeyCode.DOWN)) {
                 content.moveSelectionDown()
-                content.select()
             }
         ))
     }
 
-    private fun updateSearchResults(query: String) {
+    /**
+     * @return `true` if a search will be completed
+     */
+    private fun updateSearchResults(query: String): Boolean {
         if (query == lastQuery) {
-            return
+            return false
         }
         lastQuery = query
         remote.getIssues(
@@ -84,6 +92,7 @@ class IssuesListController : ViewController<IssuesListController.Context> {
                 displayCells(cells)
             }
         }
+        return true
     }
 
     private fun loadCells(issues: Array<Issue>): Map<Issue, HBox> {
@@ -97,6 +106,10 @@ class IssuesListController : ViewController<IssuesListController.Context> {
         cells.forEach { cell ->
             content.addElement(cell.key, cell.value)
         }
+    }
+
+    fun select(issue: Issue) {
+        content.select(issue)
     }
 
 }

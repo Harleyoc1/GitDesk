@@ -53,9 +53,12 @@ class GitHubRemoteRepository(
         executor: Executor
     ): CompletableFuture<Array<Issue>> {
         return CompletableFuture.supplyAsync({
-            val query = "repo:${name.getFullName()} is:issue " + query
-            println(query)
-            IssueSearch(query, sort, order.asGitHubId()).run()?.let {
+            IssueSearch(
+                "repo:${name.getFullName()} is:issue " + query,
+                sort,
+                order.asGitHubId(),
+                20
+            ).run()?.let {
                 it.items as Array<Issue>
             }
         }, executor)

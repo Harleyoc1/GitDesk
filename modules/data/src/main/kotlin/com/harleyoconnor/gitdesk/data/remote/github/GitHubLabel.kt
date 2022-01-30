@@ -13,7 +13,7 @@ import com.squareup.moshi.JsonAdapter
 class GitHubLabel(
     override val name: String,
     @HexColour @Json(name = "color") override val colour: Int,
-    override val description: String,
+    override val description: String?,
     @Json(name = "node_id") override val nodeId: String
 ): Label, GitHubNode {
 

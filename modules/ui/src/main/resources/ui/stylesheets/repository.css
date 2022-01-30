@@ -174,3 +174,24 @@ borderless-cell-list > .cell:open .icon {
     -fx-border-width: 1px 0 0 0;
     -fx-background-color: -primary-background-color;
 }
+
+.issue-state-box {
+    -fx-padding: 0 0.6667em 0 0.6667em;
+    -fx-background-radius: 0.3334em;
+}
+
+.issue-state-box:open {
+    -fx-background-color: -open-accent-color;
+}
+
+.issue-state-box:closed {
+    -fx-background-color: -closed-accent-color;
+}
+
+.issue-state-box > .icon {
+    -fx-background-color: -accent-contrast-color;
+}
+
+.issue-state-box > .text {
+    -fx-text-fill: -accent-contrast-color;
+}

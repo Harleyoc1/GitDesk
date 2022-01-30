@@ -10,6 +10,6 @@ interface Label {
 
     val colour: Int
 
-    val description: String
+    val description: String?
 
 }

@@ -30,7 +30,9 @@ interface Issue {
 
     val closedAt: Date?
 
-    val body: String
+    val body: String?
+
+    val comments: Int
 
     enum class State {
         @Json(name = "open") OPEN,

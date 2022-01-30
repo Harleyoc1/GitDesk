@@ -4,19 +4,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssuesListController" fx:id="root"
       spacing="2">
-    <padding>
-        <Insets top="10" left="8" bottom="10" right="8"/>
-    </padding>
-    <TextField fx:id="searchBar" promptText="%ui.search.prompt" prefHeight="35" maxWidth="Infinity">
+    <TextField fx:id="searchBar" promptText="%ui.search.prompt" minHeight="35" maxWidth="Infinity">
+        <VBox.margin>
+            <Insets top="10" left="8" bottom="10" right="8"/>
+        </VBox.margin>
         is:open
     </TextField>
-    <Region prefHeight="8"/>
     <ScrollPane minWidth="150" fitToWidth="true" VBox.vgrow="ALWAYS">
-        <IssueCellList fx:id="content"/>
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+        <IssueCellList fx:id="content">
+            <padding>
+                <Insets left="8" right="8"/>
+            </padding>
+        </IssueCellList>
     </ScrollPane>
 </VBox>

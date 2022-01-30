@@ -52,6 +52,14 @@ abstract class SelectionCellList<E> : VBox() {
         }
     }
 
+    fun select(element: E) {
+        val index = elements.indexOf(element)
+        if (index > -1) {
+            selection = Selection(element, children[index], index)
+            select()
+        }
+    }
+
     fun moveSelectionDown() {
         selection?.down(elements, this.children)?.let {
             selection = it

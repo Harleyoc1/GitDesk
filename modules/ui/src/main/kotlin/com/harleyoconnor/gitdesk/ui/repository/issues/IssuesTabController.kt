@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.data.remote.withFullData
@@ -60,6 +61,13 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     private fun getCurrentRemote(): RemoteRepository {
         return repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+    }
+
+    fun setShownIssue(issue: Issue) {
+        issueBox.children.clear()
+        issueBox.children.add(
+            IssueViewController.Loader.load(IssueViewController.Context(issue)).root
+        )
     }
 
     @FXML
