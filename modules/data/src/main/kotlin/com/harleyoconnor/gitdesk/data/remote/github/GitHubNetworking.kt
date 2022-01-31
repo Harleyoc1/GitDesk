@@ -2,6 +2,8 @@ package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.remote.*
+import com.harleyoconnor.gitdesk.data.remote.github.timeline.GitHubTimelineAdapter
+import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
@@ -18,6 +20,10 @@ object GitHubNetworking : PlatformNetworking {
 
     private val repositoryUrlPattern =
         Pattern.compile("http(s?)://(.*@)?(www\\.)?github\\.com/[$acceptableUsernameRange]{4,}/[$acceptableRepositoryRange]+/?")
+
+    override fun canConnect(): Boolean {
+        return getJsonAt(URI.create(url)).statusCode() in 200 until 300
+    }
 
     override fun getUser(username: String): User? {
         val response = getJsonAt(URI.create(getUserUrl(username)))
@@ -69,6 +75,26 @@ object GitHubNetworking : PlatformNetworking {
     }
 
     private fun getLicenseUrl(key: String) = "$url/licenses/$key"
+
+    override fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue? {
+        val response = getJsonAt(URI.create(getIssueUrl(repositoryName, number)))
+        return if (response.statusCode() in 200 until 300) {
+            GitHubIssue.ADAPTER.fromJson(response.body())
+        } else null
+    }
+
+    private fun getIssueUrl(repositoryName: RemoteRepository.Name, number: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number"
+
+    override fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int): Timeline? {
+        val response = getJsonAt(URI.create(getTimelineUrl(repositoryName, number)))
+        return if (response.statusCode() in 200 until 300) {
+            GitHubTimelineAdapter.fromJson(response.body())
+        } else null
+    }
+
+    private fun getTimelineUrl(repositoryName: RemoteRepository.Name, number: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number/timeline"
 
     private fun getJsonAt(uri: URI): HttpResponse<String> {
         Session.getOrLoad()?.getGitHubAccount()?.let {

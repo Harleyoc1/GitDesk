@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote
 
+import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.squareup.moshi.Json
 import java.net.URL
 import java.util.*
@@ -33,6 +34,8 @@ interface Issue {
     val body: String?
 
     val comments: Int
+
+    fun getTimeline(name: RemoteRepository.Name): Timeline?
 
     enum class State {
         @Json(name = "open") OPEN,

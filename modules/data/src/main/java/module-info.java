@@ -10,6 +10,7 @@ module gitdesk.data {
     requires java.net.http;
     requires org.apache.logging.log4j;
     requires com.google.common;
+    requires okio;
 
     exports com.harleyoconnor.gitdesk.data;
     exports com.harleyoconnor.gitdesk.data.account;
@@ -25,6 +26,7 @@ module gitdesk.data {
     opens com.harleyoconnor.gitdesk.data.account to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.local to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github to kotlin.reflect;
+    opens com.harleyoconnor.gitdesk.data.remote.github.timeline to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github.search to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.serialisation to kotlin.reflect;
 }

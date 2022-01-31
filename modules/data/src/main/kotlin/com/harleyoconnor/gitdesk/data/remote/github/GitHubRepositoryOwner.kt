@@ -9,8 +9,7 @@ import com.squareup.moshi.Json
 class GitHubRepositoryOwner(
     @Json(name = "login") override val name: String,
     val type: Type,
-    @Json(name = "node_id") override val nodeId: String
-): RepositoryOwner, GitHubNode {
+): RepositoryOwner {
 
     enum class Type {
         @Json(name = "User") USER, @Json(name = "Organization") ORGANISATION

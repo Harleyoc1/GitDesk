@@ -2,10 +2,12 @@ package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
-import java.util.Date
+import java.util.*
 
 /**
  *
@@ -23,12 +25,14 @@ class GitHubIssue(
     @Json(name = "updated_at") override val updatedAt: Date,
     @Json(name = "closed_at") override val closedAt: Date?,
     override val body: String?,
-    override val comments: Int,
-    @Json(name = "node_id") override val nodeId: String,
-) : Issue, GitHubNode {
+    override val comments: Int
+) : Issue {
 
     companion object {
         val ADAPTER: JsonAdapter<GitHubIssue> by lazy { MOSHI.adapter(GitHubIssue::class.java) }
     }
 
+    override fun getTimeline(name: RemoteRepository.Name): Timeline? {
+        return GitHubNetworking.getIssueTimeline(name, number)
+    }
 }

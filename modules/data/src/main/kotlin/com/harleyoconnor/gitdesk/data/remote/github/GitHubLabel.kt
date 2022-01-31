@@ -13,9 +13,8 @@ import com.squareup.moshi.JsonAdapter
 class GitHubLabel(
     override val name: String,
     @HexColour @Json(name = "color") override val colour: Int,
-    override val description: String?,
-    @Json(name = "node_id") override val nodeId: String
-): Label, GitHubNode {
+    override val description: String?
+): Label {
 
     companion object {
         val ADAPTER: JsonAdapter<GitHubLabel> by lazy { MOSHI.adapter(GitHubLabel::class.java) }

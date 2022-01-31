@@ -17,7 +17,6 @@ import java.util.concurrent.Executor
  */
 class GitHubRemoteRepository(
     val id: Int,
-    @Json(name = "node_id") override val nodeId: String,
     @Json(name = "full_name") override val name: RemoteRepository.Name,
     override val private: Boolean,
     override val owner: GitHubRepositoryOwner,
@@ -34,7 +33,7 @@ class GitHubRemoteRepository(
     override val license: GitHubLicense?,
     @Json(name = "has_issues") override val hasIssues: Boolean,
     @Json(name = "parent") private val parentData: ParentRepository?
-) : GitHubNode, RemoteRepository {
+) : RemoteRepository {
 
     companion object {
         val ADAPTER: JsonAdapter<GitHubRemoteRepository> by lazy { MOSHI.adapter(GitHubRemoteRepository::class.java) }
