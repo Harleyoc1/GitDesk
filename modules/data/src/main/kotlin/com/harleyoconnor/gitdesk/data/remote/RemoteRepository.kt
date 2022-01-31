@@ -37,6 +37,10 @@ interface RemoteRepository : Remote {
 
     val hasIssues: Boolean
 
+    val labels: Array<Label>
+
+    fun getLabel(name: String): Label?
+
     fun getIssues(query: String, sort: String, order: Order, executor: Executor): CompletableFuture<Array<Issue>>
 
     // TODO: PRs

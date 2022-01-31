@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.shape.Circle?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueCommentController" styleClass="comment">
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.CommentController" styleClass="comment">
     <HBox minHeight="30" styleClass="header" spacing="5" alignment="CENTER_LEFT">
         <Circle fx:id="commenterAvatar" styleClass="bordered" radius="10"/>
         <Label fx:id="usernameLabel" styleClass="text, body"/>

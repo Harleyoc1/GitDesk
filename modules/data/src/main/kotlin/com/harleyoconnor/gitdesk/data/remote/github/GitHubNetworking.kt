@@ -1,12 +1,16 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
+import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.remote.*
 import com.harleyoconnor.gitdesk.data.remote.github.timeline.GitHubTimelineAdapter
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
+import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
+import com.squareup.moshi.Types
+import com.squareup.moshi.adapter
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpResponse
@@ -76,6 +80,17 @@ object GitHubNetworking : PlatformNetworking {
 
     private fun getLicenseUrl(key: String) = "$url/licenses/$key"
 
+    override fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>? {
+        val response = getJsonAt(URI.create(getLabelsUrl(repositoryName)))
+        return if (response.statusCode() in 200 until 300) {
+            MOSHI.adapter<Array<Label>>(Types.newParameterizedType(Array::class.java, Label::class.java))
+                .fromJson(response.body())
+        } else null
+    }
+
+    private fun getLabelsUrl(repositoryName: RemoteRepository.Name) =
+        "$url/repos/${repositoryName.getFullName()}/labels"
+
     override fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue? {
         val response = getJsonAt(URI.create(getIssueUrl(repositoryName, number)))
         return if (response.statusCode() in 200 until 300) {
@@ -86,8 +101,10 @@ object GitHubNetworking : PlatformNetworking {
     private fun getIssueUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number"
 
-    override fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int): Timeline? {
-        val response = getJsonAt(URI.create(getTimelineUrl(repositoryName, number)))
+    override fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int, page: Int): Timeline? {
+        val response = getJsonAt(
+            URIBuilder().append(getTimelineUrl(repositoryName, number)).parameter("page", page.toString()).build()
+        )
         return if (response.statusCode() in 200 until 300) {
             GitHubTimelineAdapter.fromJson(response.body())
         } else null

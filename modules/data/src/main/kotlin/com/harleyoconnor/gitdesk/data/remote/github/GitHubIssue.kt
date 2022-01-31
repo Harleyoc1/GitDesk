@@ -32,7 +32,7 @@ class GitHubIssue(
         val ADAPTER: JsonAdapter<GitHubIssue> by lazy { MOSHI.adapter(GitHubIssue::class.java) }
     }
 
-    override fun getTimeline(name: RemoteRepository.Name): Timeline? {
-        return GitHubNetworking.getIssueTimeline(name, number)
+    override fun getTimeline(name: RemoteRepository.Name, page: Int): Timeline? {
+        return GitHubNetworking.getIssueTimeline(name, number, page)
     }
 }

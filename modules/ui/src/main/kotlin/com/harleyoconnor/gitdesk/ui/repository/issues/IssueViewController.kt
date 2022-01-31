@@ -6,21 +6,26 @@ import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.repository.LabelController
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
+import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.ImagePattern
 import javafx.scene.shape.Circle
@@ -44,6 +49,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     class Context(val remoteRepositoryName: RemoteRepository.Name, val issue: Issue) : ViewController.Context
 
+    private lateinit var remoteRepositoryName: RemoteRepository.Name
     private lateinit var issue: Issue
 
     @FXML
@@ -71,9 +77,26 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var stateLabel: Label
 
     @FXML
+    private lateinit var labelsBox: HBox
+
+    @FXML
+    private lateinit var timelineScrollPane: ScrollPane
+
+    @FXML
     private lateinit var timelineBox: VBox
 
+    /** Stores the latest timeline page currently being shown. */
+    private var latestTimelinePageShown = 1
+
+    @FXML
+    private fun initialize() {
+        timelineScrollPane.whenScrolledToBottom {
+            loadNextTimelinePage()
+        }
+    }
+
     override fun setup(context: Context) {
+        this.remoteRepositoryName = context.remoteRepositoryName
         this.issue = context.issue
 
         titleLabel.text = issue.title
@@ -97,8 +120,8 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             issue.comments.toString()
         )
 
-        timelineBox.children.clear()
-        loadTimeline(context.remoteRepositoryName)
+        loadLabels()
+        loadTimeline()
     }
 
     private fun setupUIForOpenIssue() {
@@ -131,21 +154,29 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         return icon
     }
 
-    private fun getIssueViewForRootComment() = IssueCommentController.Loader.load(
-        IssueCommentController.Context(
-            issue, IssueComment(issue.body, issue.author, issue.createdAt, issue.updatedAt)
-        )
-    )
+    private fun loadLabels() {
+        issue.labels.forEach {
+            labelsBox.children.add(loadLabelView(it).root)
+        }
+    }
 
-    private fun loadTimeline(remoteRepositoryName: RemoteRepository.Name) {
+    private fun loadLabelView(label: com.harleyoconnor.gitdesk.data.remote.Label):
+            ViewLoader.View<LabelController, Pane> {
+        return LabelController.Loader.load(LabelController.Context(label))
+    }
+
+    private fun loadTimeline() {
         // Load root comment.
         timelineBox.children.add(
             getIssueViewForRootComment().root
         )
-
         // Load rest of timeline events.
+        loadNextTimelinePage()
+    }
+
+    private fun loadNextTimelinePage() {
         CompletableFuture.runAsync({
-            issue.getTimeline(remoteRepositoryName)?.forEachEvent {
+            issue.getTimeline(remoteRepositoryName, latestTimelinePageShown++)?.forEachEvent {
                 getViewForEvent(this, issue, it)?.let { view ->
                     Platform.runLater {
                         timelineBox.children.add(view.root)
@@ -154,6 +185,12 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             }
         }, Application.getInstance().backgroundExecutor)
     }
+
+    private fun getIssueViewForRootComment() = CommentController.Loader.load(
+        CommentController.Context(
+            issue, IssueComment(issue.body, issue.author, issue.createdAt, issue.updatedAt)
+        )
+    )
 
     @FXML
     private fun toggleState(event: ActionEvent) {

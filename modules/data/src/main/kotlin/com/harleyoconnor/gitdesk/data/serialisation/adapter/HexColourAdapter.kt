@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data.serialisation.adapter
 
+import com.harleyoconnor.gitdesk.util.toHexColourString
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonReader
@@ -15,7 +16,7 @@ object HexColourAdapter : JsonAdapter<Int>() {
         if (hex == null) {
             writer.nullValue()
         } else {
-            writer.value(Integer.toHexString(hex))
+            writer.value(hex.toHexColourString())
         }
     }
 

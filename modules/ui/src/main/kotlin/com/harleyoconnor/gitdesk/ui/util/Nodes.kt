@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.ui.style.TOP_PSEUDO_CLASS
 import javafx.scene.Node
 import javafx.scene.control.CheckBox
 import javafx.scene.control.RadioButton
+import javafx.scene.control.ScrollPane
 
 fun Node.enableTopClass() {
     this.pseudoClassStateChanged(TOP_PSEUDO_CLASS, true)
@@ -36,6 +37,14 @@ fun CheckBox.setOnActions(selected: () -> Unit, deselected: () -> Unit) {
             selected()
         } else {
             deselected()
+        }
+    }
+}
+
+fun ScrollPane.whenScrolledToBottom(action: () -> Unit) {
+    this.vvalueProperty().addListener { _, _, new ->
+        if (new == 1.0) {
+            action()
         }
     }
 }

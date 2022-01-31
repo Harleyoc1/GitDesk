@@ -2,13 +2,15 @@ package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.asGitHubId
 import com.harleyoconnor.gitdesk.data.remote.github.search.IssueSearch
+import com.harleyoconnor.gitdesk.util.stream
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
-import java.util.*
+import java.util.Date
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -44,6 +46,17 @@ class GitHubRemoteRepository(
             parentData!!.name.ownerName,
             parentData.name.repositoryName
         ) else null
+
+    override val labels: Array<Label> by lazy {
+        GitHubNetworking.getLabels(name) ?: arrayOf()
+    }
+
+    override fun getLabel(name: String): Label? {
+        return labels.stream()
+            .filter { it.name == name }
+            .findFirst()
+            .orElse(null)
+    }
 
     override fun getIssues(
         query: String,

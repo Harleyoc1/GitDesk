@@ -20,8 +20,10 @@ interface PlatformNetworking {
 
     fun getLicense(key: String): License?
 
+    fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>?
+
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?
 
-    fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int): Timeline?
+    fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int, page: Int): Timeline?
 
 }

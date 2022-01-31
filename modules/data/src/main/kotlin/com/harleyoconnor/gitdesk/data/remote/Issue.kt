@@ -35,7 +35,7 @@ interface Issue {
 
     val comments: Int
 
-    fun getTimeline(name: RemoteRepository.Name): Timeline?
+    fun getTimeline(name: RemoteRepository.Name, page: Int): Timeline?
 
     enum class State {
         @Json(name = "open") OPEN,
