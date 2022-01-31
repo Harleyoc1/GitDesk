@@ -6,6 +6,10 @@ package com.harleyoconnor.gitdesk.data.remote.timeline
 class Timeline(
     private val events: Array<Event>
 ) {
+    fun forEachEvent(action: (Event) -> Unit) {
+        events.forEach(action)
+    }
+
     override fun toString(): String {
         return events.contentToString()
     }

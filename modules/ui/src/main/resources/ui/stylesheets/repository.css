@@ -195,3 +195,20 @@ borderless-cell-list > .cell:open .icon {
 .issue-state-box > .text {
     -fx-text-fill: -accent-contrast-color;
 }
+
+.timeline > .comment {
+    -fx-border-color: -primary-border-color;
+    -fx-border-radius: 0.3334em;
+    -fx-background-radius: 0.3334em;
+    -fx-background-color: -secondary-background-color;
+}
+
+.timeline > .comment > .header {
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 0 0.6667em;
+}
+
+.timeline > .comment > .body {
+    -fx-padding: /*0.3334em */0.6667em;
+}

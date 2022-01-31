@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 class IssueCellController : ViewController<IssueCellController.Context> {
 
     companion object {
-        private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM")
+        private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM yyyy")
     }
 
     object Loader : ResourceViewLoader<Context, IssueCellController, HBox>(

@@ -17,6 +17,7 @@ module gitdesk.data {
     exports com.harleyoconnor.gitdesk.data.highlighting;
     exports com.harleyoconnor.gitdesk.data.local;
     exports com.harleyoconnor.gitdesk.data.remote;
+    exports com.harleyoconnor.gitdesk.data.remote.timeline;
     exports com.harleyoconnor.gitdesk.data.remote.github;
     exports com.harleyoconnor.gitdesk.data.remote.github.search;
     exports com.harleyoconnor.gitdesk.data.serialisation.qualifier;

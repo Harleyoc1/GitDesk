@@ -66,7 +66,7 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     fun setShownIssue(issue: Issue) {
         issueBox.children.clear()
         issueBox.children.add(
-            IssueViewController.Loader.load(IssueViewController.Context(issue)).root
+            IssueViewController.Loader.load(IssueViewController.Context(getCurrentRemote().name, issue)).root
         )
     }
 

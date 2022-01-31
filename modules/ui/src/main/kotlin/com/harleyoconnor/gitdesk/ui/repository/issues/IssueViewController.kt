@@ -1,6 +1,9 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.IssueComment
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
@@ -10,6 +13,7 @@ import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -21,14 +25,15 @@ import javafx.scene.layout.VBox
 import javafx.scene.paint.ImagePattern
 import javafx.scene.shape.Circle
 import java.text.SimpleDateFormat
+import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor
  */
-class IssueViewController : ViewController<IssueViewController.Context> {
+class IssueViewController : ViewController<IssueViewController.Context>, TimelineController {
 
     companion object {
-        private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM")
+        private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM yyyy")
         private val OPEN_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/issue.svg"))
         private val CLOSED_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_issue.svg"))
     }
@@ -37,7 +42,7 @@ class IssueViewController : ViewController<IssueViewController.Context> {
         UIResource("/ui/layouts/repository/issues/IssueView.fxml")
     )
 
-    class Context(val issue: Issue) : ViewController.Context
+    class Context(val remoteRepositoryName: RemoteRepository.Name, val issue: Issue) : ViewController.Context
 
     private lateinit var issue: Issue
 
@@ -65,6 +70,9 @@ class IssueViewController : ViewController<IssueViewController.Context> {
     @FXML
     private lateinit var stateLabel: Label
 
+    @FXML
+    private lateinit var timelineBox: VBox
+
     override fun setup(context: Context) {
         this.issue = context.issue
 
@@ -88,6 +96,9 @@ class IssueViewController : ViewController<IssueViewController.Context> {
             CREATED_AT_FORMAT.format(issue.createdAt),
             issue.comments.toString()
         )
+
+        timelineBox.children.clear()
+        loadTimeline(context.remoteRepositoryName)
     }
 
     private fun setupUIForOpenIssue() {
@@ -118,6 +129,30 @@ class IssueViewController : ViewController<IssueViewController.Context> {
         icon.setupFromSvg(OPEN_ICON)
         icon.styleClass.addAll("icon", "open-accent")
         return icon
+    }
+
+    private fun getIssueViewForRootComment() = IssueCommentController.Loader.load(
+        IssueCommentController.Context(
+            issue, IssueComment(issue.body, issue.author, issue.createdAt, issue.updatedAt)
+        )
+    )
+
+    private fun loadTimeline(remoteRepositoryName: RemoteRepository.Name) {
+        // Load root comment.
+        timelineBox.children.add(
+            getIssueViewForRootComment().root
+        )
+
+        // Load rest of timeline events.
+        CompletableFuture.runAsync({
+            issue.getTimeline(remoteRepositoryName)?.forEachEvent {
+                getViewForEvent(this, issue, it)?.let { view ->
+                    Platform.runLater {
+                        timelineBox.children.add(view.root)
+                    }
+                }
+            }
+        }, Application.getInstance().backgroundExecutor)
     }
 
     @FXML

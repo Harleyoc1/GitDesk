@@ -9,6 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.Group?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController">
     <HBox prefHeight="20" styleClass="tool-bar">
@@ -33,7 +36,7 @@
     </HBox>
     <HBox spacing="8" alignment="CENTER_LEFT">
         <VBox.margin>
-            <Insets top="10" right="8" left="8"/>
+            <Insets top="10" right="12" left="12"/>
         </VBox.margin>
         <Label fx:id="titleLabel" styleClass="text, title"/>
         <Label fx:id="numberLabel" styleClass="secondary-text, title"/>
@@ -48,9 +51,18 @@
     </HBox>
     <HBox spacing="8">
         <VBox.margin>
-            <Insets right="8" left="8"/>
+            <Insets right="12" left="12"/>
         </VBox.margin>
         <Label fx:id="subHeadingLabel" styleClass="secondary-text, body"/>
     </HBox>
-    <VBox fx:id="timelineBox"/>
+    <ScrollPane fitToWidth="true">
+        <VBox.margin>
+            <Insets top="10" bottom="10"/>
+        </VBox.margin>
+        <VBox fx:id="timelineBox" styleClass="timeline" spacing="8">
+            <padding>
+                <Insets right="12" left="12"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
 </VBox>
