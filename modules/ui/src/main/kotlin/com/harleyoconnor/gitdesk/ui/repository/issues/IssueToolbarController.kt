@@ -1,15 +1,17 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
-import com.harleyoconnor.gitdesk.data.account.Session
+import com.harleyoconnor.gitdesk.data.account.GitHubAccount
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.getCloseIcon
 import com.harleyoconnor.gitdesk.ui.util.getOpenIcon
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -23,16 +25,23 @@ import java.util.concurrent.CompletableFuture
  */
 class IssueToolbarController : ViewController<IssueToolbarController.Context> {
 
+    companion object {
+        val LOCK_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/lock.svg"))
+        val UNLOCK_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/unlock.svg"))
+    }
+
     // TODO: Refresh button, open in browser button.
 
     object Loader : ResourceViewLoader<Context, IssueToolbarController, VBox>(
         UIResource("/ui/layouts/repository/issues/IssueToolbar.fxml")
     )
 
-    class Context(val repository: RemoteRepository, val issue: Issue) : ViewController.Context
+    class Context(val parent: IssueViewController, val repository: RemoteRepository, val issue: IssueAccessor) :
+        ViewController.Context
 
-    private lateinit var issue: Issue
-
+    private lateinit var parent: IssueViewController
+    private lateinit var repository: RemoteRepository
+    private lateinit var issue: IssueAccessor
     @FXML
     private lateinit var root: HBox
 
@@ -40,25 +49,26 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
     private lateinit var toggleStateButton: Button
 
     @FXML
-    private lateinit var pinButton: Button
-
-    @FXML
-    private lateinit var deleteButton: Button
+    private lateinit var toggleLockedButton: Button
 
     override fun setup(context: Context) {
+        parent = context.parent
+        repository = context.repository
         issue = context.issue
+        reloadUI()
+    }
 
+    fun reloadUI() {
         root.children.remove(1, root.children.size)
-        Session.getOrLoad()?.getGitHubAccount()?.username?.let { username ->
-            showButtonsIfUserIsCollaborator(context, username)
+        GitHubAccount.getForActiveSession()?.username?.let { username ->
+            showButtonsIfUserIsCollaborator(username)
         }
     }
 
     private fun showButtonsIfUserIsCollaborator(
-        context: Context,
         username: String
     ) = CompletableFuture.supplyAsync({
-        context.repository.isCollaborator(username)
+        repository.isCollaborator(username)
     }, Application.getInstance().backgroundExecutor)
         .thenApplyAsync({ collaborator: Boolean? ->
             // Show edit issue buttons if we could check the user is a collaborator, and they are.
@@ -69,15 +79,16 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
 
     private fun showButtons() {
         root.children.addAll(
-            toggleStateButton, pinButton, deleteButton
+            toggleStateButton, toggleLockedButton
         )
-        loadUI()
+        loadUIForState()
+        loadUIForLockedState()
     }
 
-    fun loadUI() {
-        if (issue.state == Issue.State.OPEN) {
+    private fun loadUIForState() {
+        if (issue.get().state == Issue.State.OPEN) {
             loadUIForOpenIssue()
-        } else if (issue.state == Issue.State.CLOSED) {
+        } else {
             loadUIForClosedIssue()
         }
     }
@@ -92,15 +103,31 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
         toggleStateButton.tooltip = Tooltip(TRANSLATIONS_BUNDLE.getString("ui.button.open"))
     }
 
-    fun toggleState(event: ActionEvent) {
-
+    private fun loadUIForLockedState() {
+        if (issue.get().locked) {
+            loadUIForLockedIssue()
+        } else {
+            loadUIForUnlockedIssue()
+        }
     }
 
-    fun pin(event: ActionEvent) {
-
+    private fun loadUIForLockedIssue() {
+        (toggleLockedButton.graphic as SVGIcon).setupFromSvg(UNLOCK_ICON)
+        toggleLockedButton.tooltip.text = TRANSLATIONS_BUNDLE.getString("ui.button.unlock")
     }
 
-    fun delete(event: ActionEvent) {
+    private fun loadUIForUnlockedIssue() {
+        (toggleLockedButton.graphic as SVGIcon).setupFromSvg(LOCK_ICON)
+        toggleLockedButton.tooltip.text = TRANSLATIONS_BUNDLE.getString("ui.button.lock")
+    }
+
+    @FXML
+    private fun toggleState(event: ActionEvent) {
+        parent.toggleState()
+    }
+
+    @FXML
+    private fun toggleLocked(event: ActionEvent) {
 
     }
 

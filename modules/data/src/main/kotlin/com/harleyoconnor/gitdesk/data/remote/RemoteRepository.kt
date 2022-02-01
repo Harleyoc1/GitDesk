@@ -13,6 +13,8 @@ import java.util.concurrent.Executor
  */
 interface RemoteRepository : Remote {
 
+    val platform: Platform
+
     val name: Name
 
     val private: Boolean

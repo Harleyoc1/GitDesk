@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.data.remote.github
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.Label
+import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.asGitHubId
 import com.harleyoconnor.gitdesk.data.remote.github.search.IssueSearch
@@ -40,6 +41,8 @@ class GitHubRemoteRepository(
     companion object {
         val ADAPTER: JsonAdapter<GitHubRemoteRepository> by lazy { MOSHI.adapter(GitHubRemoteRepository::class.java) }
     }
+
+    override val platform: Platform = Platform.GITHUB
 
     override val parent: RemoteRepository?
         get() = if (fork) GitHubNetworking.getRemoteRepository(

@@ -1,8 +1,12 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.account.Session
+import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.IssueComment
+import com.harleyoconnor.gitdesk.data.remote.PlatformAccount
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.User
+import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
@@ -30,7 +34,9 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.ImagePattern
 import javafx.scene.shape.Circle
+import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -49,7 +55,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     class Context(val repository: RemoteRepository, val issue: Issue) : ViewController.Context
 
     private lateinit var repository: RemoteRepository
-    private lateinit var issue: Issue
+    private lateinit var issue: IssueHolder
 
     @FXML
     private lateinit var root: VBox
@@ -87,6 +93,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     /** Stores the latest timeline page currently being shown. */
     private var latestTimelinePageShown = 1
 
+    /** Stores the size of the last timeline page loaded. */
+    private var lastTimelinePageSize = 0
+
     @FXML
     private lateinit var commentField: TextArea
 
@@ -100,10 +109,23 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         }
     }
 
+    private val toolbarView by lazy {
+        IssueToolbarController.Loader.load(IssueToolbarController.Context(this, repository, issue))
+    }
+
     override fun setup(context: Context) {
         this.repository = context.repository
-        this.issue = context.issue
+        this.issue = IssueHolder(context.issue)
+        loadAll()
+    }
 
+    fun issueUpdated(issue: Issue) {
+        this.issue.set(issue)
+        loadStateLabel()
+        toolbarView.controller.reloadUI()
+    }
+
+    private fun loadAll() {
         loadToolbar()
         loadTitle()
         loadAssignees()
@@ -115,51 +137,53 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     private fun loadToolbar() {
         root.children.add(
-            0, IssueToolbarController.Loader.load(IssueToolbarController.Context(repository, issue)).root
+            0, toolbarView.root
         )
     }
 
     private fun loadTitle() {
-        titleLabel.text = issue.title
-        numberLabel.text = "#${issue.number}"
+        titleLabel.text = issue.get().title
+        numberLabel.text = "#${issue.get().number}"
     }
 
     private fun loadAssignees() {
-        issue.assignees.firstOrNull()?.let {
+        issue.get().assignees.firstOrNull()?.let {
             assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
         }
     }
 
     private fun loadStateLabel() {
-        if (issue.state == Issue.State.OPEN) {
-            setupUIForOpenIssue()
-        } else if (issue.state == Issue.State.CLOSED) {
-            setupUIForClosedIssue()
+        if (issue.get().state == Issue.State.OPEN) {
+            loadStateBoxForOpenIssue()
+        } else {
+            loadStateBoxForClosedIssue()
         }
-        stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.state.toString().lowercase())
+        stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.get().state.toString().lowercase())
     }
 
-    private fun setupUIForOpenIssue() {
+    private fun loadStateBoxForOpenIssue() {
         stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, true)
+        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, false)
         stateIcon.setupFromSvg(OPEN_ICON)
     }
 
-    private fun setupUIForClosedIssue() {
+    private fun loadStateBoxForClosedIssue() {
         stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true)
+        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, false)
         stateIcon.setupFromSvg(CLOSED_ICON)
     }
 
     private fun loadSubHeading() {
         subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString(
             "ui.repository.tab.issues.view.subheading",
-            issue.author.username,
-            CREATED_AT_FORMAT.format(issue.createdAt),
-            issue.comments.toString()
+            issue.get().author.username,
+            CREATED_AT_FORMAT.format(issue.get().createdAt),
+            issue.get().comments.toString()
         )
     }
 
     private fun loadLabels() {
-        issue.labels.forEach {
+        issue.get().labels.forEach {
             labelsBox.children.add(loadLabelView(it).root)
         }
     }
@@ -186,33 +210,85 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         CompletableFuture.supplyAsync({
             loadTimelineViews().map { it.root }
         }, Application.getInstance().backgroundExecutor)
+            .exceptionally {
+                LogManager.getLogger().error("Getting and compiling timeline.", it)
+                null
+            }
             .thenAcceptAsync({
-                timelineBox.children.addAll(it)
+                it?.let {
+                    timelineBox.children.addAll(it)
+                    loadNextTimelinePageIfLastFull()
+                }
             }, Application.getInstance().mainThreadExecutor)
+    }
+
+    /**
+     * Loads the next timeline page if last page was full (returned 100 events).
+     * This allows all timeline events to be loaded.
+     */
+    private fun loadNextTimelinePageIfLastFull() {
+        if (lastTimelinePageSize == 100) {
+            loadNextTimelinePage()
+        }
     }
 
     private fun loadTimelineViews(): MutableList<ViewLoader.View<*, out Node>> {
         val nodes = mutableListOf<ViewLoader.View<*, out Node>>()
-        issue.getTimeline(repository.name, latestTimelinePageShown++)?.forEachEvent {
+        lastTimelinePageSize = 0
+        issue.get().getTimeline(latestTimelinePageShown++)?.forEachEvent {
+            lastTimelinePageSize++
             getViewForEvent(this, issue, it)?.let { node -> nodes.add(node) }
         }
         return nodes
     }
 
-    private fun getIssueViewForRootComment() = CommentController.Loader.load(
-        CommentController.Context(
-            issue, IssueComment(issue.body, issue.author, issue.createdAt, issue.updatedAt)
+    private fun getIssueViewForRootComment(): ViewLoader.View<CommentController, VBox> {
+        val issue = this.issue.get()
+        return CommentController.Loader.load(
+            CommentController.Context(
+                this.issue, Comment.Raw(issue.body, issue.author, issue.createdAt, issue.updatedAt)
+            )
         )
-    )
-
-    @FXML
-    private fun toggleState(event: ActionEvent) {
-
     }
 
-    @FXML
-    private fun pin(event: ActionEvent) {
+    fun toggleState() {
+        getStateToggleFuture(issue.get()).exceptionally {
+            LogManager.getLogger().error("Could not toggle issue state.", it)
+            null
+        }.thenAcceptAsync({ issue ->
+            issue?.let {
+                val createdAt = Date()
+                issueUpdated(issue)
+                addEventToTimeline(
+                    createStateChangeEvent(issue.state, getCurrentPlatformUser()!!, createdAt)
+                )
+            }
+        }, Application.getInstance().mainThreadExecutor)
+    }
 
+    private fun getStateToggleFuture(issue: Issue) =
+        if (issue.state == Issue.State.OPEN)
+            issue.close()
+        else issue.open()
+
+    private fun getCurrentPlatformAccount(): PlatformAccount? {
+        return Session.getOrLoad()?.getLinkFor(repository.platform)
+    }
+
+    private fun getCurrentPlatformUser(): User? {
+        return getCurrentPlatformAccount()?.username?.let {
+            repository.platform.networking?.getUser(it)
+        }
+    }
+
+    private fun createStateChangeEvent(newState: Issue.State, actor: User, createdAt: Date): Event {
+        return Event.Raw(if (newState == Issue.State.OPEN) "reopened" else "closed", actor, createdAt)
+    }
+
+    private fun addEventToTimeline(event: Event) {
+        getViewForEvent(this, issue, event)?.root?.let {
+            timelineBox.children.add(it)
+        }
     }
 
     @FXML
@@ -227,7 +303,26 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     @FXML
     private fun comment(event: ActionEvent) {
+        val body = commentField.text
+        if (body.isNotEmpty()) {
+            issue.get().addComment(body)
+                .exceptionally {
+                    LogManager.getLogger().error("Could not post issue comment.", it)
+                    null
+                }
+                .thenAcceptAsync({ comment ->
+                    comment?.let {
+                        addCommentToTimeline(comment)
+                        commentField.text = ""
+                    }
+                }, Application.getInstance().mainThreadExecutor)
+        }
+    }
 
+    private fun addCommentToTimeline(comment: Comment) {
+        timelineBox.children.add(
+            CommentController.Loader.load(CommentController.Context(issue, comment)).root
+        )
     }
 
 

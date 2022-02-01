@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.util.network.CLIENT
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
 import com.harleyoconnor.gitdesk.util.network.Response
 import com.harleyoconnor.gitdesk.util.network.URIBuilder
+import com.harleyoconnor.gitdesk.util.network.toHttpFormData
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.http.HttpRequest
@@ -263,10 +264,4 @@ private fun startBuildingUri(): URIBuilder {
     return URIBuilder()
         .https()
         .append("harleyoconnor.com/gitdesk/")
-}
-
-private fun <K, V> Map<K, V>.toHttpFormData(): String {
-    return this.entries.stream()
-        .map { "${it.key}=${it.value}" }
-        .collect(Collectors.joining("&"))
 }

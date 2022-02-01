@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote.timeline
 
+import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.User
 import java.util.*
 
@@ -19,5 +20,11 @@ interface Event {
     val actor: User
 
     val createdAt: Date
+
+    class Raw(
+        override val id: String,
+        override val actor: User,
+        override val createdAt: Date
+    ) : Event
 
 }

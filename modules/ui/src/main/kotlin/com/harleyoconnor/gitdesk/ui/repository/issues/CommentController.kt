@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
-import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.IssueComment
+import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
@@ -29,10 +28,7 @@ class CommentController : ViewController<CommentController.Context> {
         UIResource("/ui/layouts/repository/issues/Comment.fxml")
     )
 
-    class Context(val issue: Issue, val comment: IssueComment) : ViewController.Context
-
-    private lateinit var issue: Issue
-    private lateinit var comment: IssueComment
+    class Context(val issue: IssueAccessor, val comment: Comment) : ViewController.Context
 
     @FXML
     private lateinit var commenterAvatar: Circle
@@ -47,9 +43,7 @@ class CommentController : ViewController<CommentController.Context> {
     private lateinit var bodyLabel: Label
 
     override fun setup(context: Context) {
-        issue = context.issue
-        comment = context.comment
-
+        val comment = context.comment
         commenterAvatar.fill = ImagePattern(Image(comment.commenter.avatarUrl.toExternalForm()))
         usernameLabel.text = comment.commenter.username
         createdLabel.text = TRANSLATIONS_BUNDLE.getString(

@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.data.account
 
 import com.harleyoconnor.gitdesk.data.MOSHI
+import com.harleyoconnor.gitdesk.data.remote.Platform
+import com.harleyoconnor.gitdesk.data.remote.PlatformAccount
 import com.harleyoconnor.gitdesk.util.create
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import com.squareup.moshi.Json
@@ -61,6 +63,13 @@ class Session(
             LogManager.getLogger().error("Error retrieving account data: ${response.getCode()}.")
         }
         return response.get()
+    }
+
+    fun getLinkFor(platform: Platform): PlatformAccount? {
+        return when (platform) {
+            Platform.GITHUB -> getGitHubAccount()
+            else -> null
+        }
     }
 
     fun getGitHubAccount(): GitHubAccount? {

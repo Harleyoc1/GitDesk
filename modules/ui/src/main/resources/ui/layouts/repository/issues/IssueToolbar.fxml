@@ -10,20 +10,12 @@
       minHeight="25" prefHeight="25" styleClass="tool-bar">
     <Region HBox.hgrow="ALWAYS"/>
     <Button fx:id="toggleStateButton" onAction="#toggleState" styleClass="icon-button, no-padding"/>
-    <Button fx:id="pinButton" onAction="#pin" styleClass="icon-button, no-padding">
+    <Button fx:id="toggleLockedButton" onAction="#toggleLocked" styleClass="icon-button, no-padding">
         <graphic>
-            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/pin.svg" styleClass="icon"/>
+            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/lock.svg" styleClass="icon"/>
         </graphic>
         <tooltip>
-            <Tooltip text="%ui.button.pin"/>
-        </tooltip>
-    </Button>
-    <Button fx:id="deleteButton" onAction="#delete" styleClass="icon-button, no-padding">
-        <graphic>
-            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/bin.svg" styleClass="icon"/>
-        </graphic>
-        <tooltip>
-            <Tooltip text="%ui.button.delete"/>
+            <Tooltip text="%ui.button.lock"/>
         </tooltip>
     </Button>
 </HBox>

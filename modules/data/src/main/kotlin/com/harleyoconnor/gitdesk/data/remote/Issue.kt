@@ -3,7 +3,8 @@ package com.harleyoconnor.gitdesk.data.remote
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.squareup.moshi.Json
 import java.net.URL
-import java.util.*
+import java.util.Date
+import java.util.concurrent.CompletableFuture
 
 /**
  *
@@ -31,16 +32,25 @@ interface Issue {
 
     val closedAt: Date?
 
+    val closedBy: User?
+
     val body: String?
 
     val comments: Int
 
-    fun getTimeline(name: RemoteRepository.Name, page: Int): Timeline?
+    val locked: Boolean
+
+    fun getTimeline(page: Int): Timeline?
+
+    fun addComment(body: String): CompletableFuture<Comment>
+
+    fun close(): CompletableFuture<Issue>
+
+    fun open(): CompletableFuture<Issue>
 
     enum class State {
         @Json(name = "open") OPEN,
-        @Json(name = "closed") CLOSED,
-        @Json(name = "all") ALL
+        @Json(name = "closed") CLOSED
     }
 
 }
