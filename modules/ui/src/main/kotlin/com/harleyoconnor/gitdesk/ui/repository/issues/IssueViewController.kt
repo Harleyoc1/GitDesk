@@ -17,6 +17,7 @@ import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
 import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
+import com.harleyoconnor.gitdesk.ui.util.showErrorDialogue
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -24,6 +25,7 @@ import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
@@ -119,7 +121,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         loadAll()
     }
 
-    fun issueUpdated(issue: Issue) {
+    private fun issueUpdated(issue: Issue) {
         this.issue.set(issue)
         loadStateLabel()
         toolbarView.controller.reloadUI()
@@ -252,18 +254,19 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     fun toggleState() {
-        getStateToggleFuture(issue.get()).exceptionally {
-            LogManager.getLogger().error("Could not toggle issue state.", it)
-            null
-        }.thenAcceptAsync({ issue ->
-            issue?.let {
+        getStateToggleFuture(issue.get())
+            .thenAcceptAsync({ issue ->
                 val createdAt = Date()
                 issueUpdated(issue)
                 addEventToTimeline(
                     createStateChangeEvent(issue.state, getCurrentPlatformUser()!!, createdAt)
                 )
-            }
-        }, Application.getInstance().mainThreadExecutor)
+            }, Application.getInstance().mainThreadExecutor)
+            .exceptionallyAsync({
+                showErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.toggle_issue_state"), it)
+                LogManager.getLogger().error("Could not toggle issue state.", it)
+                null
+            }, Application.getInstance().mainThreadExecutor)
     }
 
     private fun getStateToggleFuture(issue: Issue) =
@@ -306,15 +309,14 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         val body = commentField.text
         if (body.isNotEmpty()) {
             issue.get().addComment(body)
-                .exceptionally {
+                .thenAcceptAsync({ comment ->
+                    addCommentToTimeline(comment)
+                    commentField.text = ""
+                }, Application.getInstance().mainThreadExecutor)
+                .exceptionallyAsync({
+                    showErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
                     LogManager.getLogger().error("Could not post issue comment.", it)
                     null
-                }
-                .thenAcceptAsync({ comment ->
-                    comment?.let {
-                        addCommentToTimeline(comment)
-                        commentField.text = ""
-                    }
                 }, Application.getInstance().mainThreadExecutor)
         }
     }

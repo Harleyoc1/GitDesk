@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 class IssueCellController : ViewController<IssueCellController.Context> {
 
     companion object {
-        private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM yyyy")
+        private val DATE_FORMAT = SimpleDateFormat("dd MMM yyyy")
     }
 
     object Loader : ResourceViewLoader<Context, IssueCellController, HBox>(
@@ -37,6 +37,9 @@ class IssueCellController : ViewController<IssueCellController.Context> {
 
     private lateinit var parent: IssuesListController
     private lateinit var issue: Issue
+
+    @FXML
+    private lateinit var root: HBox
 
     @FXML
     private lateinit var issueIcon: SVGIcon
@@ -55,17 +58,25 @@ class IssueCellController : ViewController<IssueCellController.Context> {
         issue = context.issue
         if (issue.state == Issue.State.CLOSED) {
             issueIcon.setPath("/ui/icons/closed_issue.svg")
+            otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
+                "ui.repository.tab.issues.cell.closed.info",
+                issue.number.toString(),
+                DATE_FORMAT.format(issue.createdAt),
+                issue.author.username,
+                DATE_FORMAT.format(issue.closedAt)
+            )
+        } else {
+            otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
+                "ui.repository.tab.issues.cell.open.info",
+                issue.number.toString(),
+                DATE_FORMAT.format(issue.createdAt),
+                issue.author.username
+            )
         }
         titleLabel.text = issue.title
-        otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
-            "ui.repository.tab.issues.cell.info",
-            issue.number.toString(),
-            CREATED_AT_FORMAT.format(issue.createdAt),
-            issue.author.username
-        )
         issue.assignees.firstOrNull()?.let {
             assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
-        }
+        } ?: root.children.remove(assigneeAvatar)
     }
 
     @FXML

@@ -32,8 +32,6 @@ interface Issue {
 
     val closedAt: Date?
 
-    val closedBy: User?
-
     val body: String?
 
     val comments: Int

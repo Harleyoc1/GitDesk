@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueCellController"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueCellController" fx:id="root"
       alignment="CENTER_LEFT" styleClass="cell, issue-cell" spacing="8" onMousePressed="#select">
     <fx:define>
         <ContextMenu fx:id="contextMenu">

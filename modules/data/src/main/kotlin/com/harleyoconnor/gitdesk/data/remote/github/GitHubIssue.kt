@@ -28,7 +28,6 @@ class GitHubIssue(
     @Json(name = "created_at") override val createdAt: Date,
     @Json(name = "updated_at") override val updatedAt: Date,
     @Json(name = "closed_at") override val closedAt: Date?,
-    @Json(name = "closed_by") override val closedBy: GitHubUser?,
     override val body: String?,
     override val comments: Int,
     override val locked: Boolean
