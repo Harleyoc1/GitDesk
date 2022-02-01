@@ -2,15 +2,22 @@ package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.account.Session
-import com.harleyoconnor.gitdesk.data.remote.*
+import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.Label
+import com.harleyoconnor.gitdesk.data.remote.License
+import com.harleyoconnor.gitdesk.data.remote.Platform
+import com.harleyoconnor.gitdesk.data.remote.PlatformNetworking
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
+import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.github.timeline.GitHubTimelineAdapter
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
+import com.harleyoconnor.gitdesk.util.network.sendRequest
 import com.squareup.moshi.Types
-import com.squareup.moshi.adapter
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpResponse
@@ -71,6 +78,17 @@ object GitHubNetworking : PlatformNetworking {
         return RemoteRepository.Name(username, repository)
     }
 
+    override fun isCollaborator(username: String, repositoryName: RemoteRepository.Name): Boolean? {
+        val response = sendRequest(URI.create(getIsCollaboratorUrl(username, repositoryName)))
+        val statusCode = response.statusCode()
+        return if (statusCode != 404 && statusCode != 204) {
+            null
+        } else statusCode == 204
+    }
+
+    private fun getIsCollaboratorUrl(username: String, repositoryName: RemoteRepository.Name) =
+        "$url/repos/${repositoryName.getFullName()}/collaborators/$username"
+
     override fun getLicense(key: String): License? {
         val response = getJsonAt(URI.create(getLicenseUrl(key)))
         return if (response.statusCode() in 200 until 300) {
@@ -112,6 +130,13 @@ object GitHubNetworking : PlatformNetworking {
 
     private fun getTimelineUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number/timeline"
+
+    private fun sendRequest(uri: URI): HttpResponse<Void> {
+        Session.getOrLoad()?.getGitHubAccount()?.let {
+            return sendRequest(uri, "token ${it.accessToken}")
+        }
+        return com.harleyoconnor.gitdesk.util.network.sendRequest(uri)
+    }
 
     private fun getJsonAt(uri: URI): HttpResponse<String> {
         Session.getOrLoad()?.getGitHubAccount()?.let {

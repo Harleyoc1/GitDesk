@@ -51,6 +51,10 @@ class GitHubRemoteRepository(
         GitHubNetworking.getLabels(name) ?: arrayOf()
     }
 
+    override fun isCollaborator(username: String): Boolean? {
+        return GitHubNetworking.isCollaborator(username, name)
+    }
+
     override fun getLabel(name: String): Label? {
         return labels.stream()
             .filter { it.name == name }

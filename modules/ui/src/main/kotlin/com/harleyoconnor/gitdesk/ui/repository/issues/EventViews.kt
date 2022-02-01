@@ -43,4 +43,6 @@ fun loadLabeledEventView(event: Event): ViewLoader.View<LabeledEventController, 
     )
 }
 
-interface TimelineController
+interface TimelineController {
+    fun remove(node: Node)
+}

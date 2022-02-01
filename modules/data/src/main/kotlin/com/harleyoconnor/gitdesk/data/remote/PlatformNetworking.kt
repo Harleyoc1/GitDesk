@@ -18,6 +18,8 @@ interface PlatformNetworking {
 
     fun getRemoteRepositoryReference(url: URL): RemoteRepositoryReference?
 
+    fun isCollaborator(username: String, repositoryName: RemoteRepository.Name): Boolean?
+
     fun getLicense(key: String): License?
 
     fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>?

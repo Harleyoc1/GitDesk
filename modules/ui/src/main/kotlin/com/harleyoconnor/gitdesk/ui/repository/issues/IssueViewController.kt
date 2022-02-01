@@ -11,18 +11,19 @@ import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
+import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
+import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
-import com.harleyoconnor.gitdesk.util.xml.SVGCache
-import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
-import javafx.scene.control.Tooltip
+import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
@@ -39,21 +40,19 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     companion object {
         private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM yyyy")
-        private val OPEN_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/issue.svg"))
-        private val CLOSED_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_issue.svg"))
     }
 
     object Loader : ResourceViewLoader<Context, IssueViewController, VBox>(
         UIResource("/ui/layouts/repository/issues/IssueView.fxml")
     )
 
-    class Context(val remoteRepositoryName: RemoteRepository.Name, val issue: Issue) : ViewController.Context
+    class Context(val repository: RemoteRepository, val issue: Issue) : ViewController.Context
 
-    private lateinit var remoteRepositoryName: RemoteRepository.Name
+    private lateinit var repository: RemoteRepository
     private lateinit var issue: Issue
 
     @FXML
-    private lateinit var toggleStateButton: Button
+    private lateinit var root: VBox
 
     @FXML
     private lateinit var titleLabel: Label
@@ -89,6 +88,12 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private var latestTimelinePageShown = 1
 
     @FXML
+    private lateinit var commentField: TextArea
+
+    @FXML
+    private lateinit var commentButton: Button
+
+    @FXML
     private fun initialize() {
         timelineScrollPane.whenScrolledToBottom {
             loadNextTimelinePage()
@@ -96,62 +101,61 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     override fun setup(context: Context) {
-        this.remoteRepositoryName = context.remoteRepositoryName
+        this.repository = context.repository
         this.issue = context.issue
 
+        loadToolbar()
+        loadTitle()
+        loadAssignees()
+        loadStateLabel()
+        loadSubHeading()
+        loadLabels()
+        loadTimeline()
+    }
+
+    private fun loadToolbar() {
+        root.children.add(
+            0, IssueToolbarController.Loader.load(IssueToolbarController.Context(repository, issue)).root
+        )
+    }
+
+    private fun loadTitle() {
         titleLabel.text = issue.title
         numberLabel.text = "#${issue.number}"
+    }
 
+    private fun loadAssignees() {
         issue.assignees.firstOrNull()?.let {
             assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
         }
+    }
 
+    private fun loadStateLabel() {
         if (issue.state == Issue.State.OPEN) {
             setupUIForOpenIssue()
         } else if (issue.state == Issue.State.CLOSED) {
             setupUIForClosedIssue()
         }
         stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.state.toString().lowercase())
+    }
 
+    private fun setupUIForOpenIssue() {
+        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, true)
+        stateIcon.setupFromSvg(OPEN_ICON)
+    }
+
+    private fun setupUIForClosedIssue() {
+        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true)
+        stateIcon.setupFromSvg(CLOSED_ICON)
+    }
+
+    private fun loadSubHeading() {
         subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString(
             "ui.repository.tab.issues.view.subheading",
             issue.author.username,
             CREATED_AT_FORMAT.format(issue.createdAt),
             issue.comments.toString()
         )
-
-        loadLabels()
-        loadTimeline()
-    }
-
-    private fun setupUIForOpenIssue() {
-        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, true)
-        toggleStateButton.graphic = getCloseIcon()
-        toggleStateButton.tooltip = Tooltip(TRANSLATIONS_BUNDLE.getString("ui.button.close"))
-        stateIcon.setupFromSvg(OPEN_ICON)
-    }
-
-    private fun setupUIForClosedIssue() {
-        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true)
-        toggleStateButton.graphic = getOpenIcon()
-        toggleStateButton.tooltip = Tooltip(TRANSLATIONS_BUNDLE.getString("ui.button.open"))
-        stateIcon.setupFromSvg(CLOSED_ICON)
-    }
-
-    private fun getCloseIcon(): SVGIcon {
-        val icon = SVGIcon()
-        icon.setPrefSize(12.0, 12.0)
-        icon.setupFromSvg(CLOSED_ICON)
-        icon.styleClass.addAll("icon", "closed-accent")
-        return icon
-    }
-
-    private fun getOpenIcon(): SVGIcon {
-        val icon = SVGIcon()
-        icon.setPrefSize(12.0, 12.0)
-        icon.setupFromSvg(OPEN_ICON)
-        icon.styleClass.addAll("icon", "open-accent")
-        return icon
     }
 
     private fun loadLabels() {
@@ -165,6 +169,10 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         return LabelController.Loader.load(LabelController.Context(label))
     }
 
+    override fun remove(node: Node) {
+        timelineBox.children.remove(node)
+    }
+
     private fun loadTimeline() {
         // Load root comment.
         timelineBox.children.add(
@@ -175,15 +183,20 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     private fun loadNextTimelinePage() {
-        CompletableFuture.runAsync({
-            issue.getTimeline(remoteRepositoryName, latestTimelinePageShown++)?.forEachEvent {
-                getViewForEvent(this, issue, it)?.let { view ->
-                    Platform.runLater {
-                        timelineBox.children.add(view.root)
-                    }
-                }
-            }
+        CompletableFuture.supplyAsync({
+            loadTimelineViews().map { it.root }
         }, Application.getInstance().backgroundExecutor)
+            .thenAcceptAsync({
+                timelineBox.children.addAll(it)
+            }, Application.getInstance().mainThreadExecutor)
+    }
+
+    private fun loadTimelineViews(): MutableList<ViewLoader.View<*, out Node>> {
+        val nodes = mutableListOf<ViewLoader.View<*, out Node>>()
+        issue.getTimeline(repository.name, latestTimelinePageShown++)?.forEachEvent {
+            getViewForEvent(this, issue, it)?.let { node -> nodes.add(node) }
+        }
+        return nodes
     }
 
     private fun getIssueViewForRootComment() = CommentController.Loader.load(
@@ -204,6 +217,16 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     @FXML
     private fun delete(event: ActionEvent) {
+
+    }
+
+    @FXML
+    private fun commentAndClose(event: ActionEvent) {
+
+    }
+
+    @FXML
+    private fun comment(event: ActionEvent) {
 
     }
 
