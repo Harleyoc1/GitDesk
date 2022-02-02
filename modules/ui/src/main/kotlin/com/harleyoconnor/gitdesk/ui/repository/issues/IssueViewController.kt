@@ -59,10 +59,12 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         UIResource("/ui/layouts/repository/issues/IssueView.fxml")
     )
 
-    class Context(val remoteContext: RemoteContext, val issue: Issue) : ViewController.Context
+    class Context(val remoteContext: RemoteContext, val issue: Issue, val refreshCallback: (Int) -> Unit) :
+        ViewController.Context
 
     private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
+    private lateinit var refreshCallback: (Int) -> Unit
 
     @FXML
     private lateinit var root: VBox
@@ -129,7 +131,12 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     override fun setup(context: Context) {
         this.remoteContext = context.remoteContext
         this.issue = IssueHolder(context.issue)
+        this.refreshCallback = context.refreshCallback
         loadAll()
+    }
+
+    override fun refresh() {
+        refreshCallback(issue.get().number)
     }
 
     override fun issueUpdated(issue: Issue) {

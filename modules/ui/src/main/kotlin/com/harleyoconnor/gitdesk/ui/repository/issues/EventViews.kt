@@ -117,6 +117,11 @@ fun loadReOpenedEventView(context: EventContext): ViewLoader.View<ReOpenedEventC
 interface TimelineController {
 
     /**
+     * Causes the UI to refresh the entire issue view from the remote.
+     */
+    fun refresh()
+
+    /**
      * Updates UI for a change to the issue.
      *
      * @param issue the updated issue
@@ -124,7 +129,6 @@ interface TimelineController {
     fun issueUpdated(issue: Issue)
 
     fun addLabeledEventToTimeline(labeledEvent: LabeledEvent)
-
     fun remove(node: Node)
 
 }

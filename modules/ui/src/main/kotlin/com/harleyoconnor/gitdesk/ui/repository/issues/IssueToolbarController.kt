@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
-import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.getCloseIcon
@@ -27,8 +27,6 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
         val UNLOCK_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/unlock.svg"))
     }
 
-    // TODO: Refresh button, open in browser button.
-
     object Loader : ResourceViewLoader<Context, IssueToolbarController, VBox>(
         UIResource("/ui/layouts/repository/issues/IssueToolbar.fxml")
     )
@@ -46,9 +44,6 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
     @FXML
     private lateinit var toggleStateButton: Button
 
-    @FXML
-    private lateinit var toggleLockedButton: Button
-
     override fun setup(context: Context) {
         parent = context.parent
         remoteContext = context.remoteContext
@@ -57,7 +52,7 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
     }
 
     fun reloadUI() {
-        root.children.remove(1, root.children.size)
+        root.children.remove(3, root.children.size)
         if (remoteContext.loggedInUserIsCollaborator) {
             showButtons()
         }
@@ -65,10 +60,9 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
 
     private fun showButtons() {
         root.children.addAll(
-            toggleStateButton, toggleLockedButton
+            toggleStateButton
         )
         loadUIForState()
-        loadUIForLockedState()
     }
 
     private fun loadUIForState() {
@@ -89,32 +83,19 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
         toggleStateButton.tooltip = Tooltip(TRANSLATIONS_BUNDLE.getString("ui.button.open"))
     }
 
-    private fun loadUIForLockedState() {
-        if (issue.get().locked) {
-            loadUIForLockedIssue()
-        } else {
-            loadUIForUnlockedIssue()
-        }
-    }
-
-    private fun loadUIForLockedIssue() {
-        (toggleLockedButton.graphic as SVGIcon).setupFromSvg(UNLOCK_ICON)
-        toggleLockedButton.tooltip.text = TRANSLATIONS_BUNDLE.getString("ui.button.unlock")
-    }
-
-    private fun loadUIForUnlockedIssue() {
-        (toggleLockedButton.graphic as SVGIcon).setupFromSvg(LOCK_ICON)
-        toggleLockedButton.tooltip.text = TRANSLATIONS_BUNDLE.getString("ui.button.lock")
-    }
-
     @FXML
     private fun toggleState(event: ActionEvent) {
         parent.toggleState()
     }
 
     @FXML
-    private fun toggleLocked(event: ActionEvent) {
+    private fun refresh(event: ActionEvent) {
+        parent.refresh()
+    }
 
+    @FXML
+    private fun openInBrowser(event: ActionEvent) {
+        Application.getInstance().hostServices.showDocument(issue.get().url.toExternalForm())
     }
 
 }

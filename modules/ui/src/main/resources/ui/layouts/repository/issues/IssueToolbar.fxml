@@ -8,14 +8,22 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueToolbarController" fx:id="root"
       minHeight="25" prefHeight="25" styleClass="tool-bar">
-    <Region HBox.hgrow="ALWAYS"/>
-    <Button fx:id="toggleStateButton" onAction="#toggleState" styleClass="icon-button, no-padding"/>
-    <Button fx:id="toggleLockedButton" onAction="#toggleLocked" styleClass="icon-button, no-padding">
+    <Button onAction="#refresh" styleClass="icon-button, no-padding">
         <graphic>
-            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/lock.svg" styleClass="icon"/>
+            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/refresh.svg" styleClass="icon"/>
         </graphic>
         <tooltip>
-            <Tooltip text="%ui.button.lock"/>
+            <Tooltip text="%ui.button.refresh"/>
         </tooltip>
     </Button>
+    <Button onAction="#openInBrowser" styleClass="icon-button, no-padding">
+        <graphic>
+            <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/open_externally.svg" styleClass="icon"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%ui.button.open_in_browser"/>
+        </tooltip>
+    </Button>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Button fx:id="toggleStateButton" onAction="#toggleState" styleClass="icon-button, no-padding"/>
 </HBox>

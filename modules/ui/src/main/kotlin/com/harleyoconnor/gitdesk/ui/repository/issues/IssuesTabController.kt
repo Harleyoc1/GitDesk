@@ -30,6 +30,15 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     private lateinit var stage: Stage
     private lateinit var repository: LocalRepository
 
+    private val remoteContext: RemoteContext by lazy {
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+        RemoteContext(
+            repository,
+            remote,
+            Session.getOrLoad()?.getUserFor(remote.platform)
+        )
+    }
+
     @FXML
     private lateinit var root: SplitPane
 
@@ -50,22 +59,18 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     private fun loadIssuesList(): VBox {
         return IssuesListController.Loader.load(
-            IssuesListController.Context(this, getCurrentRemoteContext())
+            IssuesListController.Context(this, remoteContext)
         ).root
     }
 
-    private fun getCurrentRemoteContext(): RemoteContext {
-        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
-        return RemoteContext(
-            repository,
-            remote,
-            Session.getOrLoad()?.getUserFor(remote.platform)
-        )
+    private fun setShownIssue(issueNumber: Int) {
+        remoteContext.remote.platform.networking!!.getIssue(remoteContext.remote.name, issueNumber)
+            ?.let { setShownIssue(it) }
     }
 
     fun setShownIssue(issue: Issue) {
         root.items[1] = IssueViewController.Loader.load(
-            IssueViewController.Context(getCurrentRemoteContext(), issue)
+            IssueViewController.Context(remoteContext, issue, this::setShownIssue)
         ).root
     }
 

@@ -9,7 +9,7 @@ val CLOSED_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_issue.svg"))
 
 fun getCloseIcon(): SVGIcon {
     val icon = SVGIcon()
-    icon.setPrefSize(12.0, 12.0)
+    icon.setPrefSize(14.0, 14.0)
     icon.setupFromSvg(CLOSED_ICON)
     icon.styleClass.addAll("icon", "closed-accent")
     return icon
@@ -17,7 +17,7 @@ fun getCloseIcon(): SVGIcon {
 
 fun getOpenIcon(): SVGIcon {
     val icon = SVGIcon()
-    icon.setPrefSize(12.0, 12.0)
+    icon.setPrefSize(14.0, 14.0)
     icon.setupFromSvg(OPEN_ICON)
     icon.styleClass.addAll("icon", "open-accent")
     return icon
