@@ -43,7 +43,9 @@ class ModifiableCommentController : CommentController() {
     private lateinit var deleteButton: Button
 
     private val editCommentField: TextArea by lazy {
-        TextArea(comment.body)
+        val textArea = TextArea(comment.body)
+        textArea.isWrapText = true
+        textArea
     }
 
     private val cancelEditButton: Button by lazy {
@@ -75,6 +77,10 @@ class ModifiableCommentController : CommentController() {
 
     private fun saveEditedComment() {
         val newBody = editCommentField.text
+        if (newBody == bodyLabel.text) {
+            finishedEditing()
+            return
+        }
         if (comment.isIssueBody()) {
             editIssueBody(newBody)
         } else {

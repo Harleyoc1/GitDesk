@@ -97,9 +97,9 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     }
 
     private fun loadCells(issues: Array<Issue>): Map<Issue, HBox> {
-        return issues.map {
-            it to IssueCellController.Loader.load(IssueCellController.Context(this, it)).root
-        }.toMap()
+        return issues.associateWith {
+            IssueCellController.Loader.load(IssueCellController.Context(this, it)).root
+        }
     }
 
     private fun displayCells(cells: Map<Issue, HBox>) {
