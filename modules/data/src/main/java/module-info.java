@@ -11,6 +11,7 @@ module gitdesk.data {
     requires org.apache.logging.log4j;
     requires com.google.common;
     requires okio;
+    requires JavaUtilities;
 
     exports com.harleyoconnor.gitdesk.data;
     exports com.harleyoconnor.gitdesk.data.account;

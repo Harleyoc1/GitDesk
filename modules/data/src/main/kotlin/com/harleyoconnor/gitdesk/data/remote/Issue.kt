@@ -38,6 +38,8 @@ interface Issue {
 
     val locked: Boolean
 
+    fun deleteLabel(name: String): CompletableFuture<Issue>
+
     fun getTimeline(page: Int): Timeline?
 
     fun addComment(body: String): CompletableFuture<Comment>

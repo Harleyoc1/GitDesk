@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository
+package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.ui.UIResource
@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane
 class LabelController : ViewController<LabelController.Context> {
 
     object Loader: ResourceViewLoader<Context, LabelController, Pane>(
-        UIResource("/ui/layouts/repository/Label.fxml")
+        UIResource("/ui/layouts/repository/issues/Label.fxml")
     )
 
     class Context(val label: Label): ViewController.Context

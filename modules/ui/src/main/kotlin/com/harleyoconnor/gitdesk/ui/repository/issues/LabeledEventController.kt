@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.UIResource
-import com.harleyoconnor.gitdesk.ui.repository.LabelController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
@@ -28,14 +28,21 @@ class LabeledEventController : ViewController<LabeledEventController.Context> {
         UIResource("/ui/layouts/repository/issues/LabeledEvent.fxml")
     )
 
-    class Context(val labeledEvent: LabeledEvent) : ViewController.Context
+    class Context(val label: com.harleyoconnor.gitdesk.data.remote.Label, val labeledEvent: LabeledEvent) :
+        ViewController.Context
 
     @FXML
     private lateinit var root: HBox
+
     @FXML
     private lateinit var actorAvatar: Circle
+
     @FXML
     private lateinit var usernameLabel: Label
+
+    @FXML
+    private lateinit var eventLabel: Label
+
     @FXML
     private lateinit var createdLabel: Label
 
@@ -43,7 +50,10 @@ class LabeledEventController : ViewController<LabeledEventController.Context> {
         val event = context.labeledEvent
         actorAvatar.fill = ImagePattern(Image(event.actor.avatarUrl.toExternalForm()))
         usernameLabel.text = event.actor.username
-        root.children.add(4, LabelController.Loader.load(LabelController.Context(event.label)).root)
+        if (event.type == EventType.UNLABELED) {
+            eventLabel.text = TRANSLATIONS_BUNDLE.getString("issue.event.unlabeled")
+        }
+        root.children.add(4, LabelController.Loader.load(LabelController.Context(context.label)).root)
         createdLabel.text = TRANSLATIONS_BUNDLE.getString("ui.date.on", DATE_FORMAT.format(event.createdAt))
     }
 }

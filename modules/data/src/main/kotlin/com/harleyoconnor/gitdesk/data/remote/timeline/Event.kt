@@ -1,18 +1,14 @@
 package com.harleyoconnor.gitdesk.data.remote.timeline
 
-import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.User
-import java.util.*
+import java.util.Date
 
 /**
  * An event that has occurred along the timeline of an issue or PR.
  */
 interface Event {
 
-    /**
-     * The identifier of this event.
-     */
-    val id: String
+    val type: EventType
 
     /**
      * The user who caused the event to occur.
@@ -22,7 +18,7 @@ interface Event {
     val createdAt: Date
 
     class Raw(
-        override val id: String,
+        override val type: EventType,
         override val actor: User,
         override val createdAt: Date
     ) : Event

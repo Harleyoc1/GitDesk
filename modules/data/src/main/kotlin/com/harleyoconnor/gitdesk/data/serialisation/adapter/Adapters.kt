@@ -2,7 +2,9 @@ package com.harleyoconnor.gitdesk.data.serialisation.adapter
 
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.DirectoryTree
+import com.harleyoconnor.gitdesk.data.serialisation.qualifier.GitHubEventType
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.GitHubRepositoryNameFromUrl
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.HexColour
 import com.harleyoconnor.gitdesk.util.Directory
@@ -45,6 +47,11 @@ fun Moshi.Builder.addExtraAdapters(): Moshi.Builder {
         Int::class.java,
         HexColour::class.java,
         HexColourAdapter
+    )
+    this.add(
+        EventType::class.java,
+        GitHubEventType::class.java,
+        GitHubEventTypeAdapter
     )
     this.add(
         RemoteRepository.Name::class.java,

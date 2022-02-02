@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.RemovableLabelController" fx:id="root"
+      styleClass="issue-label" maxHeight="14" spacing="5" alignment="CENTER_LEFT">
+    <Label fx:id="nameLabel" styleClass="text, body"/>
+    <Button onAction="#remove" styleClass="icon-button, no-padding" maxHeight="12">
+        <graphic>
+            <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/close.svg" styleClass="icon"/>
+        </graphic>
+    </Button>
+</HBox>

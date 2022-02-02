@@ -2,7 +2,6 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.ui.UIResource
-import com.harleyoconnor.gitdesk.ui.repository.LabelController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader

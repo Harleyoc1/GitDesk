@@ -14,7 +14,7 @@
     <SVGIcon prefHeight="16" prefWidth="16" path="/ui/icons/label.svg" styleClass="icon"/>
     <Circle fx:id="actorAvatar" styleClass="bordered" radius="12"/>
     <Label fx:id="usernameLabel" styleClass="text, body"/>
-    <Label text="%issue.event.labeled" styleClass="secondary-text, body"/>
+    <Label fx:id="eventLabel" text="%issue.event.labeled" styleClass="secondary-text, body"/>
     <!-- Label added here. -->
     <Label fx:id="createdLabel" styleClass="secondary-text, body"/>
 </HBox>

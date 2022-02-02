@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.timeline.CommentedEvent
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
@@ -19,23 +20,26 @@ class EventContext(
     val event: Event
 )
 
-private val eventViews = mapOf<String, (EventContext) -> ViewLoader.View<*, out Node>>(
-    "commented" to { context ->
+private val eventViews = mapOf<EventType, (EventContext) -> ViewLoader.View<*, out Node>>(
+    EventType.COMMENTED to { context ->
         loadCommentView(context)
     },
-    "labeled" to { context ->
+    EventType.LABELED to { context ->
         loadLabeledEventView(context)
     },
-    "closed" to { context ->
+    EventType.UNLABELED to { context ->
+        loadLabeledEventView(context)
+    },
+    EventType.CLOSED to { context ->
         loadClosedEventView(context)
     },
-    "reopened" to { context ->
+    EventType.REOPENED to { context ->
         loadReOpenedEventView(context)
     }
 )
 
 fun getViewForEvent(context: EventContext): ViewLoader.View<*, out Node>? {
-    return eventViews[context.event.id]?.invoke(context)
+    return eventViews[context.event.type]?.invoke(context)
 }
 
 private fun loadCommentView(
@@ -85,9 +89,18 @@ private fun canLoggedInUserModifyComment(
 fun loadLabeledEventView(context: EventContext): ViewLoader.View<LabeledEventController, HBox> {
     val labeledEvent = context.event as LabeledEvent
     return LabeledEventController.Loader.load(
-        LabeledEventController.Context(labeledEvent)
+        LabeledEventController.Context(getFullLabelData(context, labeledEvent) ?: labeledEvent.label, labeledEvent)
     )
 }
+
+/**
+ * [LabeledEvent]'s label does not return the description of the label, if one is present, for GitHub's API. This
+ * retrieves the full label data from the repository.
+ */
+private fun getFullLabelData(
+    context: EventContext,
+    labeledEvent: LabeledEvent
+) = context.remoteContext.remote.getLabel(labeledEvent.label.name)
 
 fun loadClosedEventView(context: EventContext): ViewLoader.View<ClosedEventController, HBox> {
     return ClosedEventController.Loader.load(
@@ -109,6 +122,8 @@ interface TimelineController {
      * @param issue the updated issue
      */
     fun issueUpdated(issue: Issue)
+
+    fun addLabeledEventToTimeline(labeledEvent: LabeledEvent)
 
     fun remove(node: Node)
 

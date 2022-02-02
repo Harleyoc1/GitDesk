@@ -6,6 +6,8 @@ import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.GitHubRepositoryNameFromUrl
+import com.harleyoconnor.gitdesk.util.stream
+import com.harleyoconnor.gitdesk.util.toTypedArray
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
@@ -35,6 +37,17 @@ class GitHubIssue(
 
     companion object {
         val ADAPTER: JsonAdapter<GitHubIssue> by lazy { MOSHI.adapter(GitHubIssue::class.java) }
+    }
+
+    override fun deleteLabel(name: String): CompletableFuture<Issue> {
+        return GitHubNetworking.deleteLabel(parentName, number, name)
+            .thenApply {
+                GitHubIssue(
+                    parentName, number, title, author, url,
+                    labels.stream().filter { it.name != name }.toTypedArray(),
+                    state, assignees, createdAt, updatedAt, closedAt, body, comments, locked
+                )
+            }
     }
 
     override fun getTimeline(page: Int): Timeline? {

@@ -19,6 +19,7 @@ import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.CLIENT
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
+import com.harleyoconnor.gitdesk.util.network.HttpRequestException
 import com.harleyoconnor.gitdesk.util.network.PATCH
 import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
@@ -112,13 +113,33 @@ object GitHubNetworking : PlatformNetworking {
     override fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>? {
         val response = getJsonAt(URI.create(getLabelsUrl(repositoryName)))
         return if (response.statusCode() in 200 until 300) {
-            MOSHI.adapter<Array<Label>>(Types.newParameterizedType(Array::class.java, Label::class.java))
-                .fromJson(response.body())
+            MOSHI.adapter<List<GitHubLabel>>(Types.newParameterizedType(List::class.java, GitHubLabel::class.java))
+                .fromJson(response.body())?.toTypedArray()
         } else null
     }
 
     private fun getLabelsUrl(repositoryName: RemoteRepository.Name) =
         "$url/repos/${repositoryName.getFullName()}/labels"
+
+    override fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String):
+            CompletableFuture<Void> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(getLabelUrl(repositoryName, issueNumber, name)))
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.discarding()
+        ).thenAccept {
+            if (it.statusCode() != 200) {
+                throw HttpRequestException("Deleting label", it.statusCode(), it.body())
+            }
+        }
+    }
+
+    private fun getLabelUrl(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String) =
+        "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels/${name.replace(" ", "%20")}"
 
     override fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue? {
         val response = getJsonAt(URI.create(getIssueUrl(repositoryName, number)))
@@ -187,7 +208,6 @@ object GitHubNetworking : PlatformNetworking {
                 )
                 .uri(URI.create(getCommentUrl(repositoryName, commentId)))
                 .header(HttpHeader.ACCEPT, acceptHeader)
-                // TODO: Disallow commenting if not linked to GitHub or not logged in.
                 .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
                 .build(),
             HttpResponse.BodyHandlers.ofString()
@@ -207,7 +227,6 @@ object GitHubNetworking : PlatformNetworking {
                 .DELETE()
                 .uri(URI.create(getCommentUrl(repositoryName, commentId)))
                 .header(HttpHeader.ACCEPT, acceptHeader)
-                // TODO: Disallow commenting if not linked to GitHub or not logged in.
                 .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
                 .build(),
             HttpResponse.BodyHandlers.ofString()

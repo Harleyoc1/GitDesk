@@ -4,10 +4,11 @@ import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
+import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
-import com.harleyoconnor.gitdesk.ui.repository.LabelController
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
@@ -16,9 +17,9 @@ import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
 import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
 import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.supplyInBackground
 import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
-import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -126,6 +127,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     override fun issueUpdated(issue: Issue) {
         this.issue.set(issue)
         loadStateLabel()
+        loadLabels()
         toolbarView.controller.reloadUI()
     }
 
@@ -187,14 +189,17 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     private fun loadLabels() {
+        labelsBox.children.clear()
         issue.get().labels.forEach {
             labelsBox.children.add(loadLabelView(it).root)
         }
     }
 
     private fun loadLabelView(label: com.harleyoconnor.gitdesk.data.remote.Label):
-            ViewLoader.View<LabelController, Pane> {
-        return LabelController.Loader.load(LabelController.Context(label))
+            ViewLoader.View<*, out Pane> {
+        return if (remoteContext.loggedInUserIsCollaborator) {
+            RemovableLabelController.Loader.load(RemovableLabelController.Context(this, remoteContext, this.issue, label))
+        } else LabelController.Loader.load(LabelController.Context(label))
     }
 
     override fun remove(node: Node) {
@@ -279,7 +284,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         else issue.open()
 
     private fun createStateChangeEvent(newState: Issue.State, actor: User, createdAt: Date): Event {
-        return Event.Raw(if (newState == Issue.State.OPEN) "reopened" else "closed", actor, createdAt)
+        return Event.Raw(if (newState == Issue.State.OPEN) EventType.REOPENED else EventType.CLOSED, actor, createdAt)
     }
 
     private fun addEventToTimeline(event: Event) {
@@ -309,6 +314,12 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                     null
                 }, Application.getInstance().mainThreadExecutor)
         }
+    }
+
+    override fun addLabeledEventToTimeline(labeledEvent: LabeledEvent) {
+        timelineBox.children.add(
+            loadLabeledEventView(EventContext(this, remoteContext, issue, labeledEvent)).root
+        )
     }
 
     private fun addCommentToTimeline(comment: Comment) {
