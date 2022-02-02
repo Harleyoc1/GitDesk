@@ -1,11 +1,9 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
-import com.harleyoconnor.gitdesk.data.account.GitHubAccount
 import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.getCloseIcon
 import com.harleyoconnor.gitdesk.ui.util.getOpenIcon
@@ -18,7 +16,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.Tooltip
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
-import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor
@@ -36,12 +33,13 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
         UIResource("/ui/layouts/repository/issues/IssueToolbar.fxml")
     )
 
-    class Context(val parent: IssueViewController, val repository: RemoteRepository, val issue: IssueAccessor) :
+    class Context(val parent: IssueViewController, val remoteContext: RemoteContext, val issue: IssueAccessor) :
         ViewController.Context
 
     private lateinit var parent: IssueViewController
-    private lateinit var repository: RemoteRepository
+    private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueAccessor
+
     @FXML
     private lateinit var root: HBox
 
@@ -53,29 +51,17 @@ class IssueToolbarController : ViewController<IssueToolbarController.Context> {
 
     override fun setup(context: Context) {
         parent = context.parent
-        repository = context.repository
+        remoteContext = context.remoteContext
         issue = context.issue
         reloadUI()
     }
 
     fun reloadUI() {
         root.children.remove(1, root.children.size)
-        GitHubAccount.getForActiveSession()?.username?.let { username ->
-            showButtonsIfUserIsCollaborator(username)
+        if (remoteContext.loggedInUserIsCollaborator) {
+            showButtons()
         }
     }
-
-    private fun showButtonsIfUserIsCollaborator(
-        username: String
-    ) = CompletableFuture.supplyAsync({
-        repository.isCollaborator(username)
-    }, Application.getInstance().backgroundExecutor)
-        .thenApplyAsync({ collaborator: Boolean? ->
-            // Show edit issue buttons if we could check the user is a collaborator, and they are.
-            if (collaborator == true) {
-                showButtons()
-            }
-        }, Application.getInstance().mainThreadExecutor)
 
     private fun showButtons() {
         root.children.addAll(

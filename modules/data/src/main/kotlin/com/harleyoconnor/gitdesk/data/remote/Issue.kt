@@ -42,6 +42,12 @@ interface Issue {
 
     fun addComment(body: String): CompletableFuture<Comment>
 
+    fun editComment(id: Int, body: String): CompletableFuture<Comment>
+
+    fun deleteComment(id: Int): CompletableFuture<Boolean>
+
+    fun editBody(body: String): CompletableFuture<Issue>
+
     fun close(): CompletableFuture<Issue>
 
     fun open(): CompletableFuture<Issue>

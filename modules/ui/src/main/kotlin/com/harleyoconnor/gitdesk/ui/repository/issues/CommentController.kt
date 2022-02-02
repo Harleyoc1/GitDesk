@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat
 /**
  * @author Harley O'Connor
  */
-class CommentController : ViewController<CommentController.Context> {
+open class CommentController : ViewController<CommentController.Context> {
 
     companion object {
         private val TIME_FORMAT = SimpleDateFormat("HH:mm")
@@ -28,7 +28,8 @@ class CommentController : ViewController<CommentController.Context> {
         UIResource("/ui/layouts/repository/issues/Comment.fxml")
     )
 
-    class Context(val issue: IssueAccessor, val comment: Comment) : ViewController.Context
+    class Context(val parent: TimelineController, val issue: IssueAccessor, val comment: Comment) :
+        ViewController.Context
 
     @FXML
     private lateinit var commenterAvatar: Circle
@@ -40,7 +41,7 @@ class CommentController : ViewController<CommentController.Context> {
     private lateinit var createdLabel: Label
 
     @FXML
-    private lateinit var bodyLabel: Label
+    protected lateinit var bodyLabel: Label
 
     override fun setup(context: Context) {
         val comment = context.comment

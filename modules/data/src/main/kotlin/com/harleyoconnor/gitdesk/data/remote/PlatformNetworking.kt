@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote
 
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
-import com.harleyoconnor.gitdesk.util.network.Response
 import java.net.URL
 import java.util.concurrent.CompletableFuture
 
@@ -34,13 +33,29 @@ interface PlatformNetworking {
      * Sends a request to post a new comment on an issue.
      *
      * @param repositoryName the name of the repository containing the issue
-     * @param number the issue's number
+     * @param issueNumber the issue's number
      * @param body the body of the comment to post
      * @return a future that completes when the request has been completed, either exceptionally or containing a
      * [Comment] object for the comment posted
      */
-    fun postIssueComment(repositoryName: RemoteRepository.Name, number: Int, body: String):
+    fun postIssueComment(repositoryName: RemoteRepository.Name, issueNumber: Int, body: String):
             CompletableFuture<Comment>
+
+    fun editIssueComment(repositoryName: RemoteRepository.Name, commentId: Int, body: String):
+            CompletableFuture<Comment>
+
+    fun deleteIssueComment(repositoryName: RemoteRepository.Name, commentId: Int): CompletableFuture<Boolean>
+
+    /**
+     * Sends a request to update the issue body.
+     *
+     * @param repositoryName the name of the repository containing the issue
+     * @param number the issue's number
+     * @param body the new body to set
+     * @return a future that completes when the request has been completed, either exceptionally or containing the
+     * updated [Issue] object
+     */
+    fun editIssueBody(repositoryName: RemoteRepository.Name, number: Int, body: String): CompletableFuture<Issue>
 
     /**
      * Sends a request to close an issue.

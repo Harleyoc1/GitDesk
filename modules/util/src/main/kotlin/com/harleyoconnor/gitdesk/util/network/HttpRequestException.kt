@@ -9,4 +9,9 @@ class HttpRequestException(
     message: String,
     val statusCode: Int,
     val body: Any?
-) : Exception(message)
+) : Exception(message) {
+
+    override fun toString(): String {
+        return "HttpRequestException(message=$message, statusCode=$statusCode, body=$body)"
+    }
+}

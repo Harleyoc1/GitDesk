@@ -7,6 +7,7 @@ import java.util.*
 
 data class GitHubCommentedEvent(
     @Json(name = "event") override val id: String,
+    @Json(name = "id") override val commentId: Int,
     override val actor: GitHubUser,
     override val body: String,
     @Json(name = "created_at") override val createdAt: Date,

@@ -128,13 +128,13 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         if (remote is RemoteRepositoryReference) {
             remote.getRemoteRepository()?.let {
                 if (!it.hasIssues) {
-                    removeIssuesTab()
+                    removeIssuesTabButton()
                 }
             }
         }
     }
 
-    private fun removeIssuesTab() {
+    private fun removeIssuesTabButton() {
         tabs.children.remove(issuesTabButton)
     }
 

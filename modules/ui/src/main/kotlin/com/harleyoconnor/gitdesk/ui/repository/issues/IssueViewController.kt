@@ -1,23 +1,24 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
-import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.PlatformAccount
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.repository.LabelController
+import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
 import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
-import com.harleyoconnor.gitdesk.ui.util.showErrorDialogue
+import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
+import com.harleyoconnor.gitdesk.ui.util.supplyInBackground
+import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -25,7 +26,6 @@ import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
-import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
@@ -39,7 +39,6 @@ import javafx.scene.shape.Circle
 import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor
@@ -54,9 +53,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         UIResource("/ui/layouts/repository/issues/IssueView.fxml")
     )
 
-    class Context(val repository: RemoteRepository, val issue: Issue) : ViewController.Context
+    class Context(val remoteContext: RemoteContext, val issue: Issue) : ViewController.Context
 
-    private lateinit var repository: RemoteRepository
+    private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
 
     @FXML
@@ -102,7 +101,14 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var commentField: TextArea
 
     @FXML
+    private lateinit var commentAndToggleStateButton: Button
+
+    @FXML
     private lateinit var commentButton: Button
+
+    private val toolbarView by lazy {
+        IssueToolbarController.Loader.load(IssueToolbarController.Context(this, remoteContext, issue))
+    }
 
     @FXML
     private fun initialize() {
@@ -111,17 +117,13 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         }
     }
 
-    private val toolbarView by lazy {
-        IssueToolbarController.Loader.load(IssueToolbarController.Context(this, repository, issue))
-    }
-
     override fun setup(context: Context) {
-        this.repository = context.repository
+        this.remoteContext = context.remoteContext
         this.issue = IssueHolder(context.issue)
         loadAll()
     }
 
-    private fun issueUpdated(issue: Issue) {
+    override fun issueUpdated(issue: Issue) {
         this.issue.set(issue)
         loadStateLabel()
         toolbarView.controller.reloadUI()
@@ -208,20 +210,28 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         loadNextTimelinePage()
     }
 
+    private fun getIssueViewForRootComment(): ViewLoader.View<out CommentController, VBox> {
+        val issue = this.issue.get()
+        return loadCommentView(
+            this,
+            this.remoteContext,
+            this.issue,
+            Comment.Raw(null, issue.body, issue.author, issue.createdAt, issue.updatedAt)
+        )
+    }
+
     private fun loadNextTimelinePage() {
-        CompletableFuture.supplyAsync({
+        supplyInBackground {
             loadTimelineViews().map { it.root }
-        }, Application.getInstance().backgroundExecutor)
-            .exceptionally {
-                LogManager.getLogger().error("Getting and compiling timeline.", it)
-                null
+        }
+            .thenAcceptOnMainThread {
+                timelineBox.children.addAll(it)
+                loadNextTimelinePageIfLastFull()
             }
-            .thenAcceptAsync({
-                it?.let {
-                    timelineBox.children.addAll(it)
-                    loadNextTimelinePageIfLastFull()
-                }
-            }, Application.getInstance().mainThreadExecutor)
+            .exceptionallyOnMainThread {
+                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.getting_timeline"), it).show()
+                LogManager.getLogger().error("Getting and compiling timeline.", it)
+            }
     }
 
     /**
@@ -239,34 +249,28 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         lastTimelinePageSize = 0
         issue.get().getTimeline(latestTimelinePageShown++)?.forEachEvent {
             lastTimelinePageSize++
-            getViewForEvent(this, issue, it)?.let { node -> nodes.add(node) }
+            getViewForEvent(EventContext(this, remoteContext, issue, it))?.let { node -> nodes.add(node) }
         }
         return nodes
     }
 
-    private fun getIssueViewForRootComment(): ViewLoader.View<CommentController, VBox> {
-        val issue = this.issue.get()
-        return CommentController.Loader.load(
-            CommentController.Context(
-                this.issue, Comment.Raw(issue.body, issue.author, issue.createdAt, issue.updatedAt)
-            )
-        )
-    }
-
     fun toggleState() {
         getStateToggleFuture(issue.get())
-            .thenAcceptAsync({ issue ->
-                val createdAt = Date()
-                issueUpdated(issue)
-                addEventToTimeline(
-                    createStateChangeEvent(issue.state, getCurrentPlatformUser()!!, createdAt)
-                )
-            }, Application.getInstance().mainThreadExecutor)
-            .exceptionallyAsync({
-                showErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.toggle_issue_state"), it)
+            .thenAcceptOnMainThread { issue ->
+                updateUIForToggledState(issue)
+            }
+            .exceptionallyOnMainThread {
+                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.toggle_issue_state"), it).show()
                 LogManager.getLogger().error("Could not toggle issue state.", it)
-                null
-            }, Application.getInstance().mainThreadExecutor)
+            }
+    }
+
+    private fun updateUIForToggledState(issue: Issue) {
+        val createdAt = Date()
+        issueUpdated(issue)
+        addEventToTimeline(
+            createStateChangeEvent(issue.state, remoteContext.loggedInUser!!, createdAt)
+        )
     }
 
     private fun getStateToggleFuture(issue: Issue) =
@@ -274,33 +278,18 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             issue.close()
         else issue.open()
 
-    private fun getCurrentPlatformAccount(): PlatformAccount? {
-        return Session.getOrLoad()?.getLinkFor(repository.platform)
-    }
-
-    private fun getCurrentPlatformUser(): User? {
-        return getCurrentPlatformAccount()?.username?.let {
-            repository.platform.networking?.getUser(it)
-        }
-    }
-
     private fun createStateChangeEvent(newState: Issue.State, actor: User, createdAt: Date): Event {
         return Event.Raw(if (newState == Issue.State.OPEN) "reopened" else "closed", actor, createdAt)
     }
 
     private fun addEventToTimeline(event: Event) {
-        getViewForEvent(this, issue, event)?.root?.let {
+        getViewForEvent(EventContext(this, remoteContext, issue, event))?.root?.let {
             timelineBox.children.add(it)
         }
     }
 
     @FXML
-    private fun delete(event: ActionEvent) {
-
-    }
-
-    @FXML
-    private fun commentAndClose(event: ActionEvent) {
+    private fun commentAndToggleState(event: ActionEvent) {
 
     }
 
@@ -314,7 +303,8 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                     commentField.text = ""
                 }, Application.getInstance().mainThreadExecutor)
                 .exceptionallyAsync({
-                    showErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
+                    createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
+                        .show()
                     LogManager.getLogger().error("Could not post issue comment.", it)
                     null
                 }, Application.getInstance().mainThreadExecutor)
@@ -323,9 +313,8 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     private fun addCommentToTimeline(comment: Comment) {
         timelineBox.children.add(
-            CommentController.Loader.load(CommentController.Context(issue, comment)).root
+            loadCommentView(this, this.remoteContext, this.issue, comment).root
         )
     }
-
 
 }

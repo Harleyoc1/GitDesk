@@ -9,6 +9,11 @@ import java.util.Date
  */
 interface Comment {
 
+    /**
+     * The comment's ID, or `null` if this 'comment' is the issue body.
+     */
+    val id: Int?
+
     val body: String?
 
     val commenter: User
@@ -17,7 +22,10 @@ interface Comment {
 
     val updatedAt: Date
 
+    fun isIssueBody(): Boolean = this.id == null
+
     class Raw(
+        override val id: Int?,
         override val body: String?,
         override val commenter: User,
         override val createdAt: Date,

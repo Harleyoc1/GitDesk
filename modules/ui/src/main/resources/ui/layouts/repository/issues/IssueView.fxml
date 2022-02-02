@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController" fx:id="root" maxHeight="Infinity">
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController" fx:id="root"
+      maxHeight="Infinity">
     <!-- Toolbar programmatically inserted here. -->
     <HBox spacing="8" alignment="CENTER_LEFT">
         <VBox.margin>
@@ -54,7 +55,8 @@
         </padding>
         <TextArea fx:id="commentField" minHeight="100" promptText="%ui.field.comment.prompt"/>
         <HBox alignment="CENTER_RIGHT" spacing="10">
-            <Button onAction="#commentAndClose" text="%ui.button.comment_and_close"/>
+            <Button fx:id="commentAndToggleStateButton" onAction="#commentAndToggleState"
+                    text="%ui.button.comment_and_close"/>
             <Button fx:id="commentButton" onAction="#comment" text="%ui.button.comment" styleClass="enter-button"/>
         </HBox>
     </VBox>

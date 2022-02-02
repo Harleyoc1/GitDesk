@@ -10,6 +10,7 @@ import java.util.Date
  * @author Harley O'Connor
  */
 class GitHubComment(
+    override val id: Int?,
     override val body: String?,
     @Json(name = "user") override val commenter: GitHubUser,
     @Json(name = "created_at") override val createdAt: Date,

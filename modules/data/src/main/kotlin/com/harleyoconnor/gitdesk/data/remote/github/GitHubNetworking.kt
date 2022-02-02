@@ -147,7 +147,7 @@ object GitHubNetworking : PlatformNetworking {
 
     override fun postIssueComment(
         repositoryName: RemoteRepository.Name,
-        number: Int,
+        issueNumber: Int,
         body: String
     ): CompletableFuture<Comment> {
         return CLIENT.sendAsync(
@@ -157,7 +157,7 @@ object GitHubNetworking : PlatformNetworking {
                         mapOf("body" to body).toJson()
                     )
                 )
-                .uri(URI.create(getPostCommentUrl(repositoryName, number)))
+                .uri(URI.create(getCommentsUrl(repositoryName, issueNumber)))
                 .header(HttpHeader.ACCEPT, acceptHeader)
                 // TODO: Disallow commenting if not linked to GitHub or not logged in.
                 .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
@@ -170,8 +170,66 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
-    private fun getPostCommentUrl(repositoryName: RemoteRepository.Name, number: Int) =
+    private fun getCommentsUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number/comments"
+
+    override fun editIssueComment(
+        repositoryName: RemoteRepository.Name,
+        commentId: Int,
+        body: String
+    ): CompletableFuture<Comment> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .PATCH(
+                    HttpRequest.BodyPublishers.ofString(
+                        mapOf("body" to body).toJson()
+                    )
+                )
+                .uri(URI.create(getCommentUrl(repositoryName, commentId)))
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                // TODO: Disallow commenting if not linked to GitHub or not logged in.
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubComment.ADAPTER.fromJson(body)
+            }, { "Editing GitHub issue comment." })
+        }
+    }
+
+    override fun deleteIssueComment(
+        repositoryName: RemoteRepository.Name,
+        commentId: Int
+    ): CompletableFuture<Boolean> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(getCommentUrl(repositoryName, commentId)))
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                // TODO: Disallow commenting if not linked to GitHub or not logged in.
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.statusCode() == 204
+        }
+    }
+
+    private fun getCommentUrl(repositoryName: RemoteRepository.Name, commentId: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/comments/$commentId"
+
+    override fun editIssueBody(
+        repositoryName: RemoteRepository.Name,
+        number: Int,
+        body: String
+    ): CompletableFuture<Issue> {
+        return createUpdateIssueRequest(
+            repositoryName,
+            number,
+            mapOf("body" to body)
+        )
+    }
 
     override fun closeIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue> {
         return createUpdateIssueRequest(

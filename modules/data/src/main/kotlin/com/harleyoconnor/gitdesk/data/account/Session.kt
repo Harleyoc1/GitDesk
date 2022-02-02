@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.data.account
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.PlatformAccount
+import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.util.create
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import com.squareup.moshi.Json
@@ -69,6 +70,16 @@ class Session(
         return when (platform) {
             Platform.GITHUB -> getGitHubAccount()
             else -> null
+        }
+    }
+
+    fun getUserFor(link: PlatformAccount): User? {
+        return link.platform.networking?.getUser(link.username)
+    }
+
+    fun getUserFor(platform: Platform): User? {
+        return getLinkFor(platform)?.let {
+            getUserFor(it)
         }
     }
 

@@ -1,10 +1,11 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.withFullData
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
@@ -49,17 +50,22 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     private fun loadIssuesList(): VBox {
         return IssuesListController.Loader.load(
-            IssuesListController.Context(this, getCurrentRemote())
+            IssuesListController.Context(this, getCurrentRemoteContext())
         ).root
     }
 
-    private fun getCurrentRemote(): RemoteRepository {
-        return repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+    private fun getCurrentRemoteContext(): RemoteContext {
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+        return RemoteContext(
+            repository,
+            remote,
+            Session.getOrLoad()?.getUserFor(remote.platform)
+        )
     }
 
     fun setShownIssue(issue: Issue) {
         root.items[1] = IssueViewController.Loader.load(
-            IssueViewController.Context(getCurrentRemote(), issue)
+            IssueViewController.Context(getCurrentRemoteContext(), issue)
         ).root
     }
 

@@ -45,6 +45,18 @@ class GitHubIssue(
         return GitHubNetworking.postIssueComment(parentName, number, body)
     }
 
+    override fun editComment(id: Int, body: String): CompletableFuture<Comment> {
+        return GitHubNetworking.editIssueComment(parentName, id, body)
+    }
+
+    override fun deleteComment(id: Int): CompletableFuture<Boolean> {
+        return GitHubNetworking.deleteIssueComment(parentName, id)
+    }
+
+    override fun editBody(body: String): CompletableFuture<Issue> {
+        return GitHubNetworking.editIssueBody(parentName, number, body)
+    }
+
     override fun close(): CompletableFuture<Issue> {
         return GitHubNetworking.closeIssue(parentName, number)
     }

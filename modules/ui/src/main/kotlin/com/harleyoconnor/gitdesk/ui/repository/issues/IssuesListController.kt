@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.IssueCellList
+import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.application.Platform
@@ -28,10 +29,10 @@ class IssuesListController : ViewController<IssuesListController.Context> {
         UIResource("/ui/layouts/repository/issues/IssueList.fxml")
     )
 
-    class Context(val parent: IssuesTabController, val remote: RemoteRepository) : ViewController.Context
+    class Context(val parent: IssuesTabController, val remote: RemoteContext) : ViewController.Context
 
     private lateinit var parent: IssuesTabController
-    private lateinit var remote: RemoteRepository
+    private lateinit var remoteContext: RemoteContext
 
     @FXML
     private lateinit var searchBar: TextField
@@ -43,7 +44,7 @@ class IssuesListController : ViewController<IssuesListController.Context> {
 
     override fun setup(context: Context) {
         parent = context.parent
-        remote = context.remote
+        remoteContext = context.remote
 
         content.setOnElementSelected {
             parent.setShownIssue(it.element)
@@ -77,7 +78,7 @@ class IssuesListController : ViewController<IssuesListController.Context> {
             return false
         }
         lastQuery = query
-        remote.getIssues(
+        remoteContext.remote.getIssues(
             query,
             "best match",
             RemoteRepository.Order.DESCENDING,
