@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController" fx:id="root"
       maxHeight="Infinity">
@@ -36,7 +39,16 @@
         <Label fx:id="subHeadingLabel" styleClass="secondary-text, body"/>
         <Region HBox.hgrow="ALWAYS"/>
         <ScrollPane fitToHeight="true">
-            <HBox fx:id="labelsBox" spacing="5"/>
+            <HBox fx:id="labelsBox" spacing="5" alignment="CENTER">
+                <Button fx:id="addLabelButton" onAction="#addLabel" styleClass="icon-button, no-padding">
+                    <graphic>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%ui.tooltip.add.label"/>
+                    </tooltip>
+                </Button>
+            </HBox>
         </ScrollPane>
     </HBox>
     <ScrollPane fitToWidth="true" fx:id="timelineScrollPane" VBox.vgrow="ALWAYS">

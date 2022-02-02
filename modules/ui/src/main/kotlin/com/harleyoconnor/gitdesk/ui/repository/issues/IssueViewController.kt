@@ -24,11 +24,16 @@ import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
+import com.harleyoconnor.gitdesk.util.stream
+import com.harleyoconnor.gitdesk.util.toHexColourString
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.geometry.Side
 import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
+import javafx.scene.control.MenuItem
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.image.Image
@@ -85,6 +90,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     @FXML
     private lateinit var labelsBox: HBox
+
+    @FXML
+    private lateinit var addLabelButton: Button
 
     @FXML
     private lateinit var timelineScrollPane: ScrollPane
@@ -189,7 +197,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     private fun loadLabels() {
-        labelsBox.children.clear()
+        labelsBox.children.remove(1, labelsBox.children.size)
         issue.get().labels.forEach {
             labelsBox.children.add(loadLabelView(it).root)
         }
@@ -198,7 +206,14 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private fun loadLabelView(label: com.harleyoconnor.gitdesk.data.remote.Label):
             ViewLoader.View<*, out Pane> {
         return if (remoteContext.loggedInUserIsCollaborator) {
-            RemovableLabelController.Loader.load(RemovableLabelController.Context(this, remoteContext, this.issue, label))
+            RemovableLabelController.Loader.load(
+                RemovableLabelController.Context(
+                    this,
+                    remoteContext,
+                    this.issue,
+                    label
+                )
+            )
         } else LabelController.Loader.load(LabelController.Context(label))
     }
 
@@ -326,6 +341,52 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         timelineBox.children.add(
             loadCommentView(this, this.remoteContext, this.issue, comment).root
         )
+    }
+
+    @FXML
+    private fun addLabel(event: ActionEvent) {
+        val labelsMenu = ContextMenu()
+        remoteContext.remote.labels.stream()
+            .filter { label -> issue.get().labels.stream().noneMatch { it.name == label.name } }
+            .forEach { label ->
+                labelsMenu.items.add(
+                    createAddLabelMenuItem(label)
+                )
+            }
+        labelsMenu.show(addLabelButton, Side.BOTTOM, 0.0, 0.0)
+    }
+
+    private fun createAddLabelMenuItem(
+        label: com.harleyoconnor.gitdesk.data.remote.Label
+    ): MenuItem {
+        val item = MenuItem(label.name)
+        item.setOnAction {
+            addLabel(label)
+        }
+        item.style = "-fx-border-color: ${label.colour.toHexColourString()};" +
+                "-fx-border-radius: 4px;" +
+                "-fx-border-width: 2px;"
+        return item
+    }
+
+    private fun addLabel(label: com.harleyoconnor.gitdesk.data.remote.Label) {
+        issue.get().addLabel(label)
+            .thenAcceptOnMainThread {
+                val createdAt = Date()
+                issueUpdated(it)
+                addLabeledEventToTimeline(
+                    LabeledEvent.Raw(
+                        EventType.LABELED,
+                        remoteContext.loggedInUser!!,
+                        createdAt,
+                        label
+                    )
+                )
+            }
+            .exceptionallyOnMainThread {
+                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.adding_issue_label"), it).show()
+                LogManager.getLogger().error("Adding issue label.", it)
+            }
     }
 
 }

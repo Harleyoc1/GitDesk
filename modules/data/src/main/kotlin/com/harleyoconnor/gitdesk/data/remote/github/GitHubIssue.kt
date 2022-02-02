@@ -3,11 +3,13 @@ package com.harleyoconnor.gitdesk.data.remote.github
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.data.serialisation.qualifier.GitHubRepositoryNameFromUrl
 import com.harleyoconnor.gitdesk.util.stream
 import com.harleyoconnor.gitdesk.util.toTypedArray
+import com.harleyoconnor.gitdesk.util.with
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
@@ -39,12 +41,23 @@ class GitHubIssue(
         val ADAPTER: JsonAdapter<GitHubIssue> by lazy { MOSHI.adapter(GitHubIssue::class.java) }
     }
 
-    override fun deleteLabel(name: String): CompletableFuture<Issue> {
-        return GitHubNetworking.deleteLabel(parentName, number, name)
+    override fun addLabel(label: Label): CompletableFuture<Issue> {
+        return GitHubNetworking.postLabel(parentName, number, label.name)
             .thenApply {
                 GitHubIssue(
                     parentName, number, title, author, url,
-                    labels.stream().filter { it.name != name }.toTypedArray(),
+                    labels.with(label as GitHubLabel),
+                    state, assignees, createdAt, updatedAt, closedAt, body, comments, locked
+                )
+            }
+    }
+
+    override fun deleteLabel(label: Label): CompletableFuture<Issue> {
+        return GitHubNetworking.deleteLabel(parentName, number, label.name)
+            .thenApply {
+                GitHubIssue(
+                    parentName, number, title, author, url,
+                    labels.stream().filter { it.name != label.name }.toTypedArray(),
                     state, assignees, createdAt, updatedAt, closedAt, body, comments, locked
                 )
             }

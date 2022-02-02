@@ -25,6 +25,8 @@ interface PlatformNetworking {
 
     fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>?
 
+    fun postLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
+
     fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
 
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?

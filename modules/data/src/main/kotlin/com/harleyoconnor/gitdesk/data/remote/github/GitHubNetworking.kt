@@ -25,6 +25,7 @@ import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
 import com.harleyoconnor.gitdesk.util.network.mapOrElseThrow
 import com.harleyoconnor.gitdesk.util.network.sendRequest
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import java.net.URI
 import java.net.URL
@@ -120,6 +121,37 @@ object GitHubNetworking : PlatformNetworking {
 
     private fun getLabelsUrl(repositoryName: RemoteRepository.Name) =
         "$url/repos/${repositoryName.getFullName()}/labels"
+
+    override fun postLabel(
+        repositoryName: RemoteRepository.Name,
+        issueNumber: Int,
+        name: String
+    ): CompletableFuture<Void> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(Labels.ADAPTER.toJson(Labels(arrayOf(name)))))
+                .uri(URI.create(getLabelsUrl(repositoryName, issueNumber)))
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.discarding()
+        ).thenAccept {
+            if (it.statusCode() != 200) {
+                throw HttpRequestException("Adding", it.statusCode(), it.body())
+            }
+        }
+    }
+
+    class Labels(
+        private val labels: Array<String>
+    ) {
+        companion object {
+            val ADAPTER: JsonAdapter<Labels> = MOSHI.adapter(Labels::class.java)
+        }
+    }
+
+    private fun getLabelsUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
+        "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels"
 
     override fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String):
             CompletableFuture<Void> {

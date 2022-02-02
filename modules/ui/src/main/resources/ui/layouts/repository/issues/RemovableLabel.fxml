@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.RemovableLabelController" fx:id="root"
-      styleClass="issue-label" maxHeight="14" spacing="5" alignment="CENTER_LEFT">
+      styleClass="issue-label, removable" spacing="5" maxHeight="25" alignment="CENTER_LEFT">
     <Label fx:id="nameLabel" styleClass="text, body"/>
-    <Button onAction="#remove" styleClass="icon-button, no-padding" maxHeight="12">
+    <Button onAction="#remove" styleClass="icon-button, no-padding">
         <graphic>
             <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/close.svg" styleClass="icon"/>
         </graphic>

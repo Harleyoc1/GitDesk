@@ -61,7 +61,7 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
 
     @FXML
     private fun remove(event: ActionEvent) {
-        issue.get().deleteLabel(label.name)
+        issue.get().deleteLabel(label)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
                 parent.issueUpdated(it)
