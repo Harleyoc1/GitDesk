@@ -143,7 +143,9 @@
 .context-menu {
     -fx-padding: 0.333333em 0.25em 0.333333em 0.25em; /* 4 1 4 1 */
     -fx-background-color: -secondary-background-color;
+    -fx-background-radius: 4px;
     -fx-border-color: -primary-border-color;
+    -fx-border-radius: 4px;
 }
 
 .context-menu .menu > .right-container > .arrow {

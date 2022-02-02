@@ -10,6 +10,7 @@ import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.input.MouseButton
@@ -42,6 +43,9 @@ class IssueCellController : ViewController<IssueCellController.Context> {
     private lateinit var root: HBox
 
     @FXML
+    private lateinit var contextMenu: ContextMenu
+
+    @FXML
     private lateinit var issueIcon: SVGIcon
 
     @FXML
@@ -53,30 +57,45 @@ class IssueCellController : ViewController<IssueCellController.Context> {
     @FXML
     private lateinit var assigneeAvatar: Circle
 
+    @FXML
+    private fun initialize() {
+        root.setOnContextMenuRequested {
+            contextMenu.show(root, it.screenX, it.screenY)
+        }
+    }
+
     override fun setup(context: Context) {
         parent = context.parent
         issue = context.issue
         if (issue.state == Issue.State.CLOSED) {
-            issueIcon.setPath("/ui/icons/closed_issue.svg")
-            otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
-                "ui.repository.tab.issues.cell.closed.info",
-                issue.number.toString(),
-                DATE_FORMAT.format(issue.createdAt),
-                issue.author.username,
-                DATE_FORMAT.format(issue.closedAt)
-            )
+            setupForClosedIssue()
         } else {
-            otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
-                "ui.repository.tab.issues.cell.open.info",
-                issue.number.toString(),
-                DATE_FORMAT.format(issue.createdAt),
-                issue.author.username
-            )
+            setupForOpenIssue()
         }
         titleLabel.text = issue.title
         issue.assignees.firstOrNull()?.let {
             assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
         } ?: root.children.remove(assigneeAvatar)
+    }
+
+    private fun setupForClosedIssue() {
+        issueIcon.setPath("/ui/icons/closed_issue.svg")
+        otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
+            "ui.repository.tab.issues.cell.closed.info",
+            issue.number.toString(),
+            DATE_FORMAT.format(issue.createdAt),
+            issue.author.username,
+            DATE_FORMAT.format(issue.closedAt)
+        )
+    }
+
+    private fun setupForOpenIssue() {
+        otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
+            "ui.repository.tab.issues.cell.open.info",
+            issue.number.toString(),
+            DATE_FORMAT.format(issue.createdAt),
+            issue.author.username
+        )
     }
 
     @FXML
@@ -88,17 +107,12 @@ class IssueCellController : ViewController<IssueCellController.Context> {
 
     @FXML
     private fun open(event: ActionEvent) {
-
+        parent.select(issue)
     }
 
     @FXML
     private fun openInBrowser(event: ActionEvent) {
         Application.getInstance().hostServices.showDocument(issue.url.toExternalForm())
-    }
-
-    @FXML
-    private fun close(event: ActionEvent) {
-
     }
 
 }
