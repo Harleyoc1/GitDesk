@@ -126,6 +126,13 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         timelineScrollPane.whenScrolledToBottom {
             loadNextTimelinePage()
         }
+        commentField.textProperty().addListener { _, old, new ->
+            if (new.isEmpty()) {
+                updateForEmptyCommentField()
+            } else if (old.isEmpty()) {
+                updateForNonEmptyCommentField()
+            }
+        }
     }
 
     override fun setup(context: Context) {
@@ -141,9 +148,14 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     override fun issueUpdated(issue: Issue) {
         this.issue.set(issue)
+        toolbarView.controller.reloadUI()
         loadStateLabel()
         loadLabels()
-        toolbarView.controller.reloadUI()
+        if (commentField.text.isEmpty()) {
+            updateForEmptyCommentField()
+        } else {
+            updateForNonEmptyCommentField()
+        }
     }
 
     private fun loadAll() {
@@ -154,6 +166,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         loadSubHeading()
         loadLabels()
         loadTimeline()
+        updateForEmptyCommentField()
     }
 
     private fun loadToolbar() {
@@ -222,6 +235,26 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                 )
             )
         } else LabelController.Loader.load(LabelController.Context(label))
+    }
+
+    private fun updateForEmptyCommentField() {
+        commentButton.isDisable = true
+        commentAndToggleStateButton.text =
+            TRANSLATIONS_BUNDLE.getString(
+                "ui.button.toggle_from_${
+                    issue.get().state.toString().lowercase()
+                }"
+            )
+    }
+
+    private fun updateForNonEmptyCommentField() {
+        commentButton.isDisable = false
+        commentAndToggleStateButton.text =
+            TRANSLATIONS_BUNDLE.getString(
+                "ui.button.comment_and_toggle_from_${
+                    issue.get().state.toString().lowercase()
+                }"
+            )
     }
 
     override fun remove(node: Node) {
@@ -317,25 +350,33 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     @FXML
     private fun commentAndToggleState(event: ActionEvent) {
-
+        val body = commentField.text
+        if (body.isNotEmpty()) {
+            comment(event)
+        }
+        toggleState()
     }
 
     @FXML
     private fun comment(event: ActionEvent) {
         val body = commentField.text
         if (body.isNotEmpty()) {
-            issue.get().addComment(body)
-                .thenAcceptAsync({ comment ->
-                    addCommentToTimeline(comment)
-                    commentField.text = ""
-                }, Application.getInstance().mainThreadExecutor)
-                .exceptionallyAsync({
-                    createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
-                        .show()
-                    LogManager.getLogger().error("Could not post issue comment.", it)
-                    null
-                }, Application.getInstance().mainThreadExecutor)
+            addComment(body)
         }
+    }
+
+    private fun addComment(body: String) {
+        issue.get().addComment(body)
+            .thenAcceptAsync({ comment ->
+                addCommentToTimeline(comment)
+                commentField.text = ""
+            }, Application.getInstance().mainThreadExecutor)
+            .exceptionallyAsync({
+                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
+                    .show()
+                LogManager.getLogger().error("Could not post issue comment.", it)
+                null
+            }, Application.getInstance().mainThreadExecutor)
     }
 
     override fun addLabeledEventToTimeline(labeledEvent: LabeledEvent) {

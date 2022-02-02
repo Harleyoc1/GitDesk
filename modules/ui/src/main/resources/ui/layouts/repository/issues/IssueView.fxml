@@ -68,7 +68,7 @@
         <TextArea fx:id="commentField" minHeight="100" promptText="%ui.field.comment.prompt"/>
         <HBox alignment="CENTER_RIGHT" spacing="10">
             <Button fx:id="commentAndToggleStateButton" onAction="#commentAndToggleState"
-                    text="%ui.button.comment_and_close"/>
+                    text="%ui.button.close"/>
             <Button fx:id="commentButton" onAction="#comment" text="%ui.button.comment" styleClass="enter-button"/>
         </HBox>
     </VBox>

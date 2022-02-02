@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote
 
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.squareup.moshi.Json
 import java.net.URL
@@ -58,7 +59,11 @@ interface Issue {
 
     enum class State {
         @Json(name = "open") OPEN,
-        @Json(name = "closed") CLOSED
+        @Json(name = "closed") CLOSED;
+
+        fun other(): State {
+            return values()[(ordinal + 1) % 2]
+        }
     }
 
 }
