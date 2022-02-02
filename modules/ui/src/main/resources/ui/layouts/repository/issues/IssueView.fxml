@@ -6,13 +6,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController" fx:id="root"
       maxHeight="Infinity">
@@ -24,8 +21,18 @@
         <Label fx:id="titleLabel" styleClass="text, title"/>
         <Label fx:id="numberLabel" styleClass="secondary-text, title"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="%ui.repository.tab.issues.view.assigned_to" styleClass="secondary-text, body"/>
-        <Circle fx:id="assigneeAvatar" styleClass="bordered" radius="12"/>
+        <Label text="%ui.repository.tab.issues.view.assignees" styleClass="secondary-text, body"/>
+        <HBox fx:id="assigneesBox" spacing="5" alignment="CENTER">
+            <Button fx:id="addAssigneeButton" onAction="#addAssignee" styleClass="icon-button, no-padding"
+                    maxHeight="15">
+                <graphic>
+                    <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon, no-padding"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.add.assignee"/>
+                </tooltip>
+            </Button>
+        </HBox>
         <HBox fx:id="stateBox" styleClass="issue-state-box" alignment="CENTER" spacing="5">
             <SVGIcon fx:id="stateIcon" prefWidth="12" prefHeight="12" path="/ui/icons/issue.svg"
                      styleClass="icon, no-padding"/>

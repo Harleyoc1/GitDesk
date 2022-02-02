@@ -45,6 +45,12 @@ object GitHubNetworking : PlatformNetworking {
     private val repositoryUrlPattern =
         Pattern.compile("http(s?)://(.*@)?(www\\.)?github\\.com/[$acceptableUsernameRange]{4,}/[$acceptableRepositoryRange]+/?")
 
+    private val userListAdapter by lazy {
+        MOSHI.adapter<List<User>>(
+            Types.newParameterizedType(List::class.java, GitHubUser::class.java)
+        )
+    }
+
     override fun canConnect(): Boolean {
         return getJsonAt(URI.create(url)).statusCode() in 200 until 300
     }
@@ -142,16 +148,17 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
+    private fun getLabelsUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
+        "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels"
+
     class Labels(
         private val labels: Array<String>
     ) {
+
         companion object {
             val ADAPTER: JsonAdapter<Labels> = MOSHI.adapter(Labels::class.java)
         }
     }
-
-    private fun getLabelsUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
-        "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels"
 
     override fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String):
             CompletableFuture<Void> {
@@ -172,6 +179,64 @@ object GitHubNetworking : PlatformNetworking {
 
     private fun getLabelUrl(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String) =
         "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels/${name.replace(" ", "%20")}"
+
+    override fun getAssignees(repositoryName: RemoteRepository.Name, page: Int): CompletableFuture<Array<User>> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .GET()
+                .uri(
+                    URIBuilder()
+                        .append(getAssigneesUrl(repositoryName))
+                        .parameter("page", page.toString())
+                        .parameter("per_page", "100")
+                        .build()
+                )
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                userListAdapter.fromJson(body)?.toTypedArray()
+            }, { "Retrieving assignees." })
+        }
+    }
+
+    private fun getAssigneesUrl(repositoryName: RemoteRepository.Name) =
+        "$url/repos/${repositoryName.getFullName()}/assignees"
+
+    override fun addAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        Assignees.ADAPTER.toJson(Assignees(arrayOf(username)))
+                    )
+                )
+                .uri(
+                    URI.create(getAssigneesUrl(repositoryName, issueNumber))
+                )
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubIssue.ADAPTER.fromJson(body)
+            }, { "Assigning issue." })
+        }
+    }
+
+    private fun getAssigneesUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
+        "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/assignees"
+
+    class Assignees(
+        private val assignees: Array<String>
+    ) {
+        companion object {
+            val ADAPTER: JsonAdapter<Assignees> = MOSHI.adapter(Assignees::class.java)
+        }
+    }
 
     override fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue? {
         val response = getJsonAt(URI.create(getIssueUrl(repositoryName, number)))

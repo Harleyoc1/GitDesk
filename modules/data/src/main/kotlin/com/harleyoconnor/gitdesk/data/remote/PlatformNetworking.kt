@@ -29,6 +29,16 @@ interface PlatformNetworking {
 
     fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
 
+    /**
+     * Sends a request to return all available assignees for a given repository.
+     *
+     * @return a future that completes when the request has been completed, either exceptionally or containing the array
+     * of assignee users
+     */
+    fun getAssignees(repositoryName: RemoteRepository.Name, page: Int): CompletableFuture<Array<User>>
+
+    fun addAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue>
+
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?
 
     fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int, page: Int): Timeline?

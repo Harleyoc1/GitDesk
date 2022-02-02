@@ -63,6 +63,10 @@ class GitHubIssue(
             }
     }
 
+    override fun addAssignee(username: String): CompletableFuture<Issue> {
+        return GitHubNetworking.addAssignee(parentName, number, username)
+    }
+
     override fun getTimeline(page: Int): Timeline? {
         return GitHubNetworking.getIssueTimeline(parentName, number, page)
     }

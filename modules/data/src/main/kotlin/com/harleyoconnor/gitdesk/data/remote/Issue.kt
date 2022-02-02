@@ -43,6 +43,8 @@ interface Issue {
 
     fun deleteLabel(label: Label): CompletableFuture<Issue>
 
+    fun addAssignee(username: String): CompletableFuture<Issue>
+
     fun getTimeline(page: Int): Timeline?
 
     fun addComment(body: String): CompletableFuture<Comment>

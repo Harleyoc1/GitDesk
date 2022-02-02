@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.data.remote.PlatformAccount
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.User
 

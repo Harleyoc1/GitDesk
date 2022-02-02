@@ -16,6 +16,7 @@ import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
 import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
+import com.harleyoconnor.gitdesk.ui.util.createAvatarNode
 import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.supplyInBackground
@@ -36,12 +37,9 @@ import javafx.scene.control.Label
 import javafx.scene.control.MenuItem
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
-import javafx.scene.image.Image
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
-import javafx.scene.paint.ImagePattern
-import javafx.scene.shape.Circle
 import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -65,10 +63,8 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
     private lateinit var refreshCallback: (Int) -> Unit
-
     @FXML
     private lateinit var root: VBox
-
     @FXML
     private lateinit var titleLabel: Label
 
@@ -76,7 +72,10 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var numberLabel: Label
 
     @FXML
-    private lateinit var assigneeAvatar: Circle
+    private lateinit var assigneesBox: HBox
+
+    @FXML
+    private lateinit var addAssigneeButton: Button
 
     @FXML
     private lateinit var subHeadingLabel: Label
@@ -149,6 +148,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     override fun issueUpdated(issue: Issue) {
         this.issue.set(issue)
         toolbarView.controller.reloadUI()
+        loadAssignees()
         loadStateLabel()
         loadLabels()
         if (commentField.text.isEmpty()) {
@@ -181,10 +181,21 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     private fun loadAssignees() {
-        issue.get().assignees.firstOrNull()?.let {
-            assigneeAvatar.fill = ImagePattern(Image(it.avatarUrl.toExternalForm()))
+        assigneesBox.children.clear()
+        val assignees = issue.get().assignees
+        if (canAddMoreAssignees(assignees)) {
+            assigneesBox.children.add(0, addAssigneeButton)
+        }
+        assignees.forEach {
+            assigneesBox.children.add(it.createAvatarNode())
         }
     }
+
+    /**
+     * @return `true` if there is capacity for more assignees
+     */
+    private fun canAddMoreAssignees(assignees: Array<out User>) =
+        assignees.size < 10
 
     private fun loadStateLabel() {
         if (issue.get().state == Issue.State.OPEN) {
@@ -434,6 +445,25 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             .exceptionallyOnMainThread {
                 createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.adding_issue_label"), it).show()
                 LogManager.getLogger().error("Adding issue label.", it)
+            }
+    }
+
+    @FXML
+    private fun addAssignee(event: ActionEvent) {
+        AssigneeSelectionContextMenu(remoteContext, issue) {
+            addAssignee(it)
+        }
+            .show(assigneesBox, Side.BOTTOM, 0.0, 0.0)
+    }
+
+    private fun addAssignee(user: User) {
+        issue.get().addAssignee(user.username)
+            .thenAcceptOnMainThread {
+                issueUpdated(it)
+            }
+            .exceptionallyOnMainThread {
+                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.adding_assignee"), it).show()
+                LogManager.getLogger().error("Adding assignee.", it)
             }
     }
 
