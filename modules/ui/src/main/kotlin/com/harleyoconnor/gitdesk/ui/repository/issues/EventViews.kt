@@ -3,10 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
-import com.harleyoconnor.gitdesk.data.remote.timeline.CommentedEvent
-import com.harleyoconnor.gitdesk.data.remote.timeline.Event
-import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
-import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
+import com.harleyoconnor.gitdesk.data.remote.timeline.*
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
@@ -35,6 +32,12 @@ private val eventViews = mapOf<EventType, (EventContext) -> ViewLoader.View<*, o
     },
     EventType.REOPENED to { context ->
         loadReOpenedEventView(context)
+    },
+    EventType.ASSIGNED to { context ->
+        loadAssignedEventView(context)
+    },
+    EventType.UNASSIGNED to { context ->
+        loadAssignedEventView(context)
     }
 )
 
@@ -90,6 +93,13 @@ fun loadLabeledEventView(context: EventContext): ViewLoader.View<LabeledEventCon
     val labeledEvent = context.event as LabeledEvent
     return LabeledEventController.Loader.load(
         LabeledEventController.Context(getFullLabelData(context, labeledEvent) ?: labeledEvent.label, labeledEvent)
+    )
+}
+
+fun loadAssignedEventView(context: EventContext): ViewLoader.View<AssignedEventController, HBox> {
+    val assignedEvent = context.event as AssignedEvent
+    return AssignedEventController.Loader.load(
+        AssignedEventController.Context(assignedEvent)
     )
 }
 

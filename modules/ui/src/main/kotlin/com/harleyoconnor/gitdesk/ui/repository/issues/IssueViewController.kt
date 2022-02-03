@@ -14,14 +14,7 @@ import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
-import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
-import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
-import com.harleyoconnor.gitdesk.ui.util.createAvatarNode
-import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
-import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
-import com.harleyoconnor.gitdesk.ui.util.supplyInBackground
-import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
-import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
+import com.harleyoconnor.gitdesk.ui.util.*
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
@@ -31,19 +24,13 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.geometry.Side
 import javafx.scene.Node
-import javafx.scene.control.Button
-import javafx.scene.control.ContextMenu
-import javafx.scene.control.Label
-import javafx.scene.control.MenuItem
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.TextArea
+import javafx.scene.control.*
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
-import java.util.Date
-import kotlin.contracts.contract
+import java.util.*
 
 /**
  * @author Harley O'Connor

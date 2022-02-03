@@ -9,13 +9,15 @@ import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 
 object GitHubTimelineAdapter : JsonAdapter<Timeline>() {
-    private val CUSTOM_EVENT_TYPES = mapOf(
+    private val customEventTypes = mapOf(
         EventType.COMMENTED to GitHubCommentedEvent::class.java,
         EventType.LABELED to GitHubLabeledEvent::class.java,
-        EventType.UNLABELED to GitHubLabeledEvent::class.java
+        EventType.UNLABELED to GitHubLabeledEvent::class.java,
+        EventType.ASSIGNED to GitHubAssignedEvent::class.java,
+        EventType.UNASSIGNED to GitHubAssignedEvent::class.java
     )
 
-    override fun fromJson(reader: JsonReader): Timeline? {
+    override fun fromJson(reader: JsonReader): Timeline {
         val events = mutableListOf<Event>()
         reader.beginArray()
         while (reader.hasNext()) {
@@ -30,7 +32,7 @@ object GitHubTimelineAdapter : JsonAdapter<Timeline>() {
     }
 
     private fun getEventType(eventId: String): Class<out Event> =
-        CUSTOM_EVENT_TYPES[EventType.fromGitHubId(eventId)] ?: GitHubEvent::class.java
+        customEventTypes[EventType.fromGitHubId(eventId)] ?: GitHubEvent::class.java
 
     override fun toJson(writer: JsonWriter, value: Timeline?) {
         writer.nullValue() // Serialisation is never needed for this.
