@@ -7,7 +7,7 @@ import com.harleyoconnor.gitdesk.ui.node.TextArea
 import com.harleyoconnor.gitdesk.ui.node.TextField
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
-import com.harleyoconnor.gitdesk.ui.util.logAndCreateDialogue
+import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
 import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -73,7 +73,7 @@ class CreateIssueController : ViewController<CreateIssueController.Context> {
                 createdCallback(it)
             }
             .exceptionallyOnMainThread {
-                logAndCreateDialogue("dialogue.error.adding_issue", it).show()
+                logErrorAndCreateDialogue("dialogue.error.adding_issue", it).show()
             }
     }
 

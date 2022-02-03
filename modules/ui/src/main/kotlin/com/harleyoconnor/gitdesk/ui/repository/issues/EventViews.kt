@@ -138,7 +138,8 @@ interface TimelineController {
      */
     fun issueUpdated(issue: Issue)
 
-    fun addLabeledEventToTimeline(labeledEvent: LabeledEvent)
+    fun addEventToTimeline(event: Event)
+
     fun remove(node: Node)
 
 }

@@ -65,7 +65,7 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
             .thenAcceptOnMainThread {
                 val createdAt = Date()
                 parent.issueUpdated(it)
-                parent.addLabeledEventToTimeline(
+                parent.addEventToTimeline(
                     LabeledEvent.Raw(
                         EventType.UNLABELED,
                         remoteContext.loggedInUser!!,

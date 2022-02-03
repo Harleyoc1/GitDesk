@@ -3,10 +3,10 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
+import com.harleyoconnor.gitdesk.data.remote.timeline.AssignedEvent
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
-import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
@@ -18,17 +18,17 @@ import com.harleyoconnor.gitdesk.ui.util.*
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
-import com.harleyoconnor.gitdesk.util.stream
-import com.harleyoconnor.gitdesk.util.toHexColourString
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.geometry.Side
 import javafx.scene.Node
-import javafx.scene.control.*
+import javafx.scene.control.Button
+import javafx.scene.control.Label
+import javafx.scene.control.ScrollPane
+import javafx.scene.control.TextArea
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
-import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,6 +51,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
     private lateinit var refreshCallback: (Int) -> Unit
+
     @FXML
     private lateinit var root: VBox
 
@@ -296,8 +297,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                 loadNextTimelinePageIfLastFull()
             }
             .exceptionallyOnMainThread {
-                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.getting_timeline"), it).show()
-                LogManager.getLogger().error("Getting and compiling timeline.", it)
+                logErrorAndCreateDialogue("dialogue.error.getting_timeline", it).show()
             }
     }
 
@@ -334,8 +334,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                 updateUIForToggledState(issue)
             }
             .exceptionallyOnMainThread {
-                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.toggle_issue_state"), it).show()
-                LogManager.getLogger().error("Could not toggle issue state.", it)
+                logErrorAndCreateDialogue("dialogue.error.toggle_issue_state", it).show()
             }
     }
 
@@ -356,9 +355,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         return Event.Raw(if (newState == Issue.State.OPEN) EventType.REOPENED else EventType.CLOSED, actor, createdAt)
     }
 
-    private fun addEventToTimeline(event: Event) {
-        getViewForEvent(EventContext(this, remoteContext, issue, event))?.root?.let {
-            timelineBox.children.add(it)
+    override fun addEventToTimeline(event: Event) {
+        getViewForEvent(EventContext(this, remoteContext, issue, event))?.let { view ->
+            timelineBox.children.add(view.root)
         }
     }
 
@@ -381,22 +380,13 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     private fun addComment(body: String) {
         issue.get().addComment(body)
-            .thenAcceptAsync({ comment ->
+            .thenAcceptOnMainThread { comment ->
                 addCommentToTimeline(comment)
                 commentField.text = ""
-            }, Application.getInstance().mainThreadExecutor)
-            .exceptionallyAsync({
-                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.posting_issue_comment"), it)
-                    .show()
-                LogManager.getLogger().error("Could not post issue comment.", it)
-                null
-            }, Application.getInstance().mainThreadExecutor)
-    }
-
-    override fun addLabeledEventToTimeline(labeledEvent: LabeledEvent) {
-        timelineBox.children.add(
-            loadLabeledEventView(EventContext(this, remoteContext, issue, labeledEvent)).root
-        )
+            }
+            .exceptionallyOnMainThread {
+                logErrorAndCreateDialogue("dialogue.error.posting_issue_comment", it).show()
+            }
     }
 
     private fun addCommentToTimeline(comment: Comment) {
@@ -407,28 +397,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     @FXML
     private fun addLabel(event: ActionEvent) {
-        val labelsMenu = ContextMenu()
-        remoteContext.remote.labels.stream()
-            .filter { label -> issue.get().labels.stream().noneMatch { it.name == label.name } }
-            .forEach { label ->
-                labelsMenu.items.add(
-                    createAddLabelMenuItem(label)
-                )
-            }
-        labelsMenu.show(addLabelButton, Side.BOTTOM, 0.0, 0.0)
-    }
-
-    private fun createAddLabelMenuItem(
-        label: com.harleyoconnor.gitdesk.data.remote.Label
-    ): MenuItem {
-        val item = MenuItem(label.name)
-        item.setOnAction {
-            addLabel(label)
-        }
-        item.style = "-fx-border-color: ${label.colour.toHexColourString()};" +
-                "-fx-border-radius: 4px;" +
-                "-fx-border-width: 2px;"
-        return item
+        LabelSelectionContextMenu(remoteContext, issue) {
+            addLabel(it)
+        }.show(addLabelButton, Side.BOTTOM, 0.0, 0.0)
     }
 
     private fun addLabel(label: com.harleyoconnor.gitdesk.data.remote.Label) {
@@ -436,18 +407,14 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             .thenAcceptOnMainThread {
                 val createdAt = Date()
                 issueUpdated(it)
-                addLabeledEventToTimeline(
+                addEventToTimeline(
                     LabeledEvent.Raw(
-                        EventType.LABELED,
-                        remoteContext.loggedInUser!!,
-                        createdAt,
-                        label
+                        EventType.LABELED, remoteContext.loggedInUser!!, createdAt, label
                     )
                 )
             }
             .exceptionallyOnMainThread {
-                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.adding_issue_label"), it).show()
-                LogManager.getLogger().error("Adding issue label.", it)
+                logErrorAndCreateDialogue("dialogue.error.adding_assignee", it)
             }
     }
 
@@ -455,18 +422,22 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private fun addAssignee(event: ActionEvent) {
         AssigneeSelectionContextMenu(remoteContext, issue) {
             addAssignee(it)
-        }
-            .show(assigneesBox, Side.BOTTOM, 0.0, 0.0)
+        }.show(assigneesBox, Side.BOTTOM, 0.0, 0.0)
     }
 
     private fun addAssignee(user: User) {
         issue.get().addAssignee(user.username)
             .thenAcceptOnMainThread {
+                val createdAt = Date()
                 issueUpdated(it)
+                addEventToTimeline(
+                    AssignedEvent.Raw(
+                        EventType.ASSIGNED, remoteContext.loggedInUser!!, createdAt, user
+                    )
+                )
             }
             .exceptionallyOnMainThread {
-                createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.adding_assignee"), it).show()
-                LogManager.getLogger().error("Adding assignee.", it)
+                logErrorAndCreateDialogue("dialogue.error.adding_assignee", it).show()
             }
     }
 
