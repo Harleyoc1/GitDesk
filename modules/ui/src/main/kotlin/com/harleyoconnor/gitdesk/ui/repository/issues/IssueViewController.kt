@@ -43,6 +43,7 @@ import javafx.scene.layout.VBox
 import org.apache.logging.log4j.LogManager
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.contracts.contract
 
 /**
  * @author Harley O'Connor
@@ -63,8 +64,10 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
     private lateinit var refreshCallback: (Int) -> Unit
+
     @FXML
     private lateinit var root: VBox
+
     @FXML
     private lateinit var titleLabel: Label
 
@@ -183,7 +186,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private fun loadAssignees() {
         assigneesBox.children.clear()
         val assignees = issue.get().assignees
-        if (canAddMoreAssignees(assignees)) {
+        if (remoteContext.loggedInUserIsCollaborator && canAddMoreAssignees(assignees)) {
             assigneesBox.children.add(0, addAssigneeButton)
         }
         assignees.forEach {
@@ -228,7 +231,10 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     }
 
     private fun loadLabels() {
-        labelsBox.children.remove(1, labelsBox.children.size)
+        labelsBox.children.clear()
+        if (remoteContext.loggedInUserIsCollaborator) {
+            labelsBox.children.add(addLabelButton)
+        }
         issue.get().labels.forEach {
             labelsBox.children.add(loadLabelView(it).root)
         }
