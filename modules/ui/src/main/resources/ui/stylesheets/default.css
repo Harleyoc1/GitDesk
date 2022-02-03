@@ -331,11 +331,11 @@
     -fx-border-color: -primary-border-color;
 }
 
-.selection-cell-list > .cell {
+.selection-cell-list > .cell, .remote-cell {
     -fx-padding: 0.6667em 0.8889em;
 }
 
-.selection-cell-list > .cell, .github-user-cell {
+.selection-cell-list > .cell, .remote-cell, .github-user-cell {
     -fx-border-color: -primary-border-color;
     -fx-background-color: -tertiary-background-color;
     -fx-border-width: 0 1px 1px 1px;
@@ -345,12 +345,12 @@
     -fx-background-color: -secondary-background-color;
 }
 
-.selection-cell-list > .cell:bottom, .github-user-cell:bottom {
+.selection-cell-list > .cell:bottom, .remote-cell:bottom, .github-user-cell:bottom {
     -fx-border-width: 0 1px 1px 1px;
 }
 
-.selection-cell-list > .cell:top, .github-user-cell:bottom,
-.selection-cell-list > .cell:top:bottom, .github-user-cell:top:bottom {
+.selection-cell-list > .cell:top, .remote-cell:bottom, .github-user-cell:bottom,
+.selection-cell-list > .cell:top:bottom, .remote-cell:top:bottom, .github-user-cell:top:bottom {
     -fx-border-width: 1px;
 }
 
