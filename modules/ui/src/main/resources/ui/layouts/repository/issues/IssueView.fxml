@@ -68,7 +68,7 @@
             </padding>
         </VBox>
     </ScrollPane>
-    <VBox spacing="8" styleClass="comment-view">
+    <VBox spacing="8" fx:id="commentBox" styleClass="comment-view">
         <padding>
             <Insets top="10" right="12" bottom="10" left="12"/>
         </padding>

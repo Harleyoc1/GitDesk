@@ -64,7 +64,6 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
     private lateinit var remoteContext: RemoteContext
     private lateinit var issue: IssueHolder
     private lateinit var refreshCallback: (Int) -> Unit
-
     @FXML
     private lateinit var root: VBox
 
@@ -109,6 +108,9 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
 
     /** Stores the size of the last timeline page loaded. */
     private var lastTimelinePageSize = 0
+
+    @FXML
+    private lateinit var commentBox: VBox
 
     @FXML
     private lateinit var commentField: TextArea
@@ -169,6 +171,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
         loadSubHeading()
         loadLabels()
         loadTimeline()
+        loadCommentBox()
         updateForEmptyCommentField()
     }
 
@@ -329,6 +332,13 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             getViewForEvent(EventContext(this, remoteContext, issue, it))?.let { node -> nodes.add(node) }
         }
         return nodes
+    }
+
+    private fun loadCommentBox() {
+        // If user not logged in and linked to platform or issue locked, do not show comment box.
+        if (remoteContext.loggedInUser == null || issue.get().locked) {
+            root.children.remove(commentBox)
+        }
     }
 
     fun toggleState() {

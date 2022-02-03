@@ -10,8 +10,10 @@ import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.SplitPane
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
@@ -29,7 +31,6 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     private lateinit var stage: Stage
     private lateinit var repository: LocalRepository
-
     private val remoteContext: RemoteContext by lazy {
         val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
         RemoteContext(
@@ -38,7 +39,6 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
             Session.getOrLoad()?.getUserFor(remote.platform)
         )
     }
-
     @FXML
     private lateinit var root: SplitPane
 
@@ -48,6 +48,12 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     @FXML
     private lateinit var sideBar: VBox
 
+    @FXML
+    private lateinit var toolBarBox: HBox
+
+    @FXML
+    private lateinit var createButton: Button
+
     override fun setup(context: Context) {
         stage = context.stage
         repository = context.repository
@@ -55,6 +61,10 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
         sideBar.children.add(
             loadIssuesList()
         )
+        // If user not logged in and linked to platform, do not show create button.
+        if (remoteContext.loggedInUser == null) {
+            toolBarBox.children.remove(createButton)
+        }
     }
 
     private fun loadIssuesList(): VBox {
