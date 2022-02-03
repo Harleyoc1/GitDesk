@@ -9,7 +9,7 @@ object NotEmptyValidator : FieldValidator {
 
     override fun validate(text: String) {
         if (text.isEmpty()) {
-            throw FieldValidator.InvalidException(TRANSLATIONS_BUNDLE.getString("field.invalid"))
+            throw FieldValidator.InvalidException(TRANSLATIONS_BUNDLE.getString("validation.not_empty.empty"))
         }
     }
 }

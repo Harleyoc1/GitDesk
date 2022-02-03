@@ -76,7 +76,7 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     @FXML
     private fun create(event: ActionEvent) {
-
+        CreateIssueWindow(remoteContext, this::setShownIssue).open()
     }
 
 }

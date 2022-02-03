@@ -128,7 +128,7 @@ object GitHubNetworking : PlatformNetworking {
     private fun getLabelsUrl(repositoryName: RemoteRepository.Name) =
         "$url/repos/${repositoryName.getFullName()}/labels"
 
-    override fun postLabel(
+    override fun addLabel(
         repositoryName: RemoteRepository.Name,
         issueNumber: Int,
         name: String
@@ -248,6 +248,44 @@ object GitHubNetworking : PlatformNetworking {
     private fun getIssueUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number"
 
+    override fun addIssue(
+        repositoryName: RemoteRepository.Name,
+        title: String,
+        body: String
+    ): CompletableFuture<Issue> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        IssueCreationData.ADAPTER.toJson(IssueCreationData(title, body))
+                    )
+                )
+                .uri(
+                    URI.create(getIssuesUrl(repositoryName))
+                )
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubIssue.ADAPTER.fromJson(body)
+            }, { "Adding issue." })
+        }
+    }
+
+    class IssueCreationData(
+        private val title: String,
+        private val body: String
+    ) {
+        companion object {
+            val ADAPTER: JsonAdapter<IssueCreationData> = MOSHI.adapter(IssueCreationData::class.java)
+        }
+    }
+
+    private fun getIssuesUrl(repositoryName: RemoteRepository.Name) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues"
+
     override fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int, page: Int): Timeline? {
         val response = getJsonAt(
             URIBuilder().append(getTimelineUrl(repositoryName, number))
@@ -263,7 +301,7 @@ object GitHubNetworking : PlatformNetworking {
     private fun getTimelineUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number/timeline"
 
-    override fun postIssueComment(
+    override fun addIssueComment(
         repositoryName: RemoteRepository.Name,
         issueNumber: Int,
         body: String

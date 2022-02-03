@@ -10,6 +10,8 @@ interface Window : Area {
 
     val id: String
 
+    val title: String
+
     val stage: Stage
 
     val selectableAccess: SelectableAccess

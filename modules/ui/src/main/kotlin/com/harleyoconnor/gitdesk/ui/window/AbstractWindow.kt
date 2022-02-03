@@ -36,6 +36,7 @@ abstract class AbstractWindow(
     init {
         this.setStageBounds()
         stylesheetManager.registerSheets(*getStylesheets())
+        stage.title = title
         stage.scene = scene
         scene.setOnKeyPressed {
             if (it.code == KeyCode.Q && it.isShortcutDown) { // TODO: Alt+F4 for Windows

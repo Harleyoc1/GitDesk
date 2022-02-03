@@ -98,14 +98,14 @@
 }
 
 .error-label {
-    -fx-text-fill: -error-color;
+    -fx-text-fill: -error-color !important;
 }
 
 .field .error-label {
     -fx-font-size: 9;
 }
 
-.field .text-field:error, .field .password-field:error {
+.field .text-field:error, .field .password-field:error, .field .text-area:error {
     -fx-border-color: -error-color;
 }
 

@@ -83,6 +83,10 @@ class GitHubRemoteRepository(
         }, executor)
     }
 
+    override fun addIssue(title: String, body: String): CompletableFuture<Issue> {
+        return GitHubNetworking.addIssue(name, title, body)
+    }
+
     class ParentRepository(val name: RemoteRepository.Name)
 
     override fun equals(other: Any?): Boolean {

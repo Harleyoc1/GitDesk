@@ -47,6 +47,8 @@ interface RemoteRepository : Remote {
 
     fun getIssues(query: String, sort: String, order: Order, executor: Executor): CompletableFuture<Array<Issue>>
 
+    fun addIssue(title: String, body: String): CompletableFuture<Issue>
+
     // TODO: PRs
 
     data class Name(

@@ -42,7 +42,7 @@ class GitHubIssue(
     }
 
     override fun addLabel(label: Label): CompletableFuture<Issue> {
-        return GitHubNetworking.postLabel(parentName, number, label.name)
+        return GitHubNetworking.addLabel(parentName, number, label.name)
             .thenApply {
                 GitHubIssue(
                     parentName, number, title, author, url,
@@ -72,7 +72,7 @@ class GitHubIssue(
     }
 
     override fun addComment(body: String): CompletableFuture<Comment> {
-        return GitHubNetworking.postIssueComment(parentName, number, body)
+        return GitHubNetworking.addIssueComment(parentName, number, body)
     }
 
     override fun editComment(id: Int, body: String): CompletableFuture<Comment> {

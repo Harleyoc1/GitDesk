@@ -25,7 +25,7 @@ interface PlatformNetworking {
 
     fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>?
 
-    fun postLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
+    fun addLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
 
     fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
 
@@ -41,6 +41,8 @@ interface PlatformNetworking {
 
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?
 
+    fun addIssue(repositoryName: RemoteRepository.Name, title: String, body: String): CompletableFuture<Issue>
+
     fun getIssueTimeline(repositoryName: RemoteRepository.Name, number: Int, page: Int): Timeline?
 
     /**
@@ -52,7 +54,7 @@ interface PlatformNetworking {
      * @return a future that completes when the request has been completed, either exceptionally or containing a
      * [Comment] object for the comment posted
      */
-    fun postIssueComment(repositoryName: RemoteRepository.Name, issueNumber: Int, body: String):
+    fun addIssueComment(repositoryName: RemoteRepository.Name, issueNumber: Int, body: String):
             CompletableFuture<Comment>
 
     fun editIssueComment(repositoryName: RemoteRepository.Name, commentId: Int, body: String):
