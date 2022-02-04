@@ -1,7 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
+import com.harleyoconnor.gitdesk.data.remote.withFullData
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
 import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
@@ -67,6 +68,15 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
+    private val remoteContext by lazy {
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+        RemoteContext(
+            repository,
+            remote,
+            Session.getOrLoad()?.getUserFor(remote.platform)
+        )
+    }
+
     private val editorTabView by lazy {
         EditorTabController.Loader.load(
             EditorTabController.Context(
@@ -90,7 +100,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     private val issuesTabView by lazy {
         IssuesTabController.Loader.load(
-            IssuesTabController.Context(parent.stage, repository)
+            IssuesTabController.Context(parent.stage, repository, remoteContext)
         )
     }
 
@@ -124,13 +134,8 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private fun removeIssuesTabIfDisabled() {
-        val remote = repository.gitRepository.getCurrentBranch().getUpstream()?.remote?.remote
-        if (remote is RemoteRepositoryReference) {
-            remote.getRemoteRepository()?.let {
-                if (!it.hasIssues) {
-                    removeIssuesTabButton()
-                }
-            }
+        if (!remoteContext.remote.hasIssues) {
+            removeIssuesTabButton()
         }
     }
 

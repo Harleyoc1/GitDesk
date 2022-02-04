@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture
  *
  * @author Harley O'Connor
  */
-class GitHubIssue(
+open class GitHubIssue(
     @GitHubRepositoryNameFromUrl @Json(name = "repository_url") val parentName: RemoteRepository.Name,
     override val number: Int,
     override val title: String,
@@ -65,6 +65,10 @@ class GitHubIssue(
 
     override fun addAssignee(username: String): CompletableFuture<Issue> {
         return GitHubNetworking.addAssignee(parentName, number, username)
+    }
+
+    override fun removeAssignee(username: String): CompletableFuture<Issue> {
+        return GitHubNetworking.removeAssignee(parentName, number, username)
     }
 
     override fun getTimeline(page: Int): Timeline? {

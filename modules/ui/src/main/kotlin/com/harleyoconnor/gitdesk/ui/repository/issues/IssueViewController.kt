@@ -14,7 +14,14 @@ import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
-import com.harleyoconnor.gitdesk.ui.util.*
+import com.harleyoconnor.gitdesk.ui.util.CLOSED_ICON
+import com.harleyoconnor.gitdesk.ui.util.OPEN_ICON
+import com.harleyoconnor.gitdesk.ui.util.createAvatarNode
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
+import com.harleyoconnor.gitdesk.ui.util.supplyInBackground
+import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
@@ -23,14 +30,17 @@ import javafx.fxml.FXML
 import javafx.geometry.Side
 import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
+import javafx.scene.control.MenuItem
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
+import javafx.scene.shape.Circle
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 /**
  * @author Harley O'Connor
@@ -181,7 +191,26 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             assigneesBox.children.add(0, addAssigneeButton)
         }
         assignees.forEach {
-            assigneesBox.children.add(it.createAvatarNode())
+            assigneesBox.children.add(
+                createAssigneeNode(it)
+            )
+        }
+    }
+
+    private fun createAssigneeNode(user: User): Circle {
+        return user.createAvatarNode().also {
+            val contextMenu = ContextMenu(
+                createRemoveAssigneeItem(user)
+            )
+            it.setOnContextMenuRequested { event ->
+                contextMenu.show(root, event.screenX, event.screenY)
+            }
+        }
+    }
+
+    private fun createRemoveAssigneeItem(user: User): MenuItem {
+        return MenuItem(TRANSLATIONS_BUNDLE.getString("issue.assignee.remove")).also { item ->
+            item.setOnAction { removeAssignee(user) }
         }
     }
 
@@ -430,15 +459,31 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
             .thenAcceptOnMainThread {
                 val createdAt = Date()
                 issueUpdated(it)
-                addEventToTimeline(
-                    AssignedEvent.Raw(
-                        EventType.ASSIGNED, remoteContext.loggedInUser!!, createdAt, user
-                    )
-                )
+                addAssigneeEventToTimeline(EventType.ASSIGNED, createdAt, user)
             }
             .exceptionallyOnMainThread {
                 logErrorAndCreateDialogue("dialogue.error.adding_assignee", it).show()
             }
+    }
+
+    private fun removeAssignee(user: User) {
+        issue.get().removeAssignee(user.username)
+            .thenAcceptOnMainThread {
+                val createdAt = Date()
+                issueUpdated(it)
+                addAssigneeEventToTimeline(EventType.UNASSIGNED, createdAt, user)
+            }
+            .exceptionallyOnMainThread {
+                logErrorAndCreateDialogue("dialogue.error.removing_assignee", it).show()
+            }
+    }
+
+    private fun addAssigneeEventToTimeline(eventType: EventType, createdAt: Date, user: User) {
+        addEventToTimeline(
+            AssignedEvent.Raw(
+                eventType, remoteContext.loggedInUser!!, createdAt, user
+            )
+        )
     }
 
 }

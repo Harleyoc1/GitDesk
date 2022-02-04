@@ -10,6 +10,10 @@ val CLIENT: HttpClient = HttpClient.newBuilder()
     .version(HttpClient.Version.HTTP_2)
     .build()
 
+fun HttpRequest.Builder.DELETE(bodyPublisher: HttpRequest.BodyPublisher): HttpRequest.Builder {
+    return this.method("DELETE", bodyPublisher)
+}
+
 fun HttpRequest.Builder.PATCH(bodyPublisher: HttpRequest.BodyPublisher): HttpRequest.Builder {
     return this.method("PATCH", bodyPublisher)
 }

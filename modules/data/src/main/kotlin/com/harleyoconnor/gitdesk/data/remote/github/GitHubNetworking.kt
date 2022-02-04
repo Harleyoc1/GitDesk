@@ -18,6 +18,7 @@ import com.harleyoconnor.gitdesk.data.serialisation.adapter.toJson
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.util.indexOf
 import com.harleyoconnor.gitdesk.util.network.CLIENT
+import com.harleyoconnor.gitdesk.util.network.DELETE
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
 import com.harleyoconnor.gitdesk.util.network.HttpRequestException
 import com.harleyoconnor.gitdesk.util.network.PATCH
@@ -224,6 +225,28 @@ object GitHubNetworking : PlatformNetworking {
             it.mapOrElseThrow({ body ->
                 GitHubIssue.ADAPTER.fromJson(body)
             }, { "Assigning issue." })
+        }
+    }
+
+    override fun removeAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .DELETE(
+                    HttpRequest.BodyPublishers.ofString(
+                        Assignees.ADAPTER.toJson(Assignees(arrayOf(username)))
+                    )
+                )
+                .uri(
+                    URI.create(getAssigneesUrl(repositoryName, issueNumber))
+                )
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubIssue.ADAPTER.fromJson(body)
+            }, { "Un-assigning issue." })
         }
     }
 

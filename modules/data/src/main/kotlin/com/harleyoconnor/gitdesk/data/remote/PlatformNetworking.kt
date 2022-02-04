@@ -39,6 +39,8 @@ interface PlatformNetworking {
 
     fun addAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue>
 
+    fun removeAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue>
+
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?
 
     fun addIssue(repositoryName: RemoteRepository.Name, title: String, body: String): CompletableFuture<Issue>

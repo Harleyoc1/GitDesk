@@ -44,6 +44,8 @@ interface Issue {
 
     fun addAssignee(username: String): CompletableFuture<Issue>
 
+    fun removeAssignee(username: String): CompletableFuture<Issue>
+
     fun getTimeline(page: Int): Timeline?
 
     fun addComment(body: String): CompletableFuture<Comment>
