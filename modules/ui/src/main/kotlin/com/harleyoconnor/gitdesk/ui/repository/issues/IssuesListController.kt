@@ -5,16 +5,24 @@ import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.IssueCellList
+import com.harleyoconnor.gitdesk.ui.node.RadioContextMenu
+import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
+import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
-import javafx.application.Platform
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.geometry.Side
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
-import org.apache.logging.log4j.LogManager
 import org.fxmisc.wellbehaved.event.EventPattern
 import org.fxmisc.wellbehaved.event.InputMap
 import org.fxmisc.wellbehaved.event.Nodes
@@ -39,8 +47,47 @@ class IssuesListController : ViewController<IssuesListController.Context> {
 
     private var lastQuery = ""
 
+    private var sort: RemoteRepository.Sort = RemoteRepository.Sort.BEST_MATCH
+        set(value) {
+            field = value; updateSearchResults()
+        }
+
+    private var sortOrder: RemoteRepository.SortOrder = RemoteRepository.SortOrder.DESCENDING
+        set(value) {
+            field = value; updateSearchResults()
+        }
+
+    @FXML
+    private lateinit var searchOptionsBox: HBox
+
+    @FXML
+    private lateinit var sortOrderIcon: SVGIcon
+
+    @FXML
+    private lateinit var contentScrollPane: ScrollPane
+
     @FXML
     private lateinit var content: IssueCellList
+
+    private var nextIssuePage: Int = 1
+
+    private val sortContextMenu by lazy {
+        RadioContextMenu(
+            RemoteRepository.Sort.values().associateBy {
+                TRANSLATIONS_BUNDLE.getString("sort.${it.name.lowercase()}")
+            },
+            RemoteRepository.Sort.BEST_MATCH
+        ) {
+            sort = it
+        }
+    }
+
+    @FXML
+    private fun initialize() {
+        contentScrollPane.whenScrolledToBottom {
+            loadNextIssuePage()
+        }
+    }
 
     override fun setup(context: Context) {
         parent = context.parent
@@ -70,6 +117,21 @@ class IssuesListController : ViewController<IssuesListController.Context> {
         ))
     }
 
+    @FXML
+    private fun openSortMenu(event: ActionEvent) {
+        sortContextMenu.show(searchOptionsBox, Side.BOTTOM, 0.0, 0.0)
+    }
+
+    @FXML
+    private fun toggleSortOrder(event: ActionEvent) {
+        sortOrder = sortOrder.other()
+        flipSortOrderIcon()
+    }
+
+    private fun flipSortOrderIcon() {
+        sortOrderIcon.rotate = (sortOrderIcon.rotate + 180) % 360
+    }
+
     /**
      * @return `true` if a search will be completed
      */
@@ -78,22 +140,30 @@ class IssuesListController : ViewController<IssuesListController.Context> {
             return false
         }
         lastQuery = query
-        remoteContext.remote.getIssues(
-            query,
-            "best match",
-            RemoteRepository.Order.DESCENDING,
-            Application.getInstance().backgroundExecutor
-        ).exceptionally {
-            // If it was completed exceptionally, log it and display no issues.
-            LogManager.getLogger().error("Error thrown whilst searching for issues:", it)
-            return@exceptionally emptyArray<Issue>()
-        }.thenAccept {
-            val cells = loadCells(it)
-            Platform.runLater {
-                displayCells(cells)
-            }
-        }
+        updateSearchResults()
         return true
+    }
+
+    private fun updateSearchResults() {
+        nextIssuePage = 1
+        content.clear()
+        loadNextIssuePage()
+    }
+
+    private fun loadNextIssuePage() {
+        remoteContext.remote.getIssues(
+            lastQuery,
+            sort,
+            sortOrder,
+            nextIssuePage++,
+            Application.getInstance().backgroundExecutor
+        ).thenApply {
+            loadCells(it)
+        }.thenAcceptOnMainThread { cells ->
+            displayCells(cells)
+        }.exceptionallyOnMainThread {
+            logErrorAndCreateDialogue("dialogue.error.searching_issues", it)
+        }
     }
 
     private fun loadCells(issues: Array<Issue>): Map<Issue, HBox> {
@@ -103,7 +173,6 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     }
 
     private fun displayCells(cells: Map<Issue, HBox>) {
-        content.clear()
         cells.forEach { cell ->
             content.addElement(cell.key, cell.value)
         }

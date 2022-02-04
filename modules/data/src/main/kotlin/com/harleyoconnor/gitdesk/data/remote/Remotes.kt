@@ -9,9 +9,3 @@ fun Remote.withFullData(): RemoteRepository? {
         this.getRemoteRepository()
     } else null
 }
-
-fun RemoteRepository.Order.asGitHubId(): String {
-    return if (this == RemoteRepository.Order.ASCENDING) {
-        "asc"
-    } else "desc"
-}

@@ -1,10 +1,9 @@
 package com.harleyoconnor.gitdesk.data.remote
 
-import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.squareup.moshi.Json
 import java.net.URL
-import java.util.Date
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**

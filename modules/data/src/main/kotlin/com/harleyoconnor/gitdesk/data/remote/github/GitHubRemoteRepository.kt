@@ -5,13 +5,12 @@ import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.data.remote.asGitHubId
 import com.harleyoconnor.gitdesk.data.remote.github.search.IssueSearch
 import com.harleyoconnor.gitdesk.util.stream
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.URL
-import java.util.Date
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -67,15 +66,16 @@ class GitHubRemoteRepository(
 
     override fun getIssues(
         query: String,
-        sort: String,
-        order: RemoteRepository.Order,
+        sort: RemoteRepository.Sort,
+        sortOrder: RemoteRepository.SortOrder,
+        page: Int,
         executor: Executor
     ): CompletableFuture<Array<Issue>> {
         return CompletableFuture.supplyAsync({
             IssueSearch(
                 "repo:${name.getFullName()} is:issue " + query,
-                sort,
-                order.asGitHubId(),
+                sort.gitHubId,
+                sortOrder.gitHubId,
                 20
             ).run()?.let {
                 it.items as Array<Issue>

@@ -2,7 +2,7 @@ package com.harleyoconnor.gitdesk.data.remote
 
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import java.net.URL
-import java.util.Date
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -45,7 +45,13 @@ interface RemoteRepository : Remote {
 
     fun getLabel(name: String): Label?
 
-    fun getIssues(query: String, sort: String, order: Order, executor: Executor): CompletableFuture<Array<Issue>>
+    fun getIssues(
+        query: String,
+        sort: Sort,
+        sortOrder: SortOrder,
+        page: Int,
+        executor: Executor
+    ): CompletableFuture<Array<Issue>>
 
     fun addIssue(title: String, body: String): CompletableFuture<Issue>
 
@@ -58,7 +64,25 @@ interface RemoteRepository : Remote {
         fun getFullName(): String = "$ownerName/$repositoryName"
     }
 
-    enum class Order {
-        ASCENDING, DESCENDING
+    enum class Sort(
+        val gitHubId: String
+    ) {
+        BEST_MATCH("best match"),
+        COMMENTS("comments"),
+        REACTIONS("reactions"),
+        INTERACTIONS("interactions"),
+        CREATED("created"),
+        UPDATED("updated")
+    }
+
+    enum class SortOrder(
+        val gitHubId: String
+    ) {
+        ASCENDING("asc"),
+        DESCENDING("desc");
+
+        fun other(): SortOrder {
+            return values()[(ordinal + 1) % 2]
+        }
     }
 }
