@@ -57,6 +57,6 @@ class GitHubPullRequest(
     }
 
     override val parentName: RemoteRepository.Name
-        get() = base.repository.name
+        get() = base.repository!!.name
 
 }

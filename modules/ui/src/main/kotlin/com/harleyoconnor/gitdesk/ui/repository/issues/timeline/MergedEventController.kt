@@ -82,7 +82,7 @@ class MergedEventController : ViewController<MergedEventController.Context> {
         if (event.button == MouseButton.PRIMARY) {
             val base = pullRequest.base!!
             Application.getInstance().hostServices.showDocument(
-                base.repository.getBranchUrl(base.ref).toExternalForm()
+                base.repository?.getBranchUrl(base.ref)?.toExternalForm()
             )
         }
     }

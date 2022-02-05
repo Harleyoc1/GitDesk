@@ -10,8 +10,10 @@ val PROFILE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/profile.svg"))
 val OPEN_ISSUE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/issue.svg"))
 val CLOSED_ISSUE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_issue.svg"))
 
-val OPEN_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/branch.svg"))
+val OPEN_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/pull_request.svg"))
+val DRAFT_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/draft_pull_request.svg"))
 val CLOSED_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_pull_request.svg"))
+val MERGED_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/branch.svg"))
 
 fun createIcon(svg: SVG, prefWidth: Double = 16.0, prefHeight: Double = 16.0): SVGIcon {
     return SVGIcon().also { icon ->

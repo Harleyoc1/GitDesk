@@ -16,6 +16,7 @@ import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.getViewForEvent
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.loadCommentView
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.REJECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_ISSUE_ICON
@@ -83,13 +84,13 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     protected lateinit var subHeadingLabel: Label
 
     @FXML
-    private lateinit var stateBox: HBox
+    protected lateinit var stateBox: HBox
 
     @FXML
-    private lateinit var stateIcon: SVGIcon
+    protected lateinit var stateIcon: SVGIcon
 
     @FXML
-    private lateinit var stateLabel: Label
+    protected lateinit var stateLabel: Label
 
     @FXML
     private lateinit var labelsBox: HBox
@@ -151,7 +152,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     override fun issueUpdated() {
         toolbarView.controller.reloadUI()
         loadAssignees()
-        loadStateLabel()
+        loadStateBox()
         loadSubHeading()
         loadLabels()
         if (commentField.text.isEmpty()) {
@@ -165,7 +166,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         loadToolbar()
         loadTitle()
         loadAssignees()
-        loadStateLabel()
+        loadStateBox()
         loadSubHeading()
         loadLabels()
         loadTimeline()
@@ -220,26 +221,20 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     private fun canAddMoreAssignees(assignees: Array<out User>) =
         assignees.size < 10
 
-    protected open fun loadStateLabel() {
+    protected open fun loadStateBox() {
+        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, issue.state == Issue.State.OPEN)
+        stateBox.pseudoClassStateChanged(REJECTED_PSEUDO_CLASS, issue.state == Issue.State.CLOSED)
         if (issue.state == Issue.State.OPEN) {
-            loadStateBoxForOpenIssue()
+            loadStateBoxForOpen()
         } else {
-            loadStateBoxForClosedIssue()
+            loadStateBoxForClosed()
         }
         stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.state.toString().lowercase())
     }
 
-    private fun loadStateBoxForOpenIssue() {
-        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, true)
-        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, false)
-        stateIcon.setupFromSvg(OPEN_ISSUE_ICON)
-    }
+    protected abstract fun loadStateBoxForOpen()
 
-    private fun loadStateBoxForClosedIssue() {
-        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true)
-        stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, false)
-        stateIcon.setupFromSvg(CLOSED_ISSUE_ICON)
-    }
+    protected abstract fun loadStateBoxForClosed()
 
     protected open fun loadSubHeading() {
         subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString(

@@ -11,5 +11,5 @@ class GitHubRemoteBranch(
     override val label: String,
     override val ref: String,
     override val user: GitHubUser,
-    @Json(name = "repo") override val repository: GitHubRemoteRepository
+    @Json(name = "repo") override val repository: GitHubRemoteRepository?
 ) : RemoteBranch

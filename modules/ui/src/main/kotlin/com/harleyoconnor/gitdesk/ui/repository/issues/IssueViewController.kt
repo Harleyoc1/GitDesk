@@ -3,6 +3,8 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.util.CLOSED_ISSUE_ICON
+import com.harleyoconnor.gitdesk.ui.util.OPEN_ISSUE_ICON
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
@@ -22,5 +24,13 @@ class IssueViewController : AbstractIssueViewController<Issue, IssueViewControll
 
     override val toolbarView: ViewLoader.View<IssueToolbarController, out Node> by lazy {
         IssueToolbarController.Loader.load(IssueToolbarController.Context(this, remoteContext, issue))
+    }
+
+    override fun loadStateBoxForOpen() {
+        stateIcon.setupFromSvg(OPEN_ISSUE_ICON)
+    }
+
+    override fun loadStateBoxForClosed() {
+        stateIcon.setupFromSvg(CLOSED_ISSUE_ICON)
     }
 }

@@ -13,3 +13,7 @@ val ERROR_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("error")
 val CHECKED_OUT_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("checked-out")
 
 val CLOSED_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("closed")
+
+val DRAFT_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("draft")
+val REJECTED_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("rejected")
+val MERGED_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("merged")

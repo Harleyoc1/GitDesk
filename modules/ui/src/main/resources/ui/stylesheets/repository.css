@@ -184,7 +184,19 @@ borderless-cell-list > .cell:open .icon {
     -fx-background-color: -open-accent-color;
 }
 
+.issue-state-box:draft {
+    -fx-background-color: -draft-accent-color;
+}
+
 .issue-state-box:closed {
+    -fx-background-color: -closed-accent-color;
+}
+
+.issue-state-box:rejected {
+    -fx-background-color: -rejected-accent-color;
+}
+
+.issue-state-box:merged {
     -fx-background-color: -closed-accent-color;
 }
 

@@ -4,8 +4,14 @@ import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.AbstractIssueViewController
+import com.harleyoconnor.gitdesk.ui.style.DRAFT_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.MERGED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
+import com.harleyoconnor.gitdesk.ui.util.CLOSED_PULL_REQUEST_ICON
+import com.harleyoconnor.gitdesk.ui.util.DRAFT_PULL_REQUEST_ICON
+import com.harleyoconnor.gitdesk.ui.util.MERGED_PULL_REQUEST_ICON
+import com.harleyoconnor.gitdesk.ui.util.OPEN_PULL_REQUEST_ICON
 import com.harleyoconnor.gitdesk.ui.util.formatByDate
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
@@ -37,6 +43,9 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     override fun setup(context: Context) {
         super.setup(context)
         mergeButton.isDisable = issue.draft
+        if (issue.merged) {
+            commentBox.children.remove(mergeButton)
+        }
     }
 
     @FXML
@@ -44,8 +53,33 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
 
     }
 
-    override fun loadStateLabel() {
-        super.loadStateLabel()
+    override fun loadStateBox() {
+        super.loadStateBox()
+        stateBox.pseudoClassStateChanged(DRAFT_PSEUDO_CLASS, issue.draft)
+        stateBox.pseudoClassStateChanged(MERGED_PSEUDO_CLASS, issue.merged)
+        if (issue.draft) {
+            loadStateBoxForDraft()
+            stateLabel.text = TRANSLATIONS_BUNDLE.getString("pull_request.draft")
+        } else if (issue.merged) {
+            loadStateBoxForMerged()
+            stateLabel.text = TRANSLATIONS_BUNDLE.getString("pull_request.merged")
+        }
+    }
+
+    override fun loadStateBoxForOpen() {
+        stateIcon.setupFromSvg(OPEN_PULL_REQUEST_ICON)
+    }
+
+    private fun loadStateBoxForDraft() {
+        stateIcon.setupFromSvg(DRAFT_PULL_REQUEST_ICON)
+    }
+
+    override fun loadStateBoxForClosed() {
+        stateIcon.setupFromSvg(CLOSED_PULL_REQUEST_ICON)
+    }
+
+    private fun loadStateBoxForMerged() {
+        stateIcon.setupFromSvg(MERGED_PULL_REQUEST_ICON)
     }
 
     override fun loadSubHeading() {
