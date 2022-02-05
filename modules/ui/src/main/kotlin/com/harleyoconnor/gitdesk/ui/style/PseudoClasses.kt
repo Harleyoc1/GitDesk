@@ -11,3 +11,5 @@ val OPEN_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("open")
 val ERROR_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("error")
 
 val CHECKED_OUT_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("checked-out")
+
+val CLOSED_PSEUDO_CLASS: PseudoClass = PseudoClass.getPseudoClass("closed")

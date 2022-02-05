@@ -47,7 +47,7 @@ class FinaliseGitHubLinkController : ViewController<FinaliseGitHubLinkController
 
     @FXML
     private fun done(event: ActionEvent) {
-        getGitHubAccountRequest(Session.load()!!).thenAccept {
+        getGitHubAccountRequest(Session.getOrLoad()!!).thenAccept {
             it.apply { account ->
                 Platform.runLater {
                     parent.toLinkedView(account)

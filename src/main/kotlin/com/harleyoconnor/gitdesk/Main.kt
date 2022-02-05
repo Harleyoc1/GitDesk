@@ -9,6 +9,9 @@ import javafx.application.Application.launch
 import org.apache.logging.log4j.LogManager
 
 fun main(vararg args: String) {
+    Runtime.getRuntime().addShutdownHook(Thread {
+        Application.getInstance().stop()
+    })
     setSystemProperties()
     setupHighlightingDirectory()
     GitHubNetworking.registerTypes()

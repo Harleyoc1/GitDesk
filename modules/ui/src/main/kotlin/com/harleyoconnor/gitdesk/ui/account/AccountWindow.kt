@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.account
 import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import javafx.scene.layout.Region
 import javafx.stage.Stage
@@ -18,12 +19,14 @@ class AccountWindow(stage: Stage) :
     override val minHeight: Double get() = 400.0
     override val id: String get() = "Account"
 
+    override val title: String get() = TRANSLATIONS_BUNDLE.getString("window.account.title")
+
     private val signedOutView by lazy {
         SignedOutController.Loader.load(SignedOutController.Context(this))
     }
 
     init {
-        val session = Session.load()
+        val session = Session.getOrLoad()
         val account = session?.getAccount()
         if (session != null && account != null) {
             toSignedInView(account)

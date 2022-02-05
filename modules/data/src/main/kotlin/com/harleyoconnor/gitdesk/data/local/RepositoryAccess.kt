@@ -6,6 +6,7 @@ import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.serialisation.DataAccess
 import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.entriesToMap
+import com.harleyoconnor.gitdesk.util.logging.setLoggingDirectoryProperty
 import com.harleyoconnor.gitdesk.util.pairsToMap
 import com.harleyoconnor.gitdesk.util.toSet
 import com.squareup.moshi.JsonAdapter
@@ -18,7 +19,7 @@ import java.io.File
 class RepositoryAccess(
     private val repositoriesFile: File,
     repositoriesDirectory: Directory
-): DataAccess<Directory, LocalRepository> {
+) : DataAccess<Directory, LocalRepository> {
 
     private val serialiser: RepositorySerialiser
     private val deserialiser: RepositoryDeserialiser
@@ -87,7 +88,9 @@ class RepositoryAccess(
 
             fun load(repositoriesFile: File): Repositories {
                 return try {
-                    ADAPTER.fromJson(repositoriesFile.readText()) ?: Repositories()
+                    ADAPTER.fromJson(repositoriesFile.readText())?.also {
+                        it.removeNonExistent()
+                    } ?: Repositories()
                 } catch (e: Exception) {
                     Repositories()
                 }
@@ -96,6 +99,18 @@ class RepositoryAccess(
 
         fun save(repositoriesFile: File) {
             repositoriesFile.writeText(ADAPTER.toJson(this))
+        }
+
+        /**
+         * Removes any entries where the repository no longer exists.
+         */
+        fun removeNonExistent() {
+            all.filter {
+                !it.key.exists()
+            }.forEach { (directory, id) ->
+                all.remove(directory)
+                open.remove(id)
+            }
         }
     }
 

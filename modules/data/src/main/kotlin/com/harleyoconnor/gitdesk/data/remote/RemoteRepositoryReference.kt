@@ -12,8 +12,12 @@ class RemoteRepositoryReference(
     val name: RemoteRepository.Name
 ) : Remote {
 
+    private val repository by lazy {
+        platform.networking?.getRemoteRepository(url)
+    }
+
     fun getRemoteRepository(): RemoteRepository? {
-        return platform.networking?.getRemoteRepository(url)
+        return repository
     }
 
 }

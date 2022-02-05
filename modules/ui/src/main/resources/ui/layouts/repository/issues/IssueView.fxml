@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueViewController" fx:id="root"
+      maxHeight="Infinity">
+    <!-- Toolbar programmatically inserted here. -->
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <VBox.margin>
+            <Insets top="10" right="12" left="12"/>
+        </VBox.margin>
+        <Label fx:id="titleLabel" styleClass="text, title"/>
+        <Label fx:id="numberLabel" styleClass="secondary-text, title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="%ui.repository.tab.issues.view.assignees" styleClass="secondary-text, body"/>
+        <HBox fx:id="assigneesBox" spacing="5" alignment="CENTER">
+            <Button fx:id="addAssigneeButton" onAction="#addAssignee" styleClass="icon-button, no-padding"
+                    maxHeight="15">
+                <graphic>
+                    <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon, no-padding"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.add.assignee"/>
+                </tooltip>
+            </Button>
+        </HBox>
+        <HBox fx:id="stateBox" styleClass="issue-state-box" alignment="CENTER" spacing="5">
+            <SVGIcon fx:id="stateIcon" prefWidth="12" prefHeight="12" path="/ui/icons/issue.svg"
+                     styleClass="icon, no-padding"/>
+            <Label fx:id="stateLabel" styleClass="text, body"/>
+        </HBox>
+    </HBox>
+    <HBox spacing="8">
+        <VBox.margin>
+            <Insets top="6" right="12" left="12"/>
+        </VBox.margin>
+        <Label fx:id="subHeadingLabel" styleClass="secondary-text, body"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ScrollPane fitToHeight="true">
+            <HBox fx:id="labelsBox" spacing="5" alignment="CENTER">
+                <Button fx:id="addLabelButton" onAction="#addLabel" styleClass="icon-button, no-padding">
+                    <graphic>
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/add.svg" styleClass="icon"/>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%ui.tooltip.add.label"/>
+                    </tooltip>
+                </Button>
+            </HBox>
+        </ScrollPane>
+    </HBox>
+    <ScrollPane fitToWidth="true" fx:id="timelineScrollPane" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets top="4" bottom="10"/>
+        </VBox.margin>
+        <VBox fx:id="timelineBox" styleClass="timeline" spacing="8">
+            <padding>
+                <Insets right="12" left="12"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
+    <VBox spacing="8" fx:id="commentBox" styleClass="comment-view">
+        <padding>
+            <Insets top="10" right="12" bottom="10" left="12"/>
+        </padding>
+        <TextArea fx:id="commentField" minHeight="100" promptText="%ui.field.comment.prompt"/>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="commentAndToggleStateButton" onAction="#commentAndToggleState"
+                    text="%ui.button.close"/>
+            <Button fx:id="commentButton" onAction="#comment" text="%ui.button.comment" styleClass="enter-button"/>
+        </HBox>
+    </VBox>
+</VBox>

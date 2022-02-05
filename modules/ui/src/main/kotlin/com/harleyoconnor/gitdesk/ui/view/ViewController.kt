@@ -14,6 +14,9 @@ interface ViewController<C : ViewController.Context> {
      */
     fun setup(context: C)
 
+    /**
+     * An object holding context required to set up this view. Effectively holds its parameters.
+     */
     interface Context
 
 }

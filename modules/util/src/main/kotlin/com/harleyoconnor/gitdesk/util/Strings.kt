@@ -31,3 +31,7 @@ fun URL.toGitDisplayUrl(): String =
 fun String.substringUntil(startIndex: Int, endChar: Char): String {
     return substring(startIndex).substringBefore(endChar)
 }
+
+fun Int.toHexColourString(): String {
+    return String.format("#%06X", (0xFFFFFF and this))
+}

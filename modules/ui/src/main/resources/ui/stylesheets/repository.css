@@ -18,26 +18,26 @@
     -fx-border-width: 0;
 }
 
-.side-bar .cell {
+borderless-cell-list > .cell {
     -fx-border-width: 1px;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
     -fx-border-color: transparent;
 }
 
-.side-bar .cell:selected {
+borderless-cell-list > .cell:selected {
     -fx-border-color: -accent-color;
 }
 
-.side-bar .cell:open {
+borderless-cell-list > .cell:open {
     -fx-background-color: -accent-color;
 }
 
-.side-bar .cell:open .text {
+borderless-cell-list > .cell:open .text {
     -fx-text-fill: -accent-contrast-color;
 }
 
-.side-bar .cell:open .icon {
+borderless-cell-list > .cell:open .icon {
     -fx-background-color: -accent-contrast-color;
 }
 
@@ -173,4 +173,64 @@
     -fx-border-color: -primary-border-color;
     -fx-border-width: 1px 0 0 0;
     -fx-background-color: -primary-background-color;
+}
+
+.issue-state-box {
+    -fx-padding: 0 0.6667em 0 0.6667em;
+    -fx-background-radius: 0.3334em;
+}
+
+.issue-state-box:open {
+    -fx-background-color: -open-accent-color;
+}
+
+.issue-state-box:closed {
+    -fx-background-color: -closed-accent-color;
+}
+
+.issue-state-box > .icon {
+    -fx-background-color: -accent-contrast-color;
+}
+
+.issue-state-box > .text {
+    -fx-text-fill: -accent-contrast-color;
+}
+
+.timeline > .comment {
+    -fx-border-color: -primary-border-color;
+    -fx-border-radius: 0.3334em;
+    -fx-background-radius: 0.3334em;
+    -fx-background-color: -secondary-background-color;
+}
+
+.timeline > .comment > .header {
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 0 0.6667em;
+}
+
+.timeline > .comment > .body {
+    -fx-padding: /*0.3334em */0.6667em;
+}
+
+.issue-label {
+    -fx-background-color: -secondary-background-color;
+    -fx-background-radius: 0.6667em;
+    -fx-border-radius: 0.6667em;
+    -fx-border-width: 2px;
+    -fx-padding: 0.3334em 0.3334em;
+}
+
+.issue-label.removable {
+    -fx-padding: 0 0.3334em 0 0.3334em;
+}
+
+.comment-view {
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 1px 0 0 0;
+    -fx-background-color: -tertiary-background-color;
+}
+
+.comment-view > .text-area, .comment-view > .text-area .content {
+    -fx-background-color: -secondary-background-color;
 }

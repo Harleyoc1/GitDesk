@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.RemoteCellList
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.xml.SVG
@@ -78,10 +79,8 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
                 content.select()
             }
         ))
-        contentScrollPane.vvalueProperty().addListener { _, _, new ->
-            if (new == 1.0) {
-                platform.cellLoader.loadMore(this, searchBar.text)
-            }
+        contentScrollPane.whenScrolledToBottom {
+            platform.cellLoader.loadMore(this, searchBar.text)
         }
     }
 

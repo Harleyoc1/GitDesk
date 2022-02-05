@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import com.harleyoconnor.gitdesk.ui.window.Window
 import javafx.scene.layout.Region
@@ -35,11 +36,18 @@ class RepositoryWindow(
 
     private val branchesWindow: Window by lazy { BranchesWindow(this, repository) }
 
+    override var title: String = ""
+        set(value) {
+            field = value
+            stage.title = value
+        }
+
     override fun getStylesheets(): Array<Stylesheet> = arrayOf(
         Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY
     )
 
     init {
+        title = repository.id
         root = RepositoryController.Loader.load(RepositoryController.Context(this, repository)).root
         loadFromWindowCache(repository.windowCache)
     }

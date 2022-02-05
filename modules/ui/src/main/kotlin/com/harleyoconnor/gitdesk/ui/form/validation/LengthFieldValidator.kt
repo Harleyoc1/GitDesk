@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.form.validation
 
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.translation.getString
 
 /**
  * Checks the length of the field's text is within [min] and [max].
@@ -13,12 +14,11 @@ class LengthFieldValidator(
 ) : FieldValidator {
 
     override fun validate(text: String) {
-        if (text.length !in min .. max) {
+        if (text.length !in min..max) {
             throw FieldValidator.InvalidException(this.getReason())
         }
     }
 
-    private fun getReason() = TRANSLATIONS_BUNDLE.getString("validation.length.out_of_range")
-        .replaceFirst("{}", min.toString())
-        .replaceFirst("{}", max.toString())
+    private fun getReason() =
+        TRANSLATIONS_BUNDLE.getString("validation.length.out_of_range", min.toString(), max.toString())
 }

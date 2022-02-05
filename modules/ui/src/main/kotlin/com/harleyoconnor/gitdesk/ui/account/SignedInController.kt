@@ -59,7 +59,8 @@ class SignedInController : ViewController<SignedInController.Context> {
 
     @FXML
     private fun signOut(event: ActionEvent) {
-        Session.delete()
-        parent.toSignedOutView()
+        Session.getOrLoad()?.delete()?.let {
+            parent.toSignedOutView()
+        }
     }
 }

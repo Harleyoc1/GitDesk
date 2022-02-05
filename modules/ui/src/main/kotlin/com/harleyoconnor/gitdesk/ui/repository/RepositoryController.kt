@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
+import com.harleyoconnor.gitdesk.data.remote.withFullData
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menubar.EditMenu
 import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
@@ -8,6 +10,7 @@ import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTab
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
+import com.harleyoconnor.gitdesk.ui.repository.issues.IssuesTabController
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
@@ -16,6 +19,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.RadioButton
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.VBox
 
 /**
  * @author Harley O'Connor
@@ -47,6 +51,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     private lateinit var windowMenu: WindowMenu
 
     @FXML
+    private lateinit var tabs: VBox
+
+    @FXML
     private lateinit var editorTabButton: RadioButton
 
     @FXML
@@ -60,6 +67,15 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     @FXML
     private lateinit var checklistsTabButton: RadioButton
+
+    private val remoteContext by lazy {
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+        RemoteContext(
+            repository,
+            remote,
+            Session.getOrLoad()?.getUserFor(remote.platform)
+        )
+    }
 
     private val editorTabView by lazy {
         EditorTabController.Loader.load(
@@ -82,6 +98,18 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         }
     }
 
+    private val issuesTabView by lazy {
+        IssuesTabController.Loader.load(
+            IssuesTabController.Context(parent.stage, repository, remoteContext)
+        )
+    }
+
+    private val issuesTab by lazy {
+        Tab(issuesTabView.root) {
+            root.center = it
+        }
+    }
+
     override fun setup(context: Context) {
         this.parent = context.parent
         this.repository = context.repository
@@ -97,7 +125,22 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         changesTabButton.setOnSelected {
             changesTab.open()
         }
+        issuesTabButton.setOnSelected {
+            issuesTab.open()
+        }
         editorTabButton.fire()
+
+        removeIssuesTabIfDisabled()
+    }
+
+    private fun removeIssuesTabIfDisabled() {
+        if (!remoteContext.remote.hasIssues) {
+            removeIssuesTabButton()
+        }
+    }
+
+    private fun removeIssuesTabButton() {
+        tabs.children.remove(issuesTabButton)
     }
 
     @FXML

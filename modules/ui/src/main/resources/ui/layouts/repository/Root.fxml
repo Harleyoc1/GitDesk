@@ -22,7 +22,7 @@
         </MenuBar>
     </top>
     <left>
-        <VBox prefWidth="20" maxHeight="Infinity" styleClass="repository-tabs">
+        <VBox fx:id="tabs" prefWidth="20" maxHeight="Infinity" styleClass="repository-tabs">
             <fx:define>
                 <ToggleGroup fx:id="tabNavigationGroup"/>
             </fx:define>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.AssignedEventController" fx:id="root" spacing="8"
+      alignment="CENTER_LEFT">
+    <padding>
+        <Insets left="20"/>
+    </padding>
+    <SVGIcon prefHeight="16" prefWidth="16" path="/ui/icons/profile.svg" styleClass="icon"/>
+    <Circle fx:id="actorAvatar" styleClass="bordered" radius="12"/>
+    <Label fx:id="actorUsernameLabel" styleClass="text, body"/>
+    <Label fx:id="eventLabel" text="%issue.event.assigned" styleClass="secondary-text, body"/>
+    <Circle fx:id="assigneeAvatar" styleClass="bordered" radius="12"/>
+    <Label fx:id="assigneeUsernameLabel" styleClass="text, body"/>
+    <Label fx:id="createdLabel" styleClass="secondary-text, body"/>
+</HBox>

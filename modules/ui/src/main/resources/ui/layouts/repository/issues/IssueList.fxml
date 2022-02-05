@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.IssueCellList?>
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssuesListController" fx:id="root"
+      spacing="2">
+    <StackPane minHeight="35" prefHeight="35" maxWidth="Infinity">
+        <VBox.margin>
+            <Insets top="10" left="8" bottom="10" right="8"/>
+        </VBox.margin>
+        <TextField fx:id="searchBar" promptText="%ui.search.prompt" minHeight="35" maxWidth="Infinity">
+            is:open
+        </TextField>
+        <HBox fx:id="searchOptionsBox" spacing="8" StackPane.alignment="CENTER_RIGHT" alignment="CENTER_RIGHT" maxWidth="50">
+            <StackPane.margin>
+                <Insets topRightBottomLeft="10"/>
+            </StackPane.margin>
+            <Button onAction="#openSortMenu" styleClass="icon-button">
+                <graphic>
+                    <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/sort.svg" styleClass="icon"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.sort"/>
+                </tooltip>
+            </Button>
+            <Button onAction="#toggleSortOrder" styleClass="icon-button">
+                <graphic>
+                    <SVGIcon fx:id="sortOrderIcon" prefWidth="16" prefHeight="16" path="/ui/icons/arrow.svg"
+                             styleClass="icon" rotate="90"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.sort_order"/>
+                </tooltip>
+            </Button>
+        </HBox>
+    </StackPane>
+    <ScrollPane fx:id="contentScrollPane" minWidth="150" fitToWidth="true" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+        <IssueCellList fx:id="content">
+            <padding>
+                <Insets left="8" right="8"/>
+            </padding>
+        </IssueCellList>
+    </ScrollPane>
+</VBox>

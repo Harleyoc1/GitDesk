@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.menu
 
 import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import javafx.scene.layout.Region
 import javafx.stage.Stage
@@ -27,6 +28,8 @@ class MenuWindow(
     override val minHeight: Double get() = 400.0
 
     override val id: String get() = ID
+
+    override val title: String get() = TRANSLATIONS_BUNDLE.getString("window.menu.title")
 
     private val rootView = MenuController.Loader.load(MenuController.Context(this))
 

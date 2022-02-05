@@ -11,9 +11,8 @@ import com.squareup.moshi.JsonAdapter
 class GitHubLicense(
     override val key: String,
     override val name: String,
-    @Json(name = "spdx_id") override val spdxId: String,
-    @Json(name = "node_id") override val nodeId: String
-): License, GitHubNode {
+    @Json(name = "spdx_id") override val spdxId: String
+): License {
 
     companion object {
         val ADAPTER: JsonAdapter<GitHubLicense> by lazy { MOSHI.adapter(GitHubLicense::class.java) }

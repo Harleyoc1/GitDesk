@@ -10,9 +10,6 @@ interface User {
     /** The user's username on this platform. */
     val username: String
 
-    /** The user's full name on this platform. */
-    val name: String
-
     /** The URL for the user's profile page on this platform. */
     val url: URL
 
