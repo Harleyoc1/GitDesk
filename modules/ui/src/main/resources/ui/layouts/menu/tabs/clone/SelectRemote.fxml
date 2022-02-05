@@ -11,8 +11,7 @@
       fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController" fx:id="root"
       styleClass="open-existing-tab">
     <StackPane styleClass="cell, top-bar" minHeight="50" prefHeight="50">
-        <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated" prefHeight="35"
-                   HBox.hgrow="ALWAYS">
+        <TextField fx:id="searchBar" promptText="%ui.search.prompt" prefHeight="35" HBox.hgrow="ALWAYS">
             <StackPane.margin>
                 <Insets right="10" left="10"/>
             </StackPane.margin>

@@ -11,6 +11,7 @@ import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
+import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor
@@ -26,7 +27,7 @@ class PullRequestsListController : AbstractIssuesListController<PullRequest, Pul
         remote: RemoteContext
     ) : AbstractIssuesListController.Context<PullRequest>(openIssueCallback, remote)
 
-    override fun loadIssuePage(page: Int) {
+    override fun loadPage(page: Int) {
         remoteContext.remote.getPullRequests(
             searchQuery,
             sort,

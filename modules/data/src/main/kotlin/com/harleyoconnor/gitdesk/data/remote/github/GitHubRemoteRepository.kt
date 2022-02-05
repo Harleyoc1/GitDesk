@@ -11,9 +11,8 @@ import com.harleyoconnor.gitdesk.data.remote.github.search.PullRequestSearch
 import com.harleyoconnor.gitdesk.util.stream
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
-import org.apache.logging.log4j.LogManager
 import java.net.URL
-import java.util.*
+import java.util.Date
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -73,17 +72,16 @@ class GitHubRemoteRepository(
         sortOrder: RemoteRepository.SortOrder,
         page: Int,
         executor: Executor
-    ): CompletableFuture<Array<out Issue>> {
-        return CompletableFuture.supplyAsync({
-            IssueSearch(
-                this,
-                query,
-                sort.gitHubId,
-                sortOrder.gitHubId,
-                20,
-                page
-            ).run()?.items
-        }, executor)
+    ): CompletableFuture<Array<out Issue>> = IssueSearch(
+        this,
+        query,
+        sort.gitHubId,
+        sortOrder.gitHubId,
+        20,
+        page,
+        executor
+    ).run().thenApply {
+        it.items
     }
 
     override fun addIssue(title: String, body: String): CompletableFuture<Issue> {
@@ -96,17 +94,16 @@ class GitHubRemoteRepository(
         sortOrder: RemoteRepository.SortOrder,
         page: Int,
         executor: Executor
-    ): CompletableFuture<Array<out PullRequest>> {
-        return CompletableFuture.supplyAsync({
-            PullRequestSearch(
-                this,
-                query,
-                sort.gitHubId,
-                sortOrder.gitHubId,
-                20,
-                page
-            ).run()?.items
-        }, executor)
+    ): CompletableFuture<Array<out PullRequest>> = PullRequestSearch(
+        this,
+        query,
+        sort.gitHubId,
+        sortOrder.gitHubId,
+        20,
+        page,
+        executor
+    ).run().thenApply {
+        it.items
     }
 
     class ParentRepository(val name: RemoteRepository.Name)

@@ -20,6 +20,8 @@ import com.squareup.moshi.Types
 import org.apache.logging.log4j.LogManager
 import java.net.URL
 import java.util.Date
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 /**
  * Returns search results for [PullRequest] data from GitHub.
@@ -35,8 +37,16 @@ class PullRequestSearch(
     sort: String = "best match",
     order: String = "desc",
     perPage: Int = 5,
-    page: Int = 1
-) : Search<PullRequestSearch.PullRequestSearchResult>(processQuery(remote, query), sort, order, perPage, page) {
+    page: Int = 1,
+    executor: Executor = Executors.newSingleThreadExecutor()
+) : Search<PullRequestSearch.PullRequestSearchResult>(
+    processQuery(remote, query),
+    sort,
+    order,
+    perPage,
+    page,
+    executor
+) {
 
     companion object {
         fun processQuery(remote: RemoteRepository, query: String): String =

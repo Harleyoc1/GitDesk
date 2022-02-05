@@ -44,7 +44,7 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
             remote: RemoteContext
         ) : AbstractIssuesListController.Context<Issue>(openIssueCallback, remote)
 
-        override fun loadIssuePage(page: Int) {
+        override fun loadPage(page: Int) {
             remoteContext.remote.getIssues(
                 searchQuery,
                 sort,
@@ -103,7 +103,7 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
     @FXML
     private lateinit var content: SelectionCellList<I>
 
-    private var nextIssuePage: Int = 1
+    private var nextPage: Int = 1
 
     private val sortContextMenu by lazy {
         RadioContextMenu(
@@ -119,7 +119,7 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
     @FXML
     private fun initialize() {
         contentScrollPane.whenScrolledToBottom {
-            loadNextIssuePage()
+            loadNextPage()
         }
     }
 
@@ -179,16 +179,15 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
     }
 
     private fun updateSearchResults() {
-        nextIssuePage = 1
+        nextPage = 1
         content.clear()
-        loadNextIssuePage()
+        loadNextPage()
     }
 
-    private fun loadNextIssuePage() {
-        loadIssuePage(nextIssuePage++)
-    }
+    private fun loadNextPage() =
+        loadPage(nextPage++)
 
-    protected abstract fun loadIssuePage(page: Int)
+    protected abstract fun loadPage(page: Int)
 
     protected fun displayCells(cells: Map<I, HBox>) {
         cells.forEach { cell ->

@@ -4,9 +4,13 @@ import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.github.search.RepositorySearch
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
+import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.RemoteCellList
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
+import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
@@ -18,15 +22,13 @@ import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import org.fxmisc.wellbehaved.event.EventPattern
 import org.fxmisc.wellbehaved.event.InputMap
 import org.fxmisc.wellbehaved.event.Nodes
 import java.net.URL
-import java.util.LinkedList
-import java.util.Queue
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 /**
  * @author Harley O'Connor
@@ -57,11 +59,7 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     @FXML
     private lateinit var contentScrollPane: ScrollPane
 
-    private val remoteCellsRefreshExecutor by lazy {
-        Executors.newSingleThreadExecutor()
-    }
-
-    private var lastQuery: String = ""
+    private var searchQuery: String = ""
 
     @FXML
     fun initialize() {
@@ -69,14 +67,16 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
             parent.toLocationSelection(event.element)
         }
         Nodes.addInputMap(searchBar, InputMap.sequence(
+            InputMap.consume(EventPattern.keyPressed(KeyCode.ENTER)) {
+                if (!updateSearchResults(searchBar.text)) {
+                    content.select()
+                }
+            },
             InputMap.consume(EventPattern.keyPressed(KeyCode.UP)) {
                 content.moveSelectionUp()
             },
             InputMap.consume(EventPattern.keyPressed(KeyCode.DOWN)) {
                 content.moveSelectionDown()
-            },
-            InputMap.consume(EventPattern.keyPressed(KeyCode.ENTER)) {
-                content.select()
             }
         ))
         contentScrollPane.whenScrolledToBottom {
@@ -92,8 +92,8 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     private fun togglePlatform() {
         platform = Platform.values()[(platform.ordinal + 1) % Platform.values().size]
         updatePlatformToggleGraphic()
-        clearDisplayedRepositories()
-        onSearchQueryUpdated(searchBar.text)
+        clearResults()
+        updateSearchResults(searchBar.text)
     }
 
     private fun updatePlatformToggleGraphic() {
@@ -105,21 +105,21 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
         platformToggle.graphic = icon
     }
 
-    @FXML
-    private fun onSearchQueryUpdated() {
-        val query = searchBar.text
-        if (query == lastQuery) {
-            return
+    private fun updateSearchResults(query: String): Boolean {
+        if (query == this.searchQuery || query.isEmpty()) {
+            return false
         }
-        onSearchQueryUpdated(query)
-        lastQuery = query
+        this.searchQuery = searchBar.text
+        updateSearchResults()
+        return true
     }
 
-    private fun onSearchQueryUpdated(newQuery: String) {
-        platform.cellLoader.searchQueryUpdated(this, newQuery)
+    private fun updateSearchResults() {
+        clearResults()
+        platform.cellLoader.updateSearchResults(this, searchQuery)
     }
 
-    private fun clearDisplayedRepositories() {
+    private fun clearResults() {
         this.content.clear()
     }
 
@@ -138,90 +138,89 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     }
 
     interface RemoteCellLoader {
-        fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String)
+        fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String)
 
         fun loadMore(controller: SelectRemoteTabController, query: String)
     }
 
     object GitHubRemoteCellLoader : RemoteCellLoader {
-        private val pendingFutures: Queue<CompletableFuture<*>> = LinkedList()
         private var nextPage = 1
 
-        override fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String) {
-            clearPendingTasks()
+        override fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String) {
+            nextPage = 1
             if (newQuery.isNotEmpty()) {
-                queueSearchTask(controller, newQuery)
+                loadNextPage(controller, newQuery)
             }
         }
 
         override fun loadMore(controller: SelectRemoteTabController, query: String) {
             if (query.isNotEmpty()) {
-                queueSearchTask(controller, query)
+                loadNextPage(controller, query)
             }
         }
 
-        private fun clearPendingTasks() {
-            pendingFutures.forEach { it.cancel(true) }
-            pendingFutures.clear()
-            nextPage = 1
+        private fun loadNextPage(
+            controller: SelectRemoteTabController,
+            query: String
+        ) {
+            loadPage(controller, query, nextPage++)
         }
 
-        private fun queueSearchTask(controller: SelectRemoteTabController, query: String, page: Int = nextPage++) {
-            val future = CompletableFuture.runAsync({ Thread.sleep(300) }, controller.remoteCellsRefreshExecutor)
-                .thenApply { runSearch(query, page) }
-            future.thenAccept { results ->
-                queueUpdateDisplayedResults(results, controller, page)
-            }.thenRun {
-                pendingFutures.remove(future)
-            }
-            pendingFutures.add(future)
+        private fun loadPage(controller: SelectRemoteTabController, query: String, page: Int) {
+            getRemotes(query, page)
+                .thenApply {
+                    loadCells(it, controller)
+                }
+                .thenAcceptOnMainThread {
+                    displayCells(it, controller)
+                }
+                .exceptionallyOnMainThread {
+                    logErrorAndCreateDialogue("dialogue.error.searching_repositories", it).show()
+                }
         }
 
         @Suppress("UNCHECKED_CAST")
-        private fun runSearch(query: String, page: Int): Array<RemoteRepository>? {
-            return RepositorySearch(query = query, perPage = 50, page = page).run()?.let {
-                it.items as Array<RemoteRepository>
+        private fun getRemotes(query: String, page: Int): CompletableFuture<Array<out RemoteRepository>> {
+            return RepositorySearch(
+                query = query,
+                perPage = 50,
+                page = page,
+                executor = Application.getInstance().backgroundExecutor
+            ).run().thenApply {
+                it.items
             }
         }
 
-        private fun queueUpdateDisplayedResults(
-            results: Array<RemoteRepository>?,
-            controller: SelectRemoteTabController,
-            page: Int
-        ) {
-            results?.let {
-                runLater {
-                    if (page == 1) {
-                        controller.clearDisplayedRepositories()
-                    }
-                    displayResults(controller, it)
-                }
-            }
-        }
-
-        private fun displayResults(controller: SelectRemoteTabController, remotes: Array<RemoteRepository>) {
-            remotes.map {
-                it to SelectableRemoteCellController.Loader.load(
+        private fun loadCells(
+            repositories: Array<out RemoteRepository>,
+            controller: SelectRemoteTabController
+        ): Map<RemoteRepository, HBox> {
+            return repositories.associateWith {
+                SelectableRemoteCellController.Loader.load(
                     SelectableRemoteCellController.Context(
                         controller.parent,
                         it
                     )
                 ).root
-            }.forEach {
-                controller.content.addElement(it.first, it.second)
+            }
+        }
+
+        fun displayCells(cells: Map<RemoteRepository, HBox>, controller: SelectRemoteTabController) {
+            cells.forEach { cell ->
+                controller.content.addElement(cell.key, cell.value)
             }
         }
     }
 
     object UrlRemoteCellLoader : RemoteCellLoader {
-        override fun searchQueryUpdated(controller: SelectRemoteTabController, newQuery: String) {
+        override fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String) {
             CompletableFuture.runAsync({
                 val url = getUrlFromQuery(newQuery)
                 if (!repositoryExistsAt(url)) {
                     return@runAsync
                 }
                 queueDisplayResults(controller, url)
-            }, controller.remoteCellsRefreshExecutor)
+            }, Application.getInstance().backgroundExecutor)
         }
 
         override fun loadMore(controller: SelectRemoteTabController, query: String) {
@@ -239,7 +238,7 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
             url: URL
         ) {
             runLater {
-                controller.clearDisplayedRepositories()
+                controller.clearResults()
                 val remote = Remote.getRemote(url)
                 controller.content.addElement(
                     remote,

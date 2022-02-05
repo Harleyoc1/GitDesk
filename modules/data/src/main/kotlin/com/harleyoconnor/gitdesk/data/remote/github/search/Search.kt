@@ -5,10 +5,13 @@ import com.harleyoconnor.gitdesk.data.remote.github.GitHubNetworking
 import com.harleyoconnor.gitdesk.util.network.CLIENT
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
 import com.harleyoconnor.gitdesk.util.network.URIBuilder
-import org.apache.logging.log4j.LogManager
+import com.harleyoconnor.gitdesk.util.network.mapOrElseThrow
 import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 /**
  *
@@ -19,22 +22,18 @@ abstract class Search<E>(
     private val sort: String = "best match",
     private val order: String = "desc",
     private val perPage: Int = 5,
-    private val page: Int = 1
+    private val page: Int = 1,
+    private val executor: Executor = Executors.newSingleThreadExecutor()
 ) {
 
     protected abstract val id: String
 
-    fun run(): SearchResults<E>? {
-        val response = this.sendRequest()
-
-        return if (this.responseSuccessful(response)) {
-            this.decodeResults(response.body())
-        } else {
-            LogManager.getLogger()
-                .error("Received ${response.statusCode()} from search request. Result: ${response.body()}")
-            null
+    fun run(): CompletableFuture<SearchResults<E>> = this.sendRequest()
+        .thenApply {
+            it.mapOrElseThrow(this::decodeResults) {
+                "Searching GitHub for $id."
+            }
         }
-    }
 
     protected abstract fun decodeResults(body: String): SearchResults<E>?
 
@@ -42,8 +41,8 @@ abstract class Search<E>(
         return response.statusCode() in 200..299
     }
 
-    private fun sendRequest(): HttpResponse<String> {
-        return CLIENT.send(
+    private fun sendRequest(): CompletableFuture<HttpResponse<String>> {
+        return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
                 .uri(this.buildUri())
