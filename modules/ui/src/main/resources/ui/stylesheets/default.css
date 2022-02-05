@@ -397,3 +397,8 @@
     -fx-border-width: 1px;
     -fx-border-color: -primary-border-color;
 }
+
+.link:hover {
+    -fx-cursor: hand;
+    -fx-underline: true;
+}

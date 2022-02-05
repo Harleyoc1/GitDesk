@@ -9,7 +9,7 @@
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
 <?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.ModifiableCommentController" fx:id="root"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.timeline.ModifiableCommentController" fx:id="root"
       styleClass="comment">
     <HBox minHeight="30" fx:id="header" styleClass="header" spacing="5" alignment="CENTER_LEFT">
         <Circle fx:id="commenterAvatar" styleClass="bordered" radius="10"/>

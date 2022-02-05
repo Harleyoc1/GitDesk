@@ -12,6 +12,6 @@ interface RemoteBranch {
 
     val user: User
 
-    val repo: RemoteRepository
+    val repository: RemoteRepository
 
 }

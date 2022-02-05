@@ -6,6 +6,7 @@ import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread

@@ -6,14 +6,15 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.ReOpenedEventController" spacing="8"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.timeline.LabeledEventController" fx:id="root" spacing="8"
       alignment="CENTER_LEFT">
     <padding>
         <Insets left="20"/>
     </padding>
-    <SVGIcon prefHeight="16" prefWidth="16" path="/ui/icons/issue.svg" styleClass="icon, open-accent"/>
+    <SVGIcon prefHeight="16" prefWidth="16" path="/ui/icons/label.svg" styleClass="icon"/>
     <Circle fx:id="actorAvatar" styleClass="bordered" radius="12"/>
     <Label fx:id="usernameLabel" styleClass="text, body"/>
-    <Label text="%issue.event.reopened" styleClass="secondary-text, body"/>
+    <Label fx:id="eventLabel" text="%issue.event.labeled" styleClass="secondary-text, body"/>
+    <!-- Label added here. -->
     <Label fx:id="createdLabel" styleClass="secondary-text, body"/>
 </HBox>

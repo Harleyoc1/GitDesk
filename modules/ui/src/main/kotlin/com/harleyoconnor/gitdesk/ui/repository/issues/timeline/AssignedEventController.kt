@@ -1,9 +1,10 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.timeline.AssignedEvent
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
+import com.harleyoconnor.gitdesk.ui.util.formatByDate
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.fxml.FXML
@@ -12,19 +13,14 @@ import javafx.scene.image.Image
 import javafx.scene.layout.HBox
 import javafx.scene.paint.ImagePattern
 import javafx.scene.shape.Circle
-import java.text.SimpleDateFormat
 
 /**
  * @author Harley O'Connor
  */
 class AssignedEventController : ViewController<AssignedEventController.Context> {
 
-    companion object {
-        private val DATE_FORMAT = SimpleDateFormat("dd MMM yyyy")
-    }
-
     object Loader : ResourceViewLoader<Context, AssignedEventController, HBox>(
-        UIResource("/ui/layouts/repository/issues/AssignedEvent.fxml")
+        UIResource("/ui/layouts/repository/issues/timeline/AssignedEvent.fxml")
     )
 
     class Context(val event: AssignedEvent) : ViewController.Context
@@ -62,6 +58,6 @@ class AssignedEventController : ViewController<AssignedEventController.Context> 
             assigneeAvatar.fill = ImagePattern(Image(event.assignee.avatarUrl.toExternalForm()))
             assigneeUsernameLabel.text = event.assignee.username
         }
-        createdLabel.text = TRANSLATIONS_BUNDLE.getString("ui.date.on", DATE_FORMAT.format(event.createdAt))
+        createdLabel.text = TRANSLATIONS_BUNDLE.getString("ui.date.on", event.createdAt.formatByDate())
     }
 }

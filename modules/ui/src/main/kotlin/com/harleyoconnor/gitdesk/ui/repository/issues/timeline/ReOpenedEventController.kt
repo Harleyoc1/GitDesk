@@ -1,4 +1,4 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.ui.UIResource
@@ -24,7 +24,7 @@ class ReOpenedEventController : ViewController<ReOpenedEventController.Context> 
     }
 
     object Loader : ResourceViewLoader<Context, ReOpenedEventController, HBox>(
-        UIResource("/ui/layouts/repository/issues/ReOpenedEvent.fxml")
+        UIResource("/ui/layouts/repository/issues/timeline/ReOpenedEvent.fxml")
     )
 
     class Context(val event: Event) : ViewController.Context

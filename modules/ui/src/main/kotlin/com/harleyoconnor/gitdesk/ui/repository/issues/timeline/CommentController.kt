@@ -1,8 +1,9 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.formatByDate
@@ -15,7 +16,6 @@ import javafx.scene.image.Image
 import javafx.scene.layout.VBox
 import javafx.scene.paint.ImagePattern
 import javafx.scene.shape.Circle
-import java.text.SimpleDateFormat
 
 /**
  * @author Harley O'Connor
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 open class CommentController : ViewController<CommentController.Context> {
 
     object Loader : ResourceViewLoader<Context, CommentController, VBox>(
-        UIResource("/ui/layouts/repository/issues/Comment.fxml")
+        UIResource("/ui/layouts/repository/issues/timeline/Comment.fxml")
     )
 
     class Context(val parent: IssueController<out Issue>, val issue: IssueAccessor<out Issue>, val comment: Comment) :

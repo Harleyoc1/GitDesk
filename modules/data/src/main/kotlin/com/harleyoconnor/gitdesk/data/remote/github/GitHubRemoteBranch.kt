@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote.github
 
 import com.harleyoconnor.gitdesk.data.remote.RemoteBranch
+import com.squareup.moshi.Json
 
 /**
  *
@@ -10,5 +11,5 @@ class GitHubRemoteBranch(
     override val label: String,
     override val ref: String,
     override val user: GitHubUser,
-    override val repo: GitHubRemoteRepository
+    @Json(name = "repo") override val repository: GitHubRemoteRepository
 ) : RemoteBranch

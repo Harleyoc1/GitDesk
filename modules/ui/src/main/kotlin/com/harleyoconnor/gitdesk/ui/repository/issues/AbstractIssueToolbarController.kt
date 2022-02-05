@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML

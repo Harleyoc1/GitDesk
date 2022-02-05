@@ -12,7 +12,8 @@ import java.net.URL
  */
 class GitHubCommittedEvent(
     @GitHubEventType @Json(name = "event") override val type: EventType,
-    override val url: URL,
+    @Json(name = "sha") override val hash: String,
+    @Json(name = "html_url") override val url: URL,
     override val author: CommittedEvent.GitUser,
     override val committer: CommittedEvent.GitUser,
     override val message: String

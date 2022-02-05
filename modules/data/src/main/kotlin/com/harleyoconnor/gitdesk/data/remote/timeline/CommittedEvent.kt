@@ -10,6 +10,8 @@ import java.util.Date
  */
 interface CommittedEvent : Event {
 
+    val hash: String
+
     val url: URL
 
     val author: GitUser

@@ -1,14 +1,18 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
+import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.timeline.AssignedEvent
 import com.harleyoconnor.gitdesk.data.remote.timeline.CommentedEvent
+import com.harleyoconnor.gitdesk.data.remote.timeline.CommittedEvent
 import com.harleyoconnor.gitdesk.data.remote.timeline.Event
 import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
+import com.harleyoconnor.gitdesk.data.remote.timeline.MergedEvent
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
 import javafx.scene.layout.HBox
@@ -42,6 +46,12 @@ private val eventViews = mapOf<EventType, (EventContext) -> ViewLoader.View<*, o
     },
     EventType.UNASSIGNED to { context ->
         loadAssignedEventView(context)
+    },
+    EventType.COMMITTED to { context ->
+        loadCommittedView(context)
+    },
+    EventType.MERGED to { context ->
+        loadMergedView(context)
     }
 )
 
@@ -125,6 +135,25 @@ fun loadClosedEventView(context: EventContext): ViewLoader.View<ClosedEventContr
 fun loadReOpenedEventView(context: EventContext): ViewLoader.View<ReOpenedEventController, HBox> {
     return ReOpenedEventController.Loader.load(
         ReOpenedEventController.Context(context.event)
+    )
+}
+
+fun loadCommittedView(context: EventContext): ViewLoader.View<CommittedEventController, HBox> {
+    val committedEvent = context.event as CommittedEvent
+    return CommittedEventController.Loader.load(
+        CommittedEventController.Context(committedEvent)
+    )
+}
+
+@Suppress("UNCHECKED_CAST")
+fun loadMergedView(context: EventContext): ViewLoader.View<MergedEventController, HBox> {
+    val committedEvent = context.event as MergedEvent
+    return MergedEventController.Loader.load(
+        MergedEventController.Context(
+            context.remoteContext,
+            context.issue as IssueAccessor<PullRequest>,
+            committedEvent
+        )
     )
 }
 

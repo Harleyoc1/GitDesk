@@ -5,11 +5,21 @@ import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 
+val PROFILE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/profile.svg"))
+
 val OPEN_ISSUE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/issue.svg"))
 val CLOSED_ISSUE_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_issue.svg"))
 
 val OPEN_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/branch.svg"))
 val CLOSED_PULL_REQUEST_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/closed_pull_request.svg"))
+
+fun createIcon(svg: SVG, prefWidth: Double = 16.0, prefHeight: Double = 16.0): SVGIcon {
+    return SVGIcon().also { icon ->
+        icon.setPrefSize(prefWidth, prefHeight)
+        icon.setupFromSvg(svg)
+        icon.styleClass.add("icon")
+    }
+}
 
 fun createOpenIssueIcon(): SVGIcon {
     return createOpenIcon(OPEN_ISSUE_ICON)

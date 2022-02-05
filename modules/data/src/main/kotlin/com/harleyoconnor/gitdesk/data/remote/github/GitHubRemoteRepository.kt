@@ -55,6 +55,10 @@ class GitHubRemoteRepository(
         GitHubNetworking.getLabels(name) ?: arrayOf()
     }
 
+    override fun getBranchUrl(ref: String): URL {
+        return URL("https://github.com/${name.getFullName()}/tree/$ref")
+    }
+
     override fun isCollaborator(username: String): Boolean? {
         return GitHubNetworking.isCollaborator(username, name)
     }

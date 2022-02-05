@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createClosedIssueIcon
 import com.harleyoconnor.gitdesk.ui.util.createOpenIssueIcon

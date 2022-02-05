@@ -1,8 +1,9 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createConfirmationDialogue
 import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
@@ -24,7 +25,7 @@ import org.apache.logging.log4j.LogManager
 class ModifiableCommentController : CommentController() {
 
     object Loader : ResourceViewLoader<Context, ModifiableCommentController, VBox>(
-        UIResource("/ui/layouts/repository/issues/ModifiableComment.fxml")
+        UIResource("/ui/layouts/repository/issues/timeline/ModifiableComment.fxml")
     )
 
     private lateinit var parent: IssueController<out Issue>

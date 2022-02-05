@@ -1,8 +1,9 @@
-package com.harleyoconnor.gitdesk.ui.repository.issues
+package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 
 import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.repository.issues.LabelController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
@@ -25,7 +26,7 @@ class LabeledEventController : ViewController<LabeledEventController.Context> {
     }
 
     object Loader : ResourceViewLoader<Context, LabeledEventController, HBox>(
-        UIResource("/ui/layouts/repository/issues/LabeledEvent.fxml")
+        UIResource("/ui/layouts/repository/issues/timeline/LabeledEvent.fxml")
     )
 
     class Context(val label: com.harleyoconnor.gitdesk.data.remote.Label, val labeledEvent: LabeledEvent) :

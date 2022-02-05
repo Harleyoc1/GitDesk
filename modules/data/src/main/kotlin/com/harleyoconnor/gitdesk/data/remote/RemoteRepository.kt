@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote
 
 import com.harleyoconnor.gitdesk.git.repository.Remote
+import java.net.URI
 import java.net.URL
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -40,6 +41,8 @@ interface RemoteRepository : Remote {
     val hasIssues: Boolean
 
     val labels: Array<Label>
+
+    fun getBranchUrl(ref: String): URL
 
     fun isCollaborator(username: String): Boolean?
 

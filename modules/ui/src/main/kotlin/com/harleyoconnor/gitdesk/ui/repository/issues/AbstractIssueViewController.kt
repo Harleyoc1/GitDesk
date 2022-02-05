@@ -9,6 +9,11 @@ import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.CommentController
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.EventContext
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.getViewForEvent
+import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.loadCommentView
 import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE

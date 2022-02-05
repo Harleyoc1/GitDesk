@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.timeline.CommittedEventController"
+      spacing="8" alignment="CENTER_LEFT">
+    <padding>
+        <Insets left="20"/>
+    </padding>
+    <SVGIcon prefHeight="16" prefWidth="16" path="/ui/icons/commit.svg" styleClass="icon"/>
+    <Label fx:id="committerUsernameLabel" styleClass="text, body"/>
+    <Label fx:id="messageLabel" maxHeight="12" onMousePressed="#commitClicked" styleClass="secondary-text, body, link"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="hashLabel" onMousePressed="#commitClicked" styleClass="secondary-text, body, link"/>
+</HBox>

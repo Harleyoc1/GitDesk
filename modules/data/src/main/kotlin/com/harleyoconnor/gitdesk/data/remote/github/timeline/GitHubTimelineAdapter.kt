@@ -16,7 +16,8 @@ object GitHubTimelineAdapter : JsonAdapter<Timeline>() {
         EventType.ASSIGNED to GitHubAssignedEvent::class.java,
         EventType.UNASSIGNED to GitHubAssignedEvent::class.java,
         EventType.COMMITTED to GitHubCommittedEvent::class.java,
-        EventType.REVIEWED to GitHubReviewedEvent::class.java
+        EventType.REVIEWED to GitHubReviewedEvent::class.java,
+        EventType.MERGED to GitHubMergedEvent::class.java
     )
 
     override fun fromJson(reader: JsonReader): Timeline {

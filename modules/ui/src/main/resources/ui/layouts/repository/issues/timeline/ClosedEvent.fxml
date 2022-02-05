@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.ClosedEventController" spacing="8"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.timeline.ClosedEventController" spacing="8"
       alignment="CENTER_LEFT">
     <padding>
         <Insets left="20"/>
