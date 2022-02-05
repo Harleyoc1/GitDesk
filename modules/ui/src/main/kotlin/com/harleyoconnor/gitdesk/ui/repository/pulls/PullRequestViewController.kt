@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.pulls
 
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.MergedEvent
@@ -24,6 +25,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import java.util.Date
 
@@ -44,15 +46,34 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     }
 
     @FXML
+    private lateinit var commentButtonsBox: HBox
+
+    @FXML
     private lateinit var mergeButton: Button
 
     override fun setup(context: Context) {
         super.setup(context)
         mergeButton.isDisable = issue.draft
-        if (!remoteContext.loggedInUserIsCollaborator || issue.merged) {
-            commentBox.children.remove(mergeButton)
+        loadMergeButton()
+    }
+
+    override fun issueUpdated() {
+        super.issueUpdated()
+        loadMergeButton()
+    }
+
+    private fun loadMergeButton() {
+        commentButtonsBox.children.remove(mergeButton)
+        if (showMergeButton()) {
+            commentButtonsBox.children.add(0, mergeButton)
         }
     }
+
+    /**
+     * @return `true` if the merge button should be shown based on the current state of the pull request
+     */
+    private fun showMergeButton() =
+        remoteContext.loggedInUserIsCollaborator && issue.state == Issue.State.OPEN && !issue.draft
 
     @FXML
     private fun merge(event: ActionEvent) {

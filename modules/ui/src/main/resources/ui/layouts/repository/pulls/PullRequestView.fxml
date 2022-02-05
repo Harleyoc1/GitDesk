@@ -73,7 +73,7 @@
             <Insets top="10" right="12" bottom="10" left="12"/>
         </padding>
         <TextArea fx:id="commentField" minHeight="100" promptText="%ui.field.comment.prompt"/>
-        <HBox alignment="CENTER_LEFT" spacing="10">
+        <HBox fx:id="commentButtonsBox" alignment="CENTER_LEFT" spacing="10">
             <Button fx:id="mergeButton" onAction="#merge" text="%ui.button.merge"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="commentAndToggleStateButton" onAction="#commentAndToggleState"
