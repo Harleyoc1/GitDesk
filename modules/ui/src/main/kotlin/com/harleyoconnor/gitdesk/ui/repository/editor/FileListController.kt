@@ -53,11 +53,16 @@ class FileListController : ViewController<FileListController.Context> {
     override fun setup(context: Context) {
         this.parent = context.parent
         this.repository = context.repository
-        root.children.addAll(buildCells(repository.directory))
+        loadRootCells()
         showLastOpenDirectories()
     }
 
-    private fun showLastOpenDirectories() {
+    private fun loadRootCells() {
+        root.children.clear()
+        root.children.addAll(buildCells(repository.directory))
+    }
+
+    fun showLastOpenDirectories() {
         repository.openDirectories.traverse(PreOrderTraverser.traverse { directory ->
             directoryCells[directory]?.setOpen()
         })
@@ -114,6 +119,30 @@ class FileListController : ViewController<FileListController.Context> {
 
     fun onDirectoryClosed(directory: Directory) {
         this.repository.openDirectories.remove(directory)
+    }
+
+    fun onDirectoryDeleted(directory: Directory) {
+        val parent = Directory(directory.parentFile)
+        directoryCells[parent]?.reloadCells() ?: run {
+            loadRootCells()
+        }
+        this.repository.openDirectories.remove(directory)
+        showLastOpenDirectories()
+    }
+
+    fun onFileDeleted(file: File) {
+        val parent = Directory(file.parentFile)
+        directoryCells[parent]?.reloadCells() ?: run {
+            loadRootCells()
+        }
+        showLastOpenDirectories()
+    }
+
+    fun reloadCellsFor(directory: Directory) {
+        directoryCells[directory]?.reloadCells() ?: run {
+            loadRootCells()
+        }
+        showLastOpenDirectories()
     }
 
 }

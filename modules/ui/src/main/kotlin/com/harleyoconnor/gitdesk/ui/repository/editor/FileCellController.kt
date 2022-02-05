@@ -4,14 +4,19 @@ import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.getIcon
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Insets
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
 import javafx.scene.input.MouseButton
@@ -32,6 +37,10 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
 
     lateinit var file: File
     protected lateinit var parent: FileListController
+
+    private val parentDirectory by lazy {
+        Directory(file.parentFile)
+    }
 
     @FXML
     private lateinit var cell: HBox
@@ -79,6 +88,38 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
 
     fun displayAsClosed() {
         cell.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, false)
+    }
+
+    @FXML
+    private fun createNewFile(event: ActionEvent) {
+        CreateFileWindow(parentDirectory) {
+            parent.reloadCellsFor(parentDirectory)
+        }.open()
+    }
+
+    @FXML
+    private fun createNewDirectory(event: ActionEvent) {
+        CreateDirectoryWindow(parentDirectory) {
+            parent.reloadCellsFor(parentDirectory)
+        }.open()
+    }
+
+    @FXML
+    private fun delete(event: ActionEvent) {
+        createDeleteFileDialogue()
+            .showAndWait()
+            .filter(ButtonType.OK::equals)
+            .ifPresent {
+                file.delete()
+                parent.onFileDeleted(file)
+            }
+    }
+
+    protected fun createDeleteFileDialogue(): Alert {
+        val alert = Alert(Alert.AlertType.CONFIRMATION)
+        alert.headerText = TRANSLATIONS_BUNDLE.getString("dialogue.confirm.file_deletion.header")
+        alert.headerText = TRANSLATIONS_BUNDLE.getString("dialogue.confirm.file_deletion.content", file.name)
+        return alert
     }
 
     @FXML

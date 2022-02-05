@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Menu?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.DirectoryCellController" fx:id="root">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>
-                <MenuItem text="%ui.button.expand" accelerator="Shortcut+O" onAction="#expandPressed"/>
+                <Menu text="%ui.button.new">
+                    <MenuItem text="%ui.button.new.file" onAction="#createNewFile"/>
+                    <MenuItem text="%ui.button.new.directory" onAction="#createNewDirectory"/>
+                </Menu>
+                <SeparatorMenuItem/>
+                <MenuItem text="%ui.button.delete" onAction="#delete"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="%ui.button.open" onAction="#expandPressed"/>
                 <Menu text="%ui.button.open_in">
-                    <MenuItem text="%ui.button.open_in.file_browser" accelerator="Shortcut+Alt+O"
-                              onAction="#openInFileBrowser"/>
+                    <MenuItem text="%ui.button.open_in.file_browser" onAction="#openInFileBrowser"/>
                 </Menu>
             </items>
         </ContextMenu>

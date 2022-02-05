@@ -1,8 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.node
 
-import com.harleyoconnor.gitdesk.ui.style.ERROR_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidators
+import com.harleyoconnor.gitdesk.ui.style.ERROR_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.util.concurrent.VariableTaskExecutor
 import com.harleyoconnor.gitdesk.util.map
 import javafx.application.Platform
@@ -10,7 +10,6 @@ import javafx.concurrent.Task
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.control.Label
-import javafx.scene.control.TextField
 import javafx.scene.control.TextInputControl
 import javafx.scene.layout.VBox
 import java.time.Duration

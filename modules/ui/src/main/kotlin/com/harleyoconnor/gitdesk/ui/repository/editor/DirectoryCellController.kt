@@ -4,10 +4,12 @@ import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.util.Directory
+import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Insets
 import javafx.scene.Node
+import javafx.scene.control.ButtonType
 import javafx.scene.layout.VBox
 
 /**
@@ -77,15 +79,56 @@ class DirectoryCellController : FileCellController<DirectoryCellController.Conte
     }
 
     fun setOpen() {
+        if (open) {
+            return
+        }
         root.children.addAll(cells)
         expandIcon.rotate = 90.0
         open = true
     }
 
     private fun closeDirectory() {
+        if (!open) {
+            return
+        }
         root.children.remove(1, root.children.size)
         expandIcon.rotate = 0.0
         open = false
         parent.onDirectoryClosed(directory)
     }
+
+    @FXML
+    private fun createNewFile(event: ActionEvent) {
+        CreateFileWindow(directory) {
+            reloadCells()
+        }.open()
+    }
+
+    @FXML
+    private fun createNewDirectory(event: ActionEvent) {
+        CreateDirectoryWindow(directory) {
+            reloadCells()
+        }.open()
+    }
+
+    fun reloadCells() {
+        cells = parent.buildCells(directory, insetIndex + 1)
+        if (open) {
+            root.children.remove(1, root.children.size)
+            root.children.addAll(cells)
+            parent.showLastOpenDirectories()
+        }
+    }
+
+    @FXML
+    private fun delete(event: ActionEvent) {
+        createDeleteFileDialogue()
+            .showAndWait()
+            .filter(ButtonType.OK::equals)
+            .ifPresent {
+                directory.deleteRecursively()
+                parent.onDirectoryDeleted(directory)
+            }
+    }
+
 }

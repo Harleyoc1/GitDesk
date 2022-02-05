@@ -6,15 +6,23 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.FileCellController" fx:id="cell"
       alignment="CENTER_LEFT" styleClass="cell, file-cell" spacing="5" onMousePressed="#select">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>
-                <MenuItem text="%ui.button.open" accelerator="Shortcut+O" onAction="#open"/>
+                <Menu text="%ui.button.new">
+                    <MenuItem text="%ui.button.new.file" onAction="#createNewFile"/>
+                    <MenuItem text="%ui.button.new.directory" onAction="#createNewDirectory"/>
+                </Menu>
+                <SeparatorMenuItem/>
+                <MenuItem text="%ui.button.delete" onAction="#delete"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="%ui.button.open" onAction="#open"/>
                 <Menu text="%ui.button.open_in">
-                    <MenuItem text="%ui.button.open_in.file_browser" accelerator="Shortcut+Alt+O"
+                    <MenuItem text="%ui.button.open_in.file_browser"
                               onAction="#openInFileBrowser"/>
                 </Menu>
             </items>

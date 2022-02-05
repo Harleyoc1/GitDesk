@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.editor.CreateFileController" spacing="10"
+      onKeyPressed="#onKeyPressed">
+    <padding>
+        <Insets topRightBottomLeft="20"/>
+    </padding>
+    <TextField fx:id="nameField" labelText="%ui.field.name" fieldPrefHeight="35"
+               validation="NotEmpty" styleClass="field"/> <!-- FileNameAvailableValidator added programmatically -->
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button onAction="#cancel" text="%ui.button.cancel"/>
+        <Button fx:id="createButton" onAction="#create" text="%ui.button.create" styleClass="enter-button"/>
+    </HBox>
+</VBox>
