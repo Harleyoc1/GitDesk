@@ -44,6 +44,8 @@ interface RemoteRepository : Remote {
 
     fun getBranchUrl(ref: String): URL
 
+    fun getCommitUrl(commitId: String): URL
+
     fun isCollaborator(username: String): Boolean?
 
     fun getLabel(name: String): Label?

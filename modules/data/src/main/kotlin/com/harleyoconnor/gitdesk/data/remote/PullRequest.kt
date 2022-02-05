@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote
 
 import java.util.Date
+import java.util.concurrent.CompletableFuture
 
 /**
  *
@@ -23,5 +24,11 @@ interface PullRequest : Issue {
     val mergedBy: User?
 
     val mergedAt: Date?
+
+    fun merge(mergedBy: User): CompletableFuture<MergeResponse>
+
+    interface MergeResponse {
+        val commitId: String
+    }
 
 }

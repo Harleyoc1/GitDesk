@@ -1,7 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote.timeline
 
-import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import java.net.URL
+import com.harleyoconnor.gitdesk.data.remote.User
+import java.util.Date
 
 /**
  *
@@ -11,6 +11,11 @@ interface MergedEvent : Event {
 
     val commitId: String
 
-    fun getUrl(parentName: RemoteRepository.Name): URL
+    class Raw(
+        override val type: EventType,
+        override val actor: User,
+        override val createdAt: Date,
+        override val commitId: String
+    ) : MergedEvent
 
 }

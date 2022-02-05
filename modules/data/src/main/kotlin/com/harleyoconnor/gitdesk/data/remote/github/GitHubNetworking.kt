@@ -457,6 +457,31 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
+    private fun getPullRequestUrl(repositoryName: RemoteRepository.Name, number: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/pulls/$number"
+
+    override fun mergePullRequest(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<PullRequest.MergeResponse> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .PUT(
+                    HttpRequest.BodyPublishers.ofString("{}")
+                )
+                .uri(getMergePullRequestUrl(repositoryName, number))
+                .applyDefaultHeaders()
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubPullRequest.GitHubMergeResponse.ADAPTER.fromJson(body)
+            }) {
+                "Merging pull request."
+            }
+        }
+    }
+
+    private fun getMergePullRequestUrl(repositoryName: RemoteRepository.Name, number: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/pulls/$number/merge"
+
     private fun mapIssueOrThrow(
         response: HttpResponse<String>,
         messageSupplier: () -> String
@@ -474,9 +499,6 @@ object GitHubNetworking : PlatformNetworking {
             GitHubPullRequest.ADAPTER.fromJson(body)!!
         }, messageSupplier)
     }
-
-    private fun getPullRequestUrl(repositoryName: RemoteRepository.Name, number: Int) =
-        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/pulls/$number"
 
     private fun sendRequest(uri: URI): HttpResponse<Void> {
         Session.getOrLoad()?.getGitHubAccount()?.let {

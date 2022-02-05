@@ -59,6 +59,10 @@ class GitHubRemoteRepository(
         return URL("https://github.com/${name.getFullName()}/tree/$ref")
     }
 
+    override fun getCommitUrl(commitId: String): URL {
+        return URL("https://github.com/${name.getFullName()}/commit/$commitId")
+    }
+
     override fun isCollaborator(username: String): Boolean? {
         return GitHubNetworking.isCollaborator(username, name)
     }

@@ -14,13 +14,10 @@ import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.EventContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.getViewForEvent
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.loadCommentView
-import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.REJECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
-import com.harleyoconnor.gitdesk.ui.util.CLOSED_ISSUE_ICON
-import com.harleyoconnor.gitdesk.ui.util.OPEN_ISSUE_ICON
 import com.harleyoconnor.gitdesk.ui.util.createAvatarNode
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
@@ -365,6 +362,10 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     private fun updateUIForToggledState() {
         val createdAt = Date()
         issueUpdated()
+        addStateChangeEventToTimeline(createdAt)
+    }
+
+    protected fun addStateChangeEventToTimeline(createdAt: Date) {
         addEventToTimeline(
             createStateChangeEvent(issue.state, remoteContext.loggedInUser!!, createdAt)
         )

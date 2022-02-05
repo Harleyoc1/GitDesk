@@ -111,4 +111,9 @@ interface PlatformNetworking {
 
     fun getPullRequest(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<PullRequest>
 
+    fun mergePullRequest(
+        repositoryName: RemoteRepository.Name,
+        number: Int
+    ): CompletableFuture<PullRequest.MergeResponse>
+
 }

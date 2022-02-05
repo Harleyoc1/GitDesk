@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
+import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubIssue
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubLabel
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubRemoteBranch
@@ -20,6 +21,7 @@ import com.squareup.moshi.Types
 import org.apache.logging.log4j.LogManager
 import java.net.URL
 import java.util.Date
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -148,6 +150,10 @@ class PullRequestSearch(
         }
 
         override val merged: Boolean = this.mergedAt != null
+
+        override fun merge(mergedBy: User): CompletableFuture<PullRequest.MergeResponse> {
+            return CompletableFuture.completedFuture(null)
+        }
 
     }
 

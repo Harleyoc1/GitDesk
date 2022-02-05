@@ -72,7 +72,7 @@ class MergedEventController : ViewController<MergedEventController.Context> {
     private fun commitClicked(event: MouseEvent) {
         if (event.button == MouseButton.PRIMARY) {
             Application.getInstance().hostServices.showDocument(
-                this.event.getUrl(remoteContext.remote.name).toExternalForm()
+                remoteContext.remote.getCommitUrl(this.event.commitId).toExternalForm()
             )
         }
     }

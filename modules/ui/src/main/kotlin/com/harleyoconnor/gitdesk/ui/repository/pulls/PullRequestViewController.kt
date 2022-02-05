@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.ui.repository.pulls
 
 import com.harleyoconnor.gitdesk.data.remote.PullRequest
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
+import com.harleyoconnor.gitdesk.data.remote.timeline.MergedEvent
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.AbstractIssueViewController
@@ -12,7 +14,10 @@ import com.harleyoconnor.gitdesk.ui.util.CLOSED_PULL_REQUEST_ICON
 import com.harleyoconnor.gitdesk.ui.util.DRAFT_PULL_REQUEST_ICON
 import com.harleyoconnor.gitdesk.ui.util.MERGED_PULL_REQUEST_ICON
 import com.harleyoconnor.gitdesk.ui.util.OPEN_PULL_REQUEST_ICON
+import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.formatByDate
+import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
+import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.event.ActionEvent
@@ -20,6 +25,7 @@ import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.layout.VBox
+import java.util.Date
 
 /**
  * @author Harley O'Connor
@@ -43,14 +49,34 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     override fun setup(context: Context) {
         super.setup(context)
         mergeButton.isDisable = issue.draft
-        if (issue.merged) {
+        if (!remoteContext.loggedInUserIsCollaborator || issue.merged) {
             commentBox.children.remove(mergeButton)
         }
     }
 
     @FXML
     private fun merge(event: ActionEvent) {
+        issue.merge(remoteContext.loggedInUser!!)
+            .thenAcceptOnMainThread {
+                val createdAt = Date()
+                issueUpdated()
+                addMergedEventToTimeline(createdAt, it)
+                addStateChangeEventToTimeline(createdAt)
+            }
+            .exceptionallyOnMainThread {
+                logErrorAndCreateDialogue("dialogue.error.merging_pull_request", it).show()
+            }
+    }
 
+    private fun addMergedEventToTimeline(
+        createdAt: Date,
+        it: PullRequest.MergeResponse
+    ) {
+        addEventToTimeline(
+            MergedEvent.Raw(
+                EventType.MERGED, remoteContext.loggedInUser!!, createdAt, it.commitId
+            )
+        )
     }
 
     override fun loadStateBox() {
