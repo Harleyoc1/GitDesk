@@ -82,6 +82,11 @@ class EditorTabController : ViewController<EditorTabController.Context> {
     }
 
     @FXML
+    private fun openIgnoredWindow(event: ActionEvent) {
+
+    }
+
+    @FXML
     private fun openBranchesWindow(event: ActionEvent) {
         window.openBranchesWindow()
     }

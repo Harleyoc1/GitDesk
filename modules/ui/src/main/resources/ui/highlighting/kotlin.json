@@ -1,7 +1,7 @@
 {
   "type": "keyword_based",
   "priority": 1,
-  "name_pattern": ".*\\.kts{0,1}",
+  "name_pattern": ".*\\.kts?",
   "keywords": [
     "as",
     "as?",

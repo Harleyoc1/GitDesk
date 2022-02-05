@@ -20,7 +20,7 @@
                 </graphic>
             </Button>
         </HBox>
-        <!-- IssueList programmatically inserted here. -->
+        <!-- PullRequestsList programmatically inserted here. -->
     </VBox>
-    <VBox/> <!-- IssueBox put here. -->
+    <VBox/> <!-- PullRequestView put here. -->
 </SplitPane>

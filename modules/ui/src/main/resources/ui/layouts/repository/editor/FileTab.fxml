@@ -31,7 +31,7 @@
             <Label fx:id="label" HBox.hgrow="ALWAYS" styleClass="text, body"/>
             <Button onAction="#close" styleClass="icon-button, no-padding">
                 <graphic>
-                    <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/close.svg" styleClass="icon"/>
+                    <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/close.svg" styleClass="icon"/>
                 </graphic>
             </Button>
         </HBox>
