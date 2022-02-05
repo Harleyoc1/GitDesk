@@ -10,8 +10,12 @@ import java.io.File
 @Throws(JsonDataException::class)
 fun JsonReader.findName(name: String) {
     while (this.hasNext()) {
-        if (this.peek() == JsonReader.Token.NAME && this.nextName() == name) {
-            return
+        if (this.peek() == JsonReader.Token.NAME) {
+            if (this.nextName() == name) {
+                return
+            }
+        } else {
+            this.skipValue()
         }
     }
     throw JsonDataException("No such name \"$name\".")
@@ -19,8 +23,12 @@ fun JsonReader.findName(name: String) {
 
 inline fun JsonReader.findNameOrElse(name: String, action: () -> Unit) {
     while (this.hasNext()) {
-        if (this.peek() == JsonReader.Token.NAME && this.nextName() == name) {
-            return
+        if (this.peek() == JsonReader.Token.NAME) {
+            if (this.nextName() == name) {
+                return
+            }
+        } else {
+            this.skipValue()
         }
     }
     action()

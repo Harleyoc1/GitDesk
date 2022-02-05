@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.data.remote.github.search
 
 import com.harleyoconnor.gitdesk.data.MOSHI
+import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubIssue
 import com.squareup.moshi.Types
 
@@ -9,12 +10,18 @@ import com.squareup.moshi.Types
  * @author Harley O'Connor
  */
 class IssueSearch(
+    remote: RemoteRepository,
     query: String,
     sort: String = "best match",
     order: String = "desc",
     perPage: Int = 5,
     page: Int = 1
-) : Search<GitHubIssue>(query, sort, order, perPage, page) {
+) : Search<GitHubIssue>(processQuery(remote, query), sort, order, perPage, page) {
+
+    companion object {
+        fun processQuery(remote: RemoteRepository, query: String): String =
+            "repo:${remote.name.getFullName()} is:issue $query"
+    }
 
     override val id: String = "issues"
 

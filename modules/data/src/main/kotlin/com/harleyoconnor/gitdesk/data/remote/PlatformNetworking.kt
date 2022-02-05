@@ -95,4 +95,6 @@ interface PlatformNetworking {
      */
     fun openIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue>
 
+    fun getPullRequest(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<PullRequest>
+
 }

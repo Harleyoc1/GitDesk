@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.AbstractIssuesListController$Issues" fx:id="root"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.pulls.PullRequestsListController" fx:id="root"
       spacing="2">
     <StackPane minHeight="35" prefHeight="35" maxWidth="Infinity">
         <VBox.margin>

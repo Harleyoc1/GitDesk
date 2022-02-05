@@ -22,11 +22,6 @@ import javafx.scene.layout.VBox
  */
 class IssueToolbarController : ViewController<IssueToolbarController.Context> {
 
-    companion object {
-        val LOCK_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/lock.svg"))
-        val UNLOCK_ICON = SVGCache.getOrLoad(UIResource("/ui/icons/unlock.svg"))
-    }
-
     object Loader : ResourceViewLoader<Context, IssueToolbarController, VBox>(
         UIResource("/ui/layouts/repository/issues/IssueToolbar.fxml")
     )

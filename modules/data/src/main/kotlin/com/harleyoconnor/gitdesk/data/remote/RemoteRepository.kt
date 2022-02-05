@@ -51,11 +51,17 @@ interface RemoteRepository : Remote {
         sortOrder: SortOrder,
         page: Int,
         executor: Executor
-    ): CompletableFuture<Array<Issue>>
+    ): CompletableFuture<Array<out Issue>>
 
     fun addIssue(title: String, body: String): CompletableFuture<Issue>
 
-    // TODO: PRs
+    fun getPullRequests(
+        query: String,
+        sort: Sort,
+        sortOrder: SortOrder,
+        page: Int,
+        executor: Executor
+    ): CompletableFuture<Array<out PullRequest>>
 
     data class Name(
         val ownerName: String,

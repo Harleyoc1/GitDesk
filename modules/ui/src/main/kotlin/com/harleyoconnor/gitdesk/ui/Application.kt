@@ -33,7 +33,7 @@ class Application : javafx.application.Application() {
         }
     }
 
-    val backgroundExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    val backgroundExecutor: ExecutorService = Executors.newCachedThreadPool()
 
     fun getPrimaryStage(): Stage = primaryStage
 

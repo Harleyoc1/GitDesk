@@ -1,9 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
-import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.data.remote.Issue
-import com.harleyoconnor.gitdesk.data.remote.withFullData
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
@@ -27,18 +25,13 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
         UIResource("/ui/layouts/repository/issues/Root.fxml")
     )
 
-    class Context(val stage: Stage, val repository: LocalRepository) : ViewController.Context
+    class Context(val stage: Stage, val repository: LocalRepository, val remoteContext: RemoteContext) :
+        ViewController.Context
 
     private lateinit var stage: Stage
     private lateinit var repository: LocalRepository
-    private val remoteContext: RemoteContext by lazy {
-        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
-        RemoteContext(
-            repository,
-            remote,
-            Session.getOrLoad()?.getUserFor(remote.platform)
-        )
-    }
+    private lateinit var remoteContext: RemoteContext
+
     @FXML
     private lateinit var root: SplitPane
 
@@ -57,6 +50,7 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     override fun setup(context: Context) {
         stage = context.stage
         repository = context.repository
+        remoteContext = context.remoteContext
         titleLabel.text = repository.id
         sideBar.children.add(
             loadIssuesList()
@@ -68,8 +62,8 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     }
 
     private fun loadIssuesList(): VBox {
-        return IssuesListController.Loader.load(
-            IssuesListController.Context(this, remoteContext)
+        return AbstractIssuesListController.Issues.Loader.load(
+            AbstractIssuesListController.Issues.Context(this::setShownIssue, remoteContext)
         ).root
     }
 

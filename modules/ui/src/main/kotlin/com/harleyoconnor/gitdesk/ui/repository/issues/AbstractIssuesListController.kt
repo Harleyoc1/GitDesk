@@ -4,9 +4,9 @@ import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
-import com.harleyoconnor.gitdesk.ui.node.IssueCellList
 import com.harleyoconnor.gitdesk.ui.node.RadioContextMenu
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.node.SelectionCellList
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
@@ -31,28 +31,62 @@ import org.fxmisc.wellbehaved.event.Nodes
  *
  * @author Harley O'Connor
  */
-class IssuesListController : ViewController<IssuesListController.Context> {
+abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListController.Context<I>> : ViewController<C> {
 
-    object Loader : ResourceViewLoader<Context, IssuesListController, VBox>(
-        UIResource("/ui/layouts/repository/issues/IssueList.fxml")
-    )
+    class Issues : AbstractIssuesListController<Issue, Issues.Context>() {
 
-    class Context(val parent: IssuesTabController, val remote: RemoteContext) : ViewController.Context
+        object Loader : ResourceViewLoader<Context, Issues, VBox>(
+            UIResource("/ui/layouts/repository/issues/IssueList.fxml")
+        )
 
-    private lateinit var parent: IssuesTabController
-    private lateinit var remoteContext: RemoteContext
+        open class Context(
+            openIssueCallback: (Issue) -> Unit,
+            remote: RemoteContext
+        ) : AbstractIssuesListController.Context<Issue>(openIssueCallback, remote)
+
+        override fun loadIssuePage(page: Int) {
+            remoteContext.remote.getIssues(
+                searchQuery,
+                sort,
+                sortOrder,
+                page,
+                Application.getInstance().backgroundExecutor
+            ).thenApply {
+                loadCells(it)
+            }.thenAcceptOnMainThread { cells ->
+                displayCells(cells)
+            }.exceptionallyOnMainThread {
+                logErrorAndCreateDialogue("dialogue.error.searching_issues", it).show()
+            }
+        }
+
+        private fun loadCells(issues: Array<out Issue>): Map<Issue, HBox> {
+            return issues.associateWith {
+                IssueCellController.Loader.load(IssueCellController.Context(this::select, it)).root
+            }
+        }
+
+    }
+
+    open class Context<I : Issue>(
+        val openIssueCallback: (I) -> Unit,
+        val remote: RemoteContext
+    ) : ViewController.Context
+
+    private lateinit var openIssueCallback: (I) -> Unit
+    protected lateinit var remoteContext: RemoteContext
 
     @FXML
     private lateinit var searchBar: TextField
 
-    private var lastQuery = ""
+    protected var searchQuery = ""
 
-    private var sort: RemoteRepository.Sort = RemoteRepository.Sort.BEST_MATCH
+    protected var sort: RemoteRepository.Sort = RemoteRepository.Sort.BEST_MATCH
         set(value) {
             field = value; updateSearchResults()
         }
 
-    private var sortOrder: RemoteRepository.SortOrder = RemoteRepository.SortOrder.DESCENDING
+    protected var sortOrder: RemoteRepository.SortOrder = RemoteRepository.SortOrder.DESCENDING
         set(value) {
             field = value; updateSearchResults()
         }
@@ -67,7 +101,7 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     private lateinit var contentScrollPane: ScrollPane
 
     @FXML
-    private lateinit var content: IssueCellList
+    private lateinit var content: SelectionCellList<I>
 
     private var nextIssuePage: Int = 1
 
@@ -89,12 +123,12 @@ class IssuesListController : ViewController<IssuesListController.Context> {
         }
     }
 
-    override fun setup(context: Context) {
-        parent = context.parent
+    override fun setup(context: C) {
+        openIssueCallback = context.openIssueCallback
         remoteContext = context.remote
 
         content.setOnElementSelected {
-            parent.setShownIssue(it.element)
+            openIssueCallback(it.element)
         }
 
         registerSearchBarInputs()
@@ -136,10 +170,10 @@ class IssuesListController : ViewController<IssuesListController.Context> {
      * @return `true` if a search will be completed
      */
     private fun updateSearchResults(query: String): Boolean {
-        if (query == lastQuery) {
+        if (query == this.searchQuery) {
             return false
         }
-        lastQuery = query
+        this.searchQuery = query
         updateSearchResults()
         return true
     }
@@ -151,34 +185,18 @@ class IssuesListController : ViewController<IssuesListController.Context> {
     }
 
     private fun loadNextIssuePage() {
-        remoteContext.remote.getIssues(
-            lastQuery,
-            sort,
-            sortOrder,
-            nextIssuePage++,
-            Application.getInstance().backgroundExecutor
-        ).thenApply {
-            loadCells(it)
-        }.thenAcceptOnMainThread { cells ->
-            displayCells(cells)
-        }.exceptionallyOnMainThread {
-            logErrorAndCreateDialogue("dialogue.error.searching_issues", it)
-        }
+        loadIssuePage(nextIssuePage++)
     }
 
-    private fun loadCells(issues: Array<Issue>): Map<Issue, HBox> {
-        return issues.associateWith {
-            IssueCellController.Loader.load(IssueCellController.Context(this, it)).root
-        }
-    }
+    protected abstract fun loadIssuePage(page: Int)
 
-    private fun displayCells(cells: Map<Issue, HBox>) {
+    protected fun displayCells(cells: Map<I, HBox>) {
         cells.forEach { cell ->
             content.addElement(cell.key, cell.value)
         }
     }
 
-    fun select(issue: Issue) {
+    fun select(issue: I) {
         content.select(issue)
     }
 

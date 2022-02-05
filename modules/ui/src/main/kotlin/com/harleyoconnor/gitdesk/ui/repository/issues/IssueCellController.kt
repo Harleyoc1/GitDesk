@@ -34,9 +34,9 @@ class IssueCellController : ViewController<IssueCellController.Context> {
         UIResource("/ui/layouts/repository/issues/IssueCell.fxml")
     )
 
-    class Context(val parent: IssuesListController, val issue: Issue) : ViewController.Context
+    class Context(val selectCallback: (Issue) -> Unit, val issue: Issue) : ViewController.Context
 
-    private lateinit var parent: IssuesListController
+    private lateinit var selectCallback: (Issue) -> Unit
     private lateinit var issue: Issue
 
     @FXML
@@ -65,7 +65,7 @@ class IssueCellController : ViewController<IssueCellController.Context> {
     }
 
     override fun setup(context: Context) {
-        parent = context.parent
+        selectCallback = context.selectCallback
         issue = context.issue
         if (issue.state == Issue.State.CLOSED) {
             setupForClosedIssue()
@@ -81,7 +81,7 @@ class IssueCellController : ViewController<IssueCellController.Context> {
     private fun setupForClosedIssue() {
         issueIcon.setPath("/ui/icons/closed_issue.svg")
         otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
-            "ui.repository.tab.issues.cell.closed.info",
+            "cell.issue.closed.info",
             issue.number.toString(),
             DATE_FORMAT.format(issue.createdAt),
             issue.author.username,
@@ -91,7 +91,7 @@ class IssueCellController : ViewController<IssueCellController.Context> {
 
     private fun setupForOpenIssue() {
         otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
-            "ui.repository.tab.issues.cell.open.info",
+            "cell.issue.open.info",
             issue.number.toString(),
             DATE_FORMAT.format(issue.createdAt),
             issue.author.username
@@ -101,13 +101,13 @@ class IssueCellController : ViewController<IssueCellController.Context> {
     @FXML
     private fun select(event: MouseEvent) {
         if (event.button == MouseButton.PRIMARY) {
-            parent.select(issue)
+            selectCallback(issue)
         }
     }
 
     @FXML
     private fun open(event: ActionEvent) {
-        parent.select(issue)
+        selectCallback(issue)
     }
 
     @FXML

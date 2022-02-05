@@ -4,11 +4,14 @@ import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.Platform
+import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.github.search.IssueSearch
+import com.harleyoconnor.gitdesk.data.remote.github.search.PullRequestSearch
 import com.harleyoconnor.gitdesk.util.stream
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
+import org.apache.logging.log4j.LogManager
 import java.net.URL
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -70,21 +73,49 @@ class GitHubRemoteRepository(
         sortOrder: RemoteRepository.SortOrder,
         page: Int,
         executor: Executor
-    ): CompletableFuture<Array<Issue>> {
+    ): CompletableFuture<Array<out Issue>> {
         return CompletableFuture.supplyAsync({
-            IssueSearch(
-                "repo:${name.getFullName()} is:issue " + query,
-                sort.gitHubId,
-                sortOrder.gitHubId,
-                20
-            ).run()?.let {
-                it.items as Array<Issue>
+            try {
+                IssueSearch(
+                    this,
+                    query,
+                    sort.gitHubId,
+                    sortOrder.gitHubId,
+                    20
+                ).run()?.items
+            } catch (t: Throwable) {
+                LogManager.getLogger().error(t)
+                throw RuntimeException(t)
             }
         }, executor)
     }
 
     override fun addIssue(title: String, body: String): CompletableFuture<Issue> {
         return GitHubNetworking.addIssue(name, title, body)
+    }
+
+    override fun getPullRequests(
+        query: String,
+        sort: RemoteRepository.Sort,
+        sortOrder: RemoteRepository.SortOrder,
+        page: Int,
+        executor: Executor
+    ): CompletableFuture<Array<out PullRequest>> {
+        return CompletableFuture.supplyAsync({
+            try {
+                val items = PullRequestSearch(
+                    this,
+                    query,
+                    sort.gitHubId,
+                    sortOrder.gitHubId,
+                    20
+                ).run()?.items
+                items
+            } catch (t: Throwable) {
+                LogManager.getLogger().error(t)
+                throw RuntimeException(t)
+            }
+        }, executor)
     }
 
     class ParentRepository(val name: RemoteRepository.Name)

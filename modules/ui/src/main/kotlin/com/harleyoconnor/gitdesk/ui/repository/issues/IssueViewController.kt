@@ -443,7 +443,7 @@ class IssueViewController : ViewController<IssueViewController.Context>, Timelin
                 )
             }
             .exceptionallyOnMainThread {
-                logErrorAndCreateDialogue("dialogue.error.adding_assignee", it)
+                logErrorAndCreateDialogue("dialogue.error.adding_assignee", it).show()
             }
     }
 

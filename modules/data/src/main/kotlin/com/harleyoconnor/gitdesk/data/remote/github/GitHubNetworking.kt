@@ -9,6 +9,7 @@ import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.License
 import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.PlatformNetworking
+import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.data.remote.User
@@ -446,6 +447,27 @@ object GitHubNetworking : PlatformNetworking {
 
     private fun getUpdateIssueUrl(repositoryName: RemoteRepository.Name, number: Int) =
         "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/issues/$number"
+
+    override fun getPullRequest(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<PullRequest> {
+        return CLIENT.sendAsync(
+            HttpRequest.newBuilder()
+                .GET()
+                .uri(
+                    URI.create(getPullRequestUrl(repositoryName, number))
+                )
+                .header(HttpHeader.ACCEPT, acceptHeader)
+                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .build(),
+            HttpResponse.BodyHandlers.ofString()
+        ).thenApply {
+            it.mapOrElseThrow({ body ->
+                GitHubPullRequest.ADAPTER.fromJson(body)
+            }, { "Retrieving pull request." })
+        }
+    }
+
+    private fun getPullRequestUrl(repositoryName: RemoteRepository.Name, number: Int) =
+        "$url/repos/${repositoryName.ownerName}/${repositoryName.repositoryName}/pulls/$number"
 
     private fun sendRequest(uri: URI): HttpResponse<Void> {
         Session.getOrLoad()?.getGitHubAccount()?.let {
