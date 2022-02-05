@@ -5,7 +5,6 @@ import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.AbstractIssueToolbarController
-import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createClosedPullRequestIcon
@@ -25,17 +24,17 @@ class PullRequestToolbarController :
     )
 
     class Context(
-        parent: IssueController<PullRequest>,
+        parent: IssueController,
         remoteContext: RemoteContext,
-        pullRequest: IssueAccessor<PullRequest>
+        pullRequest: PullRequest
     ) : AbstractIssueToolbarController.Context<PullRequest>(parent, remoteContext, pullRequest)
 
     override fun shouldShowButtons(): Boolean {
-        return super.shouldShowButtons() && !issue.get().merged
+        return super.shouldShowButtons() && !issue.merged
     }
 
     override fun loadUIForState() {
-        if (issue.get().state == Issue.State.OPEN) {
+        if (issue.state == Issue.State.OPEN) {
             loadUIForOpenState()
         } else {
             loadUIForClosedState()

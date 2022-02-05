@@ -12,6 +12,7 @@ import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
+import javafx.scene.control.Button
 import javafx.scene.layout.VBox
 
 /**
@@ -31,6 +32,14 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     }
 
     @FXML
+    private lateinit var mergeButton: Button
+
+    override fun setup(context: Context) {
+        super.setup(context)
+        mergeButton.isDisable = issue.draft
+    }
+
+    @FXML
     private fun merge(event: ActionEvent) {
 
     }
@@ -40,7 +49,7 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     }
 
     override fun loadSubHeading() {
-        val pullRequest = issue.get()
+        val pullRequest = issue
         if (pullRequest.merged) {
             loadMergedSubheading(pullRequest)
         } else {

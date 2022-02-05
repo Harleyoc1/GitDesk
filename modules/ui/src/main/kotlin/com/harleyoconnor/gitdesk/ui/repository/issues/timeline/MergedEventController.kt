@@ -5,7 +5,6 @@ import com.harleyoconnor.gitdesk.data.remote.timeline.MergedEvent
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
-import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.formatByDate
@@ -32,12 +31,12 @@ class MergedEventController : ViewController<MergedEventController.Context> {
 
     class Context(
         val remoteContext: RemoteContext,
-        val pullRequest: IssueAccessor<PullRequest>,
+        val pullRequest: PullRequest,
         val event: MergedEvent
     ) : ViewController.Context
 
     private lateinit var remoteContext: RemoteContext
-    private lateinit var pullRequest: IssueAccessor<PullRequest>
+    private lateinit var pullRequest: PullRequest
     private lateinit var event: MergedEvent
 
     @FXML
@@ -63,7 +62,7 @@ class MergedEventController : ViewController<MergedEventController.Context> {
         actorUsernameLabel.text = event.actor.username
         commitIdLabel.text = event.commitId.substring(0, 8)
         commitIdLabel.tooltip = Tooltip(event.commitId)
-        labelLabel.text = pullRequest.get().base!!.label
+        labelLabel.text = pullRequest.base!!.label
         dateCreatedLabel.text = TRANSLATIONS_BUNDLE.getString(
             "pull_request.event.merged.on", event.createdAt.formatByDate()
         )
@@ -81,7 +80,7 @@ class MergedEventController : ViewController<MergedEventController.Context> {
     @FXML
     private fun baseClicked(event: MouseEvent) {
         if (event.button == MouseButton.PRIMARY) {
-            val base = pullRequest.get().base!!
+            val base = pullRequest.base!!
             Application.getInstance().hostServices.showDocument(
                 base.repository.getBranchUrl(base.ref).toExternalForm()
             )

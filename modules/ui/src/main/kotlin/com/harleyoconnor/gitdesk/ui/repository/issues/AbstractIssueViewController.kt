@@ -51,7 +51,7 @@ import java.util.concurrent.CompletableFuture
  */
 abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewController.Context<I>> :
     ViewController<C>,
-    IssueController<I> {
+    IssueController {
 
     companion object {
         private val CREATED_AT_FORMAT = SimpleDateFormat("dd MMM yyyy")
@@ -61,7 +61,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         ViewController.Context
 
     protected lateinit var remoteContext: RemoteContext
-    protected lateinit var issue: IssueHolder<I>
+    protected lateinit var issue: I
     private lateinit var refreshCallback: (Int) -> Unit
 
     @FXML
@@ -110,7 +110,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     private var lastTimelinePageSize = 0
 
     @FXML
-    private lateinit var commentBox: VBox
+    protected lateinit var commentBox: VBox
 
     @FXML
     private lateinit var commentField: TextArea
@@ -139,20 +139,20 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     override fun setup(context: C) {
         this.remoteContext = context.remoteContext
-        this.issue = IssueHolder(context.issue)
+        this.issue = context.issue
         this.refreshCallback = context.refreshCallback
         loadAll()
     }
 
     override fun refresh() {
-        refreshCallback(issue.get().number)
+        refreshCallback(issue.number)
     }
 
-    override fun issueUpdated(issue: I) {
-        this.issue.set(issue)
+    override fun issueUpdated() {
         toolbarView.controller.reloadUI()
         loadAssignees()
         loadStateLabel()
+        loadSubHeading()
         loadLabels()
         if (commentField.text.isEmpty()) {
             updateForEmptyCommentField()
@@ -180,13 +180,13 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     }
 
     private fun loadTitle() {
-        titleLabel.text = issue.get().title
-        numberLabel.text = "#${issue.get().number}"
+        titleLabel.text = issue.title
+        numberLabel.text = "#${issue.number}"
     }
 
     private fun loadAssignees() {
         assigneesBox.children.clear()
-        val assignees = issue.get().assignees
+        val assignees = issue.assignees
         if (remoteContext.loggedInUserIsCollaborator && canAddMoreAssignees(assignees)) {
             assigneesBox.children.add(0, addAssigneeButton)
         }
@@ -221,12 +221,12 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         assignees.size < 10
 
     protected open fun loadStateLabel() {
-        if (issue.get().state == Issue.State.OPEN) {
+        if (issue.state == Issue.State.OPEN) {
             loadStateBoxForOpenIssue()
         } else {
             loadStateBoxForClosedIssue()
         }
-        stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.get().state.toString().lowercase())
+        stateLabel.text = TRANSLATIONS_BUNDLE.getString("issue.state." + issue.state.toString().lowercase())
     }
 
     private fun loadStateBoxForOpenIssue() {
@@ -244,9 +244,9 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     protected open fun loadSubHeading() {
         subHeadingLabel.text = TRANSLATIONS_BUNDLE.getString(
             "ui.repository.tab.issues.view.subheading",
-            issue.get().author.username,
-            CREATED_AT_FORMAT.format(issue.get().createdAt),
-            issue.get().comments.toString()
+            issue.author.username,
+            CREATED_AT_FORMAT.format(issue.createdAt),
+            issue.comments.toString()
         )
     }
 
@@ -255,7 +255,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         if (remoteContext.loggedInUserIsCollaborator) {
             labelsBox.children.add(addLabelButton)
         }
-        issue.get().labels.forEach {
+        issue.labels.forEach {
             labelsBox.children.add(loadLabelView(it).root)
         }
     }
@@ -279,7 +279,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         commentAndToggleStateButton.text =
             TRANSLATIONS_BUNDLE.getString(
                 "ui.button.toggle_from_${
-                    issue.get().state.toString().lowercase()
+                    issue.state.toString().lowercase()
                 }"
             )
     }
@@ -289,7 +289,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         commentAndToggleStateButton.text =
             TRANSLATIONS_BUNDLE.getString(
                 "ui.button.comment_and_toggle_from_${
-                    issue.get().state.toString().lowercase()
+                    issue.state.toString().lowercase()
                 }"
             )
     }
@@ -308,7 +308,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     }
 
     private fun getIssueViewForRootComment(): ViewLoader.View<out CommentController, VBox> {
-        val issue = this.issue.get()
+        val issue = this.issue
         return loadCommentView(
             this,
             this.remoteContext,
@@ -343,7 +343,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     private fun loadTimelineViews(): MutableList<ViewLoader.View<*, out Node>> {
         val nodes = mutableListOf<ViewLoader.View<*, out Node>>()
         lastTimelinePageSize = 0
-        issue.get().getTimeline(latestTimelinePageShown++)?.forEachEvent {
+        issue.getTimeline(latestTimelinePageShown++)?.forEachEvent {
             lastTimelinePageSize++
             getViewForEvent(EventContext(this, remoteContext, issue, it))?.let { node -> nodes.add(node) }
         }
@@ -352,34 +352,34 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     private fun loadCommentBox() {
         // If user not logged in and linked to platform or issue locked, do not show comment box.
-        if (remoteContext.loggedInUser == null || issue.get().locked) {
+        if (remoteContext.loggedInUser == null || issue.locked) {
             root.children.remove(commentBox)
         }
     }
 
     override fun toggleState() {
-        getStateToggleFuture(issue.get())
-            .thenAcceptOnMainThread { issue ->
-                updateUIForToggledState(issue)
+        getStateToggleFuture(issue)
+            .thenAcceptOnMainThread {
+                updateUIForToggledState()
             }
             .exceptionallyOnMainThread {
                 logErrorAndCreateDialogue("dialogue.error.toggle_issue_state", it).show()
             }
     }
 
-    private fun updateUIForToggledState(issue: I) {
+    private fun updateUIForToggledState() {
         val createdAt = Date()
-        issueUpdated(issue)
+        issueUpdated()
         addEventToTimeline(
             createStateChangeEvent(issue.state, remoteContext.loggedInUser!!, createdAt)
         )
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getStateToggleFuture(issue: I): CompletableFuture<I> =
+    private fun getStateToggleFuture(issue: I): CompletableFuture<Void?> =
         (if (issue.state == Issue.State.OPEN)
             issue.close()
-        else issue.open()) as CompletableFuture<I>
+        else issue.open())
 
     private fun createStateChangeEvent(newState: Issue.State, actor: User, createdAt: Date): Event {
         return Event.Raw(if (newState == Issue.State.OPEN) EventType.REOPENED else EventType.CLOSED, actor, createdAt)
@@ -409,8 +409,9 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     }
 
     private fun addComment(body: String) {
-        issue.get().addComment(body)
+        issue.addComment(body)
             .thenAcceptOnMainThread { comment ->
+                issueUpdated()
                 addCommentToTimeline(comment)
                 commentField.text = ""
             }
@@ -434,10 +435,10 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     @Suppress("UNCHECKED_CAST")
     private fun addLabel(label: com.harleyoconnor.gitdesk.data.remote.Label) {
-        issue.get().addLabel(label)
+        issue.addLabel(label)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
-                issueUpdated(it as I)
+                issueUpdated()
                 addEventToTimeline(
                     LabeledEvent.Raw(
                         EventType.LABELED, remoteContext.loggedInUser!!, createdAt, label
@@ -458,10 +459,10 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     @Suppress("UNCHECKED_CAST")
     private fun addAssignee(user: User) {
-        issue.get().addAssignee(user.username)
+        issue.addAssignee(user)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
-                issueUpdated(it as I)
+                issueUpdated()
                 addAssigneeEventToTimeline(EventType.ASSIGNED, createdAt, user)
             }
             .exceptionallyOnMainThread {
@@ -471,10 +472,10 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     @Suppress("UNCHECKED_CAST")
     private fun removeAssignee(user: User) {
-        issue.get().removeAssignee(user.username)
+        issue.removeAssignee(user)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
-                issueUpdated(it as I)
+                issueUpdated()
                 addAssigneeEventToTimeline(EventType.UNASSIGNED, createdAt, user)
             }
             .exceptionallyOnMainThread {

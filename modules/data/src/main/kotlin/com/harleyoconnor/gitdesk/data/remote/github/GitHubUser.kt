@@ -19,4 +19,20 @@ class GitHubUser(
         val ADAPTER: JsonAdapter<GitHubUser> by lazy { MOSHI.adapter(GitHubUser::class.java) }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as GitHubUser
+
+        if (username != other.username) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return username.hashCode()
+    }
+
+
 }

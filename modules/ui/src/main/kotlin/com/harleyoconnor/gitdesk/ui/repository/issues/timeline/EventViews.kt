@@ -12,16 +12,15 @@ import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.data.remote.timeline.MergedEvent
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
-import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 
 class EventContext(
-    val parent: IssueController<out Issue>,
+    val parent: IssueController,
     val remoteContext: RemoteContext,
-    val issue: IssueAccessor<out Issue>,
+    val issue: Issue,
     val event: Event
 )
 
@@ -78,9 +77,9 @@ private fun loadCommentView(
 }
 
 fun loadCommentView(
-    parent: IssueController<out Issue>,
+    parent: IssueController,
     remoteContext: RemoteContext,
-    issue: IssueAccessor<out Issue>,
+    issue: Issue,
     comment: Comment
 ): ViewLoader.View<out CommentController, VBox> {
     val viewContext = CommentController.Context(
@@ -151,13 +150,13 @@ fun loadMergedView(context: EventContext): ViewLoader.View<MergedEventController
     return MergedEventController.Loader.load(
         MergedEventController.Context(
             context.remoteContext,
-            context.issue as IssueAccessor<PullRequest>,
+            context.issue as PullRequest,
             committedEvent
         )
     )
 }
 
-interface IssueController<I : Issue> {
+interface IssueController {
 
     /**
      * Causes the UI to refresh the entire issue view from the remote.
@@ -169,7 +168,7 @@ interface IssueController<I : Issue> {
      *
      * @param issue the updated issue
      */
-    fun issueUpdated(issue: I)
+    fun issueUpdated()
 
     fun addEventToTimeline(event: Event)
 

@@ -13,7 +13,7 @@ import javafx.scene.control.MenuItem
  */
 class LabelSelectionContextMenu(
     private val remoteContext: RemoteContext,
-    private val issue: IssueAccessor<out Issue>,
+    private val issue: Issue,
     private val callback: (Label) -> Unit
 ) : ContextMenu() {
 
@@ -31,7 +31,7 @@ class LabelSelectionContextMenu(
     }
 
     private fun notAlreadyAdded(label: Label) =
-        issue.get().labels.stream().noneMatch { it.name == label.name }
+        issue.labels.stream().noneMatch { it.name == label.name }
 
     private fun createLabelMenuItem(
         label: Label

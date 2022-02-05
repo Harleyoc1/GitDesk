@@ -3,7 +3,6 @@ package com.harleyoconnor.gitdesk.ui.repository.issues.timeline
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
-import com.harleyoconnor.gitdesk.ui.repository.issues.IssueAccessor
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createConfirmationDialogue
 import com.harleyoconnor.gitdesk.ui.util.createErrorDialogue
@@ -28,8 +27,8 @@ class ModifiableCommentController : CommentController() {
         UIResource("/ui/layouts/repository/issues/timeline/ModifiableComment.fxml")
     )
 
-    private lateinit var parent: IssueController<out Issue>
-    private lateinit var issue: IssueAccessor<out Issue>
+    private lateinit var parent: IssueController
+    private lateinit var issue: Issue
     private lateinit var comment: Comment
 
     @FXML
@@ -91,7 +90,7 @@ class ModifiableCommentController : CommentController() {
     }
 
     private fun editComment(id: Int, newBody: String) {
-        issue.get().editComment(id, newBody)
+        issue.editComment(id, newBody)
             .thenAcceptOnMainThread {
                 bodyLabel.text = newBody
                 finishedEditing()
@@ -109,9 +108,9 @@ class ModifiableCommentController : CommentController() {
      * Sends a request to edit the issue body. Should only be called if this 'comment' represents the issue body.
      */
     private fun editIssueBody(newBody: String) {
-        issue.get().editBody(newBody)
+        issue.editBody(newBody)
             .thenAcceptOnMainThread {
-                issueUpdated(it)
+                parent.issueUpdated()
                 bodyLabel.text = newBody
                 finishedEditing()
             }
@@ -122,11 +121,6 @@ class ModifiableCommentController : CommentController() {
                 ).show()
                 LogManager.getLogger().error("Editing issue body.", it)
             }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <I : Issue> issueUpdated(it: I) {
-        (parent as IssueController<I>).issueUpdated(it)
     }
 
     @FXML
@@ -165,8 +159,9 @@ class ModifiableCommentController : CommentController() {
         }
     }
 
-    private fun deleteComment(id: Int) = issue.get().deleteComment(id)
+    private fun deleteComment(id: Int) = issue.deleteComment(id)
         .thenAcceptOnMainThread {
+            parent.issueUpdated()
             parent.remove(root)
         }
         .exceptionallyOnMainThread {

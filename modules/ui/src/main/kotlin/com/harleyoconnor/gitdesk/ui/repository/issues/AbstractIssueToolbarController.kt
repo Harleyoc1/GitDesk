@@ -17,14 +17,14 @@ abstract class AbstractIssueToolbarController<I : Issue, C : AbstractIssueToolba
     ViewController<C> {
 
     open class Context<I : Issue>(
-        val parent: IssueController<I>,
+        val parent: IssueController,
         val remoteContext: RemoteContext,
-        val issue: IssueAccessor<I>
+        val issue: I
     ) : ViewController.Context
 
-    private lateinit var parent: IssueController<I>
+    private lateinit var parent: IssueController
     private lateinit var remoteContext: RemoteContext
-    protected lateinit var issue: IssueAccessor<I>
+    protected lateinit var issue: I
 
     @FXML
     protected lateinit var root: HBox
@@ -69,7 +69,7 @@ abstract class AbstractIssueToolbarController<I : Issue, C : AbstractIssueToolba
 
     @FXML
     private fun openInBrowser(event: ActionEvent) {
-        Application.getInstance().hostServices.showDocument(issue.get().url.toExternalForm())
+        Application.getInstance().hostServices.showDocument(issue.url.toExternalForm())
     }
 
 }

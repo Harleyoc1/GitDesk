@@ -38,13 +38,13 @@ interface Issue {
 
     val locked: Boolean
 
-    fun addLabel(label: Label): CompletableFuture<Issue>
+    fun addLabel(label: Label): CompletableFuture<Void?>
 
-    fun deleteLabel(label: Label): CompletableFuture<Issue>
+    fun deleteLabel(label: Label): CompletableFuture<Void?>
 
-    fun addAssignee(username: String): CompletableFuture<Issue>
+    fun addAssignee(user: User): CompletableFuture<Void?>
 
-    fun removeAssignee(username: String): CompletableFuture<Issue>
+    fun removeAssignee(user: User): CompletableFuture<Void?>
 
     fun getTimeline(page: Int): Timeline?
 
@@ -54,11 +54,11 @@ interface Issue {
 
     fun deleteComment(id: Int): CompletableFuture<Boolean>
 
-    fun editBody(body: String): CompletableFuture<Issue>
+    fun editBody(body: String): CompletableFuture<Void?>
 
-    fun close(): CompletableFuture<Issue>
+    fun close(): CompletableFuture<Void?>
 
-    fun open(): CompletableFuture<Issue>
+    fun open(): CompletableFuture<Void?>
 
     enum class State {
         @Json(name = "open") OPEN,

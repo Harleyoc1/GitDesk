@@ -74,7 +74,7 @@
         </padding>
         <TextArea fx:id="commentField" minHeight="100" promptText="%ui.field.comment.prompt"/>
         <HBox alignment="CENTER_LEFT" spacing="10">
-            <Button onAction="#merge" text="%ui.button.merge"/>
+            <Button fx:id="mergeButton" onAction="#merge" text="%ui.button.merge"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="commentAndToggleStateButton" onAction="#commentAndToggleState"
                     text="%ui.button.close"/>

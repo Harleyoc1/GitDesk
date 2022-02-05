@@ -21,13 +21,13 @@ class IssueToolbarController : AbstractIssueToolbarController<Issue, IssueToolba
     )
 
     class Context(
-        parent: IssueController<Issue>,
+        parent: IssueController,
         remoteContext: RemoteContext,
-        issue: IssueAccessor<Issue>
+        issue: Issue
     ) : AbstractIssueToolbarController.Context<Issue>(parent, remoteContext, issue)
 
     override fun loadUIForState() {
-        if (issue.get().state == Issue.State.OPEN) {
+        if (issue.state == Issue.State.OPEN) {
             loadUIForOpenIssue()
         } else {
             loadUIForClosedIssue()

@@ -25,9 +25,9 @@ interface PlatformNetworking {
 
     fun getLabels(repositoryName: RemoteRepository.Name): Array<Label>?
 
-    fun addLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
+    fun addLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void?>
 
-    fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void>
+    fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void?>
 
     /**
      * Sends a request to return all available assignees for a given repository.
@@ -37,9 +37,19 @@ interface PlatformNetworking {
      */
     fun getAssignees(repositoryName: RemoteRepository.Name, page: Int): CompletableFuture<Array<User>>
 
-    fun addAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue>
+    fun addAssignee(
+        repositoryName: RemoteRepository.Name,
+        issueNumber: Int,
+        pullRequest: Boolean,
+        username: String
+    ): CompletableFuture<Void?>
 
-    fun removeAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue>
+    fun removeAssignee(
+        repositoryName: RemoteRepository.Name,
+        issueNumber: Int,
+        pullRequest: Boolean,
+        username: String
+    ): CompletableFuture<Void?>
 
     fun getIssue(repositoryName: RemoteRepository.Name, number: Int): Issue?
 
@@ -73,7 +83,11 @@ interface PlatformNetworking {
      * @return a future that completes when the request has been completed, either exceptionally or containing the
      * updated [Issue] object
      */
-    fun editIssueBody(repositoryName: RemoteRepository.Name, number: Int, body: String): CompletableFuture<Issue>
+    fun editIssueBody(
+        repositoryName: RemoteRepository.Name,
+        number: Int,
+        body: String
+    ): CompletableFuture<Void?>
 
     /**
      * Sends a request to close an issue.
@@ -83,7 +97,7 @@ interface PlatformNetworking {
      * @return a future that completes when the request has been completed, either exceptionally or containing the
      * updated [Issue] object
      */
-    fun closeIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue>
+    fun closeIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Void?>
 
     /**
      * Sends a request to open an issue.
@@ -93,7 +107,7 @@ interface PlatformNetworking {
      * @return a future that completes when the request has been completed, either exceptionally or containing the
      * updated [Issue] object
      */
-    fun openIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue>
+    fun openIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Void?>
 
     fun getPullRequest(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<PullRequest>
 

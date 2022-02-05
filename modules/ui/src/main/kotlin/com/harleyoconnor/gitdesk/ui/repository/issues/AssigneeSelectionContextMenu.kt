@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture
  */
 class AssigneeSelectionContextMenu(
     private val remoteContext: RemoteContext,
-    private val issue: IssueAccessor<out Issue>,
+    private val issue: Issue,
     private val callback: (User) -> Unit
 ) : ContextMenu() {
 
@@ -48,7 +48,7 @@ class AssigneeSelectionContextMenu(
     private fun displayAssignees(assignees: Array<User>) {
         assignees.stream()
             .filter { user ->
-                issue.get().assignees.stream().noneMatch { user.username == it.username }
+                issue.assignees.stream().noneMatch { user.username == it.username }
             }
             .map {
                 createUserMenuItem(it)

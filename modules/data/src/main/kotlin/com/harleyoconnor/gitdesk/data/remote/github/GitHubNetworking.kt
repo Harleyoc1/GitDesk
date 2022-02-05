@@ -26,6 +26,7 @@ import com.harleyoconnor.gitdesk.util.network.PATCH
 import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
 import com.harleyoconnor.gitdesk.util.network.mapOrElseThrow
+import com.harleyoconnor.gitdesk.util.network.orElseThrow
 import com.harleyoconnor.gitdesk.util.network.sendRequest
 import com.harleyoconnor.gitdesk.util.network.uri
 import com.squareup.moshi.JsonAdapter
@@ -135,7 +136,7 @@ object GitHubNetworking : PlatformNetworking {
         repositoryName: RemoteRepository.Name,
         issueNumber: Int,
         name: String
-    ): CompletableFuture<Void> {
+    ): CompletableFuture<Void?> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(Labels.ADAPTER.toJson(Labels(arrayOf(name)))))
@@ -162,8 +163,7 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
-    override fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String):
-            CompletableFuture<Void> {
+    override fun deleteLabel(repositoryName: RemoteRepository.Name, issueNumber: Int, name: String): CompletableFuture<Void?> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE()
@@ -208,8 +208,9 @@ object GitHubNetworking : PlatformNetworking {
     override fun addAssignee(
         repositoryName: RemoteRepository.Name,
         issueNumber: Int,
+        pullRequest: Boolean,
         username: String
-    ): CompletableFuture<Issue> {
+    ): CompletableFuture<Void?> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .POST(
@@ -220,19 +221,20 @@ object GitHubNetworking : PlatformNetworking {
                 .uri(getAssigneesUrl(repositoryName, issueNumber))
                 .applyDefaultHeaders()
                 .build(),
-            HttpResponse.BodyHandlers.ofString()
+            HttpResponse.BodyHandlers.discarding()
         ).thenApply {
-            it.mapOrElseThrow({ body ->
-                GitHubIssue.ADAPTER.fromJson(body)
-            }, { "Assigning issue." })
+            it.orElseThrow {
+                "Assigning issue."
+            }
         }
     }
 
     override fun removeAssignee(
         repositoryName: RemoteRepository.Name,
         issueNumber: Int,
+        pullRequest: Boolean,
         username: String
-    ): CompletableFuture<Issue> {
+    ): CompletableFuture<Void?> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE(
@@ -243,11 +245,11 @@ object GitHubNetworking : PlatformNetworking {
                 .uri(getAssigneesUrl(repositoryName, issueNumber))
                 .applyDefaultHeaders()
                 .build(),
-            HttpResponse.BodyHandlers.ofString()
+            HttpResponse.BodyHandlers.discarding()
         ).thenApply {
-            it.mapOrElseThrow({ body ->
-                GitHubIssue.ADAPTER.fromJson(body)
-            }, { "Un-assigning issue." })
+            it.orElseThrow {
+                "Removing issue assignment."
+            }
         }
     }
 
@@ -289,9 +291,9 @@ object GitHubNetworking : PlatformNetworking {
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
-            it.mapOrElseThrow({ body ->
-                GitHubIssue.ADAPTER.fromJson(body)
-            }, { "Adding issue." })
+            mapIssueOrThrow(it) {
+                "Adding issue."
+            }
         }
     }
 
@@ -394,48 +396,44 @@ object GitHubNetworking : PlatformNetworking {
         repositoryName: RemoteRepository.Name,
         number: Int,
         body: String
-    ): CompletableFuture<Issue> {
+    ): CompletableFuture<Void?> {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("body" to body),
-            false
+            mapOf("body" to body)
         )
     }
 
-    override fun closeIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue> {
+    override fun closeIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Void?> {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("state" to "closed"),
-            false
+            mapOf("state" to "closed")
         )
     }
 
-    override fun openIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Issue> {
+    override fun openIssue(repositoryName: RemoteRepository.Name, number: Int): CompletableFuture<Void?> {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("state" to "open"),
-            false
+            mapOf("state" to "open")
         )
     }
 
     private fun createUpdateIssueRequest(
         repositoryName: RemoteRepository.Name,
         number: Int,
-        parameters: Map<String, String>,
-        pullRequest: Boolean
-    ): CompletableFuture<Issue> {
+        parameters: Map<String, String>
+    ): CompletableFuture<Void?> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .PATCH(HttpRequest.BodyPublishers.ofString(parameters.toJson()))
                 .uri(getUpdateIssueUrl(repositoryName, number))
                 .applyDefaultHeaders()
                 .build(),
-            HttpResponse.BodyHandlers.ofString()
+            HttpResponse.BodyHandlers.discarding()
         ).thenApply {
-            mapIssueOrThrow(it, pullRequest) {
+            it.orElseThrow {
                 "Updating GitHub issue with parameters: $parameters"
             }
         }
@@ -457,16 +455,6 @@ object GitHubNetworking : PlatformNetworking {
                 "Retrieving pull request."
             }
         }
-    }
-
-    private fun mapIssueOrThrow(
-        response: HttpResponse<String>,
-        pullRequest: Boolean,
-        messageSupplier: () -> String
-    ): Issue {
-        return if (pullRequest)
-            mapPullRequestOrThrow(response, messageSupplier)
-        else mapIssueOrThrow(response, messageSupplier)
     }
 
     private fun mapIssueOrThrow(

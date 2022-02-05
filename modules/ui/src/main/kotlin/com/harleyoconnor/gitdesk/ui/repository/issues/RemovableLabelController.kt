@@ -32,15 +32,15 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
     )
 
     class Context(
-        val parent: IssueController<out Issue>,
+        val parent: IssueController,
         val remoteContext: RemoteContext,
-        val issue: IssueAccessor<out Issue>,
+        val issue: Issue,
         val label: Label
     ) : ViewController.Context
 
-    private lateinit var parent: IssueController<out Issue>
+    private lateinit var parent: IssueController
     private lateinit var remoteContext: RemoteContext
-    private lateinit var issue: IssueAccessor<out Issue>
+    private lateinit var issue: Issue
     private lateinit var label: Label
 
     @FXML
@@ -63,10 +63,10 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
 
     @FXML
     private fun remove(event: ActionEvent) {
-        issue.get().deleteLabel(label)
+        issue.deleteLabel(label)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
-                issueUpdated(it)
+                parent.issueUpdated()
                 parent.addEventToTimeline(
                     LabeledEvent.Raw(
                         EventType.UNLABELED,
@@ -80,11 +80,6 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
                 createErrorDialogue(TRANSLATIONS_BUNDLE.getString("dialogue.error.deleting_issue_label"), it).show()
                 LogManager.getLogger().error("Deleting issue label.", it)
             }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <I : Issue> issueUpdated(it: I) {
-        (parent as IssueController<I>).issueUpdated(it)
     }
 
 }
