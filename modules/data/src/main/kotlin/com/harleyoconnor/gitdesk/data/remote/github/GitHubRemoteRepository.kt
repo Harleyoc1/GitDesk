@@ -75,18 +75,14 @@ class GitHubRemoteRepository(
         executor: Executor
     ): CompletableFuture<Array<out Issue>> {
         return CompletableFuture.supplyAsync({
-            try {
-                IssueSearch(
-                    this,
-                    query,
-                    sort.gitHubId,
-                    sortOrder.gitHubId,
-                    20
-                ).run()?.items
-            } catch (t: Throwable) {
-                LogManager.getLogger().error(t)
-                throw RuntimeException(t)
-            }
+            IssueSearch(
+                this,
+                query,
+                sort.gitHubId,
+                sortOrder.gitHubId,
+                20,
+                page
+            ).run()?.items
         }, executor)
     }
 
@@ -102,19 +98,14 @@ class GitHubRemoteRepository(
         executor: Executor
     ): CompletableFuture<Array<out PullRequest>> {
         return CompletableFuture.supplyAsync({
-            try {
-                val items = PullRequestSearch(
-                    this,
-                    query,
-                    sort.gitHubId,
-                    sortOrder.gitHubId,
-                    20
-                ).run()?.items
-                items
-            } catch (t: Throwable) {
-                LogManager.getLogger().error(t)
-                throw RuntimeException(t)
-            }
+            PullRequestSearch(
+                this,
+                query,
+                sort.gitHubId,
+                sortOrder.gitHubId,
+                20,
+                page
+            ).run()?.items
         }, executor)
     }
 
