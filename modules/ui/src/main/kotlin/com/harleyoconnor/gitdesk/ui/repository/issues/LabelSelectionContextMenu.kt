@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.util.stream
@@ -12,7 +13,7 @@ import javafx.scene.control.MenuItem
  */
 class LabelSelectionContextMenu(
     private val remoteContext: RemoteContext,
-    private val issue: IssueAccessor,
+    private val issue: IssueAccessor<out Issue>,
     private val callback: (Label) -> Unit
 ) : ContextMenu() {
 

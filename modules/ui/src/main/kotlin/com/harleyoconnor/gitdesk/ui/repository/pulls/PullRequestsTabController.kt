@@ -85,10 +85,9 @@ class PullRequestsTabController : ViewController<PullRequestsTabController.Conte
     }
 
     private fun setShownPullRequest(pullRequest: PullRequest) {
-        TODO("PR View")
-//        root.items[1] = IssueViewController.Loader.load(
-//            IssueViewController.Context(remoteContext, pullRequest, this::setShownPullRequest)
-//        ).root
+        root.items[1] = PullRequestViewController.Loader.load(
+            PullRequestViewController.Context(remoteContext, pullRequest, this::setShownPullRequest)
+        ).root
     }
 
     @FXML

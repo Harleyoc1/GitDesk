@@ -7,6 +7,7 @@
     -secondary-accent-constrast-color: #E0DCE2;
     -open-accent-color: #007B36;
     -closed-accent-color: #844EDB;
+    -rejected-accent-color: #D21C2C;
 }
 
 /* Default node styles */
@@ -254,6 +255,10 @@
 
 .icon.closed-accent {
     -fx-background-color: -closed-accent-color;
+}
+
+.icon.rejected-accent {
+    -fx-background-color: -rejected-accent-color;
 }
 
 .icon-button {

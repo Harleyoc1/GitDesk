@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture
  * @author Harley O'Connor
  */
 open class GitHubIssue(
-    @GitHubRepositoryNameFromUrl @Json(name = "repository_url") val parentName: RemoteRepository.Name,
+    @GitHubRepositoryNameFromUrl @Json(name = "repository_url") parentName: RemoteRepository.Name,
     override val number: Int,
     override val title: String,
     @Json(name = "user") override val author: GitHubUser,
@@ -40,6 +40,8 @@ open class GitHubIssue(
     companion object {
         val ADAPTER: JsonAdapter<GitHubIssue> by lazy { MOSHI.adapter(GitHubIssue::class.java) }
     }
+
+    protected open val parentName: RemoteRepository.Name = parentName
 
     override fun addLabel(label: Label): CompletableFuture<Issue> {
         return GitHubNetworking.addLabel(parentName, number, label.name)

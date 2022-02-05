@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.Label
 import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
 import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
@@ -30,15 +31,15 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
     )
 
     class Context(
-        val parent: TimelineController,
+        val parent: IssueController<out Issue>,
         val remoteContext: RemoteContext,
-        val issue: IssueAccessor,
+        val issue: IssueAccessor<out Issue>,
         val label: Label
     ) : ViewController.Context
 
-    private lateinit var parent: TimelineController
+    private lateinit var parent: IssueController<out Issue>
     private lateinit var remoteContext: RemoteContext
-    private lateinit var issue: IssueAccessor
+    private lateinit var issue: IssueAccessor<out Issue>
     private lateinit var label: Label
 
     @FXML
@@ -64,7 +65,7 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
         issue.get().deleteLabel(label)
             .thenAcceptOnMainThread {
                 val createdAt = Date()
-                parent.issueUpdated(it)
+                issueUpdated(it)
                 parent.addEventToTimeline(
                     LabeledEvent.Raw(
                         EventType.UNLABELED,
@@ -79,4 +80,10 @@ class RemovableLabelController : ViewController<RemovableLabelController.Context
                 LogManager.getLogger().error("Deleting issue label.", it)
             }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <I : Issue> issueUpdated(it: I) {
+        (parent as IssueController<I>).issueUpdated(it)
+    }
+
 }

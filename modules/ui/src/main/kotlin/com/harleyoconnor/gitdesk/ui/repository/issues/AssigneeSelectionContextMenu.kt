@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
@@ -17,7 +18,7 @@ import java.util.concurrent.CompletableFuture
  */
 class AssigneeSelectionContextMenu(
     private val remoteContext: RemoteContext,
-    private val issue: IssueAccessor,
+    private val issue: IssueAccessor<out Issue>,
     private val callback: (User) -> Unit
 ) : ContextMenu() {
 

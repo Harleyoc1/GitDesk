@@ -18,6 +18,11 @@ fun HttpRequest.Builder.PATCH(bodyPublisher: HttpRequest.BodyPublisher): HttpReq
     return this.method("PATCH", bodyPublisher)
 }
 
+fun HttpRequest.Builder.uri(uri: String): HttpRequest.Builder {
+    this.uri(URI.create(uri))
+    return this
+}
+
 fun <T, N> HttpResponse<T>.mapOrElseThrow(mapper: (T) -> N, messageSupplier: () -> String): N {
     return if (this.statusCode() in 200 until 300 && this.body() != null) {
         mapper(this.body())

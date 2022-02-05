@@ -62,8 +62,8 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
     }
 
     private fun loadIssuesList(): VBox {
-        return AbstractIssuesListController.Issues.Loader.load(
-            AbstractIssuesListController.Issues.Context(this::setShownIssue, remoteContext)
+        return IssuesListController.Loader.load(
+            IssuesListController.Context(this::setShownIssue, remoteContext)
         ).root
     }
 

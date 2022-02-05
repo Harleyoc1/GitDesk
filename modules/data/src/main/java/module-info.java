@@ -30,5 +30,6 @@ module gitdesk.data {
     opens com.harleyoconnor.gitdesk.data.remote.github to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github.timeline to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.remote.github.search to kotlin.reflect;
+    opens com.harleyoconnor.gitdesk.data.remote.timeline to kotlin.reflect;
     opens com.harleyoconnor.gitdesk.data.serialisation to kotlin.reflect;
 }

@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Comment
+import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.createConfirmationDialogue
@@ -26,8 +27,8 @@ class ModifiableCommentController : CommentController() {
         UIResource("/ui/layouts/repository/issues/ModifiableComment.fxml")
     )
 
-    private lateinit var parent: TimelineController
-    private lateinit var issue: IssueAccessor
+    private lateinit var parent: IssueController<out Issue>
+    private lateinit var issue: IssueAccessor<out Issue>
     private lateinit var comment: Comment
 
     @FXML
@@ -109,7 +110,7 @@ class ModifiableCommentController : CommentController() {
     private fun editIssueBody(newBody: String) {
         issue.get().editBody(newBody)
             .thenAcceptOnMainThread {
-                parent.issueUpdated(it)
+                issueUpdated(it)
                 bodyLabel.text = newBody
                 finishedEditing()
             }
@@ -120,6 +121,11 @@ class ModifiableCommentController : CommentController() {
                 ).show()
                 LogManager.getLogger().error("Editing issue body.", it)
             }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <I : Issue> issueUpdated(it: I) {
+        (parent as IssueController<I>).issueUpdated(it)
     }
 
     @FXML

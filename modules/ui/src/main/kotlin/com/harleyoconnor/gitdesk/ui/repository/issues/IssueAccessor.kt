@@ -2,17 +2,17 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Issue
 
-interface IssueAccessor {
-    fun get(): Issue
+interface IssueAccessor<I: Issue> {
+    fun get(): I
 }
 
-class IssueHolder(
-    var issue: Issue
-) : IssueAccessor {
+class IssueHolder<I: Issue>(
+    var issue: I
+) : IssueAccessor<I> {
 
     override fun get() = issue
 
-    fun set(issue: Issue) {
+    fun set(issue: I) {
         this.issue = issue
     }
 

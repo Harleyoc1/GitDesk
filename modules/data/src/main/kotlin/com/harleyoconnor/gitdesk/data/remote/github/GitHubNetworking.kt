@@ -27,6 +27,7 @@ import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.getJsonAt
 import com.harleyoconnor.gitdesk.util.network.mapOrElseThrow
 import com.harleyoconnor.gitdesk.util.network.sendRequest
+import com.harleyoconnor.gitdesk.util.network.uri
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import java.net.URI
@@ -36,9 +37,9 @@ import java.net.http.HttpResponse
 import java.util.concurrent.CompletableFuture
 import java.util.regex.Pattern
 
-object GitHubNetworking : PlatformNetworking {
+private const val ACCEPT_HEADER = "application/vnd.github.v3+json"
 
-    private const val acceptHeader = "application/vnd.github.v3+json"
+object GitHubNetworking : PlatformNetworking {
 
     const val url = "https://api.github.com"
     const val acceptableUsernameRange = "A-Za-z0-9-"
@@ -138,9 +139,8 @@ object GitHubNetworking : PlatformNetworking {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(Labels.ADAPTER.toJson(Labels(arrayOf(name)))))
-                .uri(URI.create(getLabelsUrl(repositoryName, issueNumber)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getLabelsUrl(repositoryName, issueNumber))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.discarding()
         ).thenAccept {
@@ -153,7 +153,7 @@ object GitHubNetworking : PlatformNetworking {
     private fun getLabelsUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
         "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/labels"
 
-    class Labels(
+    private class Labels(
         private val labels: Array<String>
     ) {
 
@@ -167,9 +167,8 @@ object GitHubNetworking : PlatformNetworking {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE()
-                .uri(URI.create(getLabelUrl(repositoryName, issueNumber, name)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getLabelUrl(repositoryName, issueNumber, name))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.discarding()
         ).thenAccept {
@@ -193,8 +192,7 @@ object GitHubNetworking : PlatformNetworking {
                         .parameter("per_page", "100")
                         .build()
                 )
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -207,7 +205,11 @@ object GitHubNetworking : PlatformNetworking {
     private fun getAssigneesUrl(repositoryName: RemoteRepository.Name) =
         "$url/repos/${repositoryName.getFullName()}/assignees"
 
-    override fun addAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue> {
+    override fun addAssignee(
+        repositoryName: RemoteRepository.Name,
+        issueNumber: Int,
+        username: String
+    ): CompletableFuture<Issue> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .POST(
@@ -215,11 +217,8 @@ object GitHubNetworking : PlatformNetworking {
                         Assignees.ADAPTER.toJson(Assignees(arrayOf(username)))
                     )
                 )
-                .uri(
-                    URI.create(getAssigneesUrl(repositoryName, issueNumber))
-                )
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getAssigneesUrl(repositoryName, issueNumber))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -229,7 +228,11 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
-    override fun removeAssignee(repositoryName: RemoteRepository.Name, issueNumber: Int, username: String): CompletableFuture<Issue> {
+    override fun removeAssignee(
+        repositoryName: RemoteRepository.Name,
+        issueNumber: Int,
+        username: String
+    ): CompletableFuture<Issue> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE(
@@ -237,11 +240,8 @@ object GitHubNetworking : PlatformNetworking {
                         Assignees.ADAPTER.toJson(Assignees(arrayOf(username)))
                     )
                 )
-                .uri(
-                    URI.create(getAssigneesUrl(repositoryName, issueNumber))
-                )
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getAssigneesUrl(repositoryName, issueNumber))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -254,7 +254,7 @@ object GitHubNetworking : PlatformNetworking {
     private fun getAssigneesUrl(repositoryName: RemoteRepository.Name, issueNumber: Int) =
         "$url/repos/${repositoryName.getFullName()}/issues/$issueNumber/assignees"
 
-    class Assignees(
+    private class Assignees(
         private val assignees: Array<String>
     ) {
         companion object {
@@ -284,11 +284,8 @@ object GitHubNetworking : PlatformNetworking {
                         IssueCreationData.ADAPTER.toJson(IssueCreationData(title, body))
                     )
                 )
-                .uri(
-                    URI.create(getIssuesUrl(repositoryName))
-                )
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getIssuesUrl(repositoryName))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -298,7 +295,7 @@ object GitHubNetworking : PlatformNetworking {
         }
     }
 
-    class IssueCreationData(
+    private class IssueCreationData(
         private val title: String,
         private val body: String
     ) {
@@ -337,10 +334,8 @@ object GitHubNetworking : PlatformNetworking {
                         mapOf("body" to body).toJson()
                     )
                 )
-                .uri(URI.create(getCommentsUrl(repositoryName, issueNumber)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                // TODO: Disallow commenting if not linked to GitHub or not logged in.
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getCommentsUrl(repositoryName, issueNumber))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -365,9 +360,8 @@ object GitHubNetworking : PlatformNetworking {
                         mapOf("body" to body).toJson()
                     )
                 )
-                .uri(URI.create(getCommentUrl(repositoryName, commentId)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getCommentUrl(repositoryName, commentId))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -384,9 +378,8 @@ object GitHubNetworking : PlatformNetworking {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .DELETE()
-                .uri(URI.create(getCommentUrl(repositoryName, commentId)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getCommentUrl(repositoryName, commentId))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
@@ -405,7 +398,8 @@ object GitHubNetworking : PlatformNetworking {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("body" to body)
+            mapOf("body" to body),
+            false
         )
     }
 
@@ -413,7 +407,8 @@ object GitHubNetworking : PlatformNetworking {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("state" to "closed")
+            mapOf("state" to "closed"),
+            false
         )
     }
 
@@ -421,27 +416,28 @@ object GitHubNetworking : PlatformNetworking {
         return createUpdateIssueRequest(
             repositoryName,
             number,
-            mapOf("state" to "open")
+            mapOf("state" to "open"),
+            false
         )
     }
 
     private fun createUpdateIssueRequest(
         repositoryName: RemoteRepository.Name,
         number: Int,
-        parameters: Map<String, String>
+        parameters: Map<String, String>,
+        pullRequest: Boolean
     ): CompletableFuture<Issue> {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .PATCH(HttpRequest.BodyPublishers.ofString(parameters.toJson()))
-                .uri(URI.create(getUpdateIssueUrl(repositoryName, number)))
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getUpdateIssueUrl(repositoryName, number))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
-            it.mapOrElseThrow({ body ->
-                GitHubIssue.ADAPTER.fromJson(body)
-            }, { "Updating GitHub issue with parameters: $parameters" })
+            mapIssueOrThrow(it, pullRequest) {
+                "Updating GitHub issue with parameters: $parameters"
+            }
         }
     }
 
@@ -452,18 +448,43 @@ object GitHubNetworking : PlatformNetworking {
         return CLIENT.sendAsync(
             HttpRequest.newBuilder()
                 .GET()
-                .uri(
-                    URI.create(getPullRequestUrl(repositoryName, number))
-                )
-                .header(HttpHeader.ACCEPT, acceptHeader)
-                .header(HttpHeader.AUTHORIZATION, "token ${GitHubAccount.getForActiveSession()?.accessToken}")
+                .uri(getPullRequestUrl(repositoryName, number))
+                .applyDefaultHeaders()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         ).thenApply {
-            it.mapOrElseThrow({ body ->
-                GitHubPullRequest.ADAPTER.fromJson(body)
-            }, { "Retrieving pull request." })
+            mapPullRequestOrThrow(it) {
+                "Retrieving pull request."
+            }
         }
+    }
+
+    private fun mapIssueOrThrow(
+        response: HttpResponse<String>,
+        pullRequest: Boolean,
+        messageSupplier: () -> String
+    ): Issue {
+        return if (pullRequest)
+            mapPullRequestOrThrow(response, messageSupplier)
+        else mapIssueOrThrow(response, messageSupplier)
+    }
+
+    private fun mapIssueOrThrow(
+        response: HttpResponse<String>,
+        messageSupplier: () -> String
+    ): Issue {
+        return response.mapOrElseThrow({ body ->
+            GitHubIssue.ADAPTER.fromJson(body)!!
+        }, messageSupplier)
+    }
+
+    private fun mapPullRequestOrThrow(
+        response: HttpResponse<String>,
+        messageSupplier: () -> String
+    ): PullRequest {
+        return response.mapOrElseThrow({ body ->
+            GitHubPullRequest.ADAPTER.fromJson(body)!!
+        }, messageSupplier)
     }
 
     private fun getPullRequestUrl(repositoryName: RemoteRepository.Name, number: Int) =
@@ -488,4 +509,12 @@ object GitHubNetworking : PlatformNetworking {
             getRemoteRepositoryReference(url)
         }
     }
+}
+
+private fun HttpRequest.Builder.applyDefaultHeaders(): HttpRequest.Builder {
+    this.header(HttpHeader.ACCEPT, ACCEPT_HEADER)
+    GitHubAccount.getForActiveSession()?.let { account ->
+        this.header(HttpHeader.AUTHORIZATION, "token ${account.accessToken}")
+    }
+    return this
 }

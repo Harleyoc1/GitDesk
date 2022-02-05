@@ -3,7 +3,11 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 import com.harleyoconnor.gitdesk.data.remote.Comment
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.User
-import com.harleyoconnor.gitdesk.data.remote.timeline.*
+import com.harleyoconnor.gitdesk.data.remote.timeline.AssignedEvent
+import com.harleyoconnor.gitdesk.data.remote.timeline.CommentedEvent
+import com.harleyoconnor.gitdesk.data.remote.timeline.Event
+import com.harleyoconnor.gitdesk.data.remote.timeline.EventType
+import com.harleyoconnor.gitdesk.data.remote.timeline.LabeledEvent
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import javafx.scene.Node
@@ -11,9 +15,9 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 
 class EventContext(
-    val parent: TimelineController,
+    val parent: IssueController<out Issue>,
     val remoteContext: RemoteContext,
-    val issue: IssueAccessor,
+    val issue: IssueAccessor<out Issue>,
     val event: Event
 )
 
@@ -64,9 +68,9 @@ private fun loadCommentView(
 }
 
 fun loadCommentView(
-    parent: TimelineController,
+    parent: IssueController<out Issue>,
     remoteContext: RemoteContext,
-    issue: IssueAccessor,
+    issue: IssueAccessor<out Issue>,
     comment: Comment
 ): ViewLoader.View<out CommentController, VBox> {
     val viewContext = CommentController.Context(
@@ -124,7 +128,7 @@ fun loadReOpenedEventView(context: EventContext): ViewLoader.View<ReOpenedEventC
     )
 }
 
-interface TimelineController {
+interface IssueController<I : Issue> {
 
     /**
      * Causes the UI to refresh the entire issue view from the remote.
@@ -136,9 +140,11 @@ interface TimelineController {
      *
      * @param issue the updated issue
      */
-    fun issueUpdated(issue: Issue)
+    fun issueUpdated(issue: I)
 
     fun addEventToTimeline(event: Event)
+
+    fun toggleState()
 
     fun remove(node: Node)
 

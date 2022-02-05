@@ -2,18 +2,12 @@ package com.harleyoconnor.gitdesk.ui.repository.issues
 
 import com.harleyoconnor.gitdesk.data.remote.Issue
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.ui.Application
-import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.RadioContextMenu
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.node.SelectionCellList
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
-import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
-import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
-import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
-import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -22,58 +16,23 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
-import javafx.scene.layout.VBox
 import org.fxmisc.wellbehaved.event.EventPattern
 import org.fxmisc.wellbehaved.event.InputMap
 import org.fxmisc.wellbehaved.event.Nodes
 
 /**
+ * Abstract implementation of an issue cell list view controller, used by both issue and PR cell lists.
  *
  * @author Harley O'Connor
  */
 abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListController.Context<I>> : ViewController<C> {
 
-    class Issues : AbstractIssuesListController<Issue, Issues.Context>() {
-
-        object Loader : ResourceViewLoader<Context, Issues, VBox>(
-            UIResource("/ui/layouts/repository/issues/IssueList.fxml")
-        )
-
-        open class Context(
-            openIssueCallback: (Issue) -> Unit,
-            remote: RemoteContext
-        ) : AbstractIssuesListController.Context<Issue>(openIssueCallback, remote)
-
-        override fun loadPage(page: Int) {
-            remoteContext.remote.getIssues(
-                searchQuery,
-                sort,
-                sortOrder,
-                page,
-                Application.getInstance().backgroundExecutor
-            ).thenApply {
-                loadCells(it)
-            }.thenAcceptOnMainThread { cells ->
-                displayCells(cells)
-            }.exceptionallyOnMainThread {
-                logErrorAndCreateDialogue("dialogue.error.searching_issues", it).show()
-            }
-        }
-
-        private fun loadCells(issues: Array<out Issue>): Map<Issue, HBox> {
-            return issues.associateWith {
-                IssueCellController.Loader.load(IssueCellController.Context(this::select, it)).root
-            }
-        }
-
-    }
-
     open class Context<I : Issue>(
-        val openIssueCallback: (I) -> Unit,
+        val selectCallback: (I) -> Unit,
         val remote: RemoteContext
     ) : ViewController.Context
 
-    private lateinit var openIssueCallback: (I) -> Unit
+    private lateinit var selectCallback: (I) -> Unit
     protected lateinit var remoteContext: RemoteContext
 
     @FXML
@@ -124,11 +83,11 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
     }
 
     override fun setup(context: C) {
-        openIssueCallback = context.openIssueCallback
+        selectCallback = context.selectCallback
         remoteContext = context.remote
 
         content.setOnElementSelected {
-            openIssueCallback(it.element)
+            selectCallback(it.element)
         }
 
         registerSearchBarInputs()
