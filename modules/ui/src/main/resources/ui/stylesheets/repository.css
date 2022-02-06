@@ -250,3 +250,18 @@
 .comment-view > .text-area, .comment-view > .text-area .content {
     -fx-background-color: -secondary-background-color;
 }
+
+.terminal {
+    -fx-border-color: -primary-border-color;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.terminal-input {
+    -fx-text-fill: -primary-text-color;
+    -fx-font-size: 11px;
+    -fx-font-family: Menlo !important;
+}
+
+.mono {
+    -fx-font-family: Menlo !important;
+}

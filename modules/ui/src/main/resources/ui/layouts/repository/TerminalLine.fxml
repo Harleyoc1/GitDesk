@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.TerminalLineController" fx:id="root" prefHeight="20"
+      alignment="CENTER_LEFT" maxWidth="Infinity">
+    <Label fx:id="outputLabel" styleClass="text, body, mono"/>
+    <TextField fx:id="inputField" onKeyPressed="#keyPressed" maxHeight="20" styleClass="terminal-input"
+               HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+</HBox>

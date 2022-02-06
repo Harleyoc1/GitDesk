@@ -16,6 +16,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.harleyoconnor.gitdesk.ui.repository.RepositoryController" fx:id="root">
     <top>
@@ -24,7 +26,11 @@
                 <MenuItem text="%ui.menu.save" accelerator="Shortcut+S" onAction="#save"/>
             </FileMenu>
             <EditMenu fx:id="editMenu"/>
-            <ViewMenu fx:id="viewMenu"/>
+            <ViewMenu fx:id="viewMenu">
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="toggleTerminalMenuItem" text="%ui.menu.view.toggle_terminal_view.enable"
+                          accelerator="Shortcut+Alt+T" onAction="#toggleTerminalView"/>
+            </ViewMenu>
             <RepositoryMenu fx:id="repositoryMenu"/>
             <WindowMenu fx:id="windowMenu"/>
             <Menu text="%ui.menu.help"/>
@@ -66,7 +72,8 @@
                     </VBox>
                 </graphic>
             </RadioButton>
-            <RadioButton fx:id="pullRequestsTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell" prefWidth="20">
+            <RadioButton fx:id="pullRequestsTabButton" toggleGroup="$tabNavigationGroup" styleClass="cell"
+                         prefWidth="20">
                 <graphic>
                     <VBox alignment="CENTER" spacing="5">
                         <Group>
@@ -88,4 +95,7 @@
             </RadioButton>
         </VBox>
     </left>
+    <center>
+        <SplitPane fx:id="centreSplitPane" orientation="VERTICAL"/>
+    </center>
 </BorderPane>

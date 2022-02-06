@@ -107,6 +107,7 @@ class RepositoryWindow(
 
     fun openBranchesWindow() {
         branchesWindow.open()
+        branchesWindow.focus() // In case window was already open, make sure to bring it to the foreground.
     }
 
     fun openNewBranchWindow() {
@@ -116,6 +117,7 @@ class RepositoryWindow(
 
     fun openIgnoredWindow() {
         ignoredWindow.open()
+        ignoredWindow.focus() // In case window was already open, make sure to bring it to the foreground.
     }
 
     fun promptCommit() {

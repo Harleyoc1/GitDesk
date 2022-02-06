@@ -12,13 +12,17 @@ import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTab
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
 import com.harleyoconnor.gitdesk.ui.repository.issues.IssuesTabController
 import com.harleyoconnor.gitdesk.ui.repository.pulls.PullRequestsTabController
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.Node
+import javafx.scene.control.MenuItem
 import javafx.scene.control.RadioButton
+import javafx.scene.control.SplitPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 
@@ -49,6 +53,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     private lateinit var viewMenu: ViewMenu
 
     @FXML
+    private lateinit var toggleTerminalMenuItem: MenuItem
+
+    @FXML
     private lateinit var repositoryMenu: RepositoryMenu
 
     @FXML
@@ -72,6 +79,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
+    @FXML
+    private lateinit var centreSplitPane: SplitPane
+
     val remoteContext by lazy {
         val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
         RemoteContext(
@@ -91,15 +101,11 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private val editorTab: Tab by lazy {
-        Tab(editorTabView.root) {
-            root.center = it
-        }
+        Tab(editorTabView.root, this::openTab)
     }
 
     private val changesTab by lazy {
-        ChangesTab(parent.stage, repository) {
-            root.center = it
-        }
+        ChangesTab(parent.stage, repository, this::openTab)
     }
 
     private val issuesTabView by lazy {
@@ -109,9 +115,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private val issuesTab by lazy {
-        Tab(issuesTabView.root) {
-            root.center = it
-        }
+        Tab(issuesTabView.root, this::openTab)
     }
 
     private val pullRequestsTabView by lazy {
@@ -121,9 +125,11 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     }
 
     private val pullRequestsTab by lazy {
-        Tab(pullRequestsTabView.root) {
-            root.center = it
-        }
+        Tab(pullRequestsTabView.root, this::openTab)
+    }
+
+    private val terminalView by lazy {
+        TerminalController.Loader.load(TerminalController.Context(repository))
     }
 
     override fun setup(context: Context) {
@@ -153,6 +159,14 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         removeIssuesTabIfDisabled()
     }
 
+    private fun openTab(node: Node) {
+        if (centreSplitPane.items.size < 1) {
+            centreSplitPane.items.add(node)
+        } else {
+            centreSplitPane.items[0] = node
+        }
+    }
+
     private fun removeIssuesTabIfDisabled() {
         if (!remoteContext.remote.hasIssues) {
             removeIssuesTabButton()
@@ -173,6 +187,21 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     fun promptCommit() {
         changesTabButton.fire()
         changesTab.promptCommit()
+    }
+
+    @FXML
+    private fun toggleTerminalView(event: ActionEvent) {
+        if (centreSplitPane.items.size < 2) {
+            centreSplitPane.items.add(terminalView.root)
+            toggleTerminalMenuItem.text = TRANSLATIONS_BUNDLE.getString(
+                "ui.menu.view.toggle_terminal_view.disable"
+            )
+        } else {
+            centreSplitPane.items.remove(terminalView.root)
+            toggleTerminalMenuItem.text = TRANSLATIONS_BUNDLE.getString(
+                "ui.menu.view.toggle_terminal_view.enable"
+            )
+        }
     }
 
 }

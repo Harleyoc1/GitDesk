@@ -1,6 +1,5 @@
 
 * {
-    -fx-font-family: "Helvetica Neue";
     -error-color: #D70A0A;
     -accent-color: #F9322E;
     -accent-contrast-color: #FCFDFC;
@@ -14,6 +13,7 @@
 /* Default node styles */
 
 .text-field, .choice-box, .text-area {
+    -fx-font-family: "Helvetica Neue";
     -fx-text-fill: -primary-text-color;
     -fx-background-color: -tertiary-background-color;
     -fx-border-color: -primary-border-color;
@@ -32,7 +32,12 @@
     -fx-padding: 0.3334em 0;
 }
 
+.label {
+    -fx-font-family: "Helvetica Neue";
+}
+
 .button {
+    -fx-font-family: "Helvetica Neue";
     -fx-text-fill: -primary-text-color;
     -fx-background-color: -tertiary-background-color;
     -fx-background-insets: 0;
@@ -56,7 +61,7 @@
 }
 
 .scroll-bar > .thumb {
-    -fx-background-color: -secondary-background-color;
+    -fx-background-color: -secondary-text-color;
 }
 
 .scroll-bar > .increment-button, .scroll-bar > .decrement-button {
@@ -230,9 +235,9 @@
     -fx-font-weight: bold !important;
 }
 
-.mono {
-    -fx-font-family: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";
-}
+/*.mono {*/
+/*    -fx-font-family: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";*/
+/*}*/
 
 .label.error {
     -fx-text-fill: -error-color;
