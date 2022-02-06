@@ -44,6 +44,10 @@ class CommitController : ViewController<CommitController.Context> {
         this.repository = context.repository
     }
 
+    fun promptCommit() {
+        summaryField.requestFocus()
+    }
+
     @FXML
     private fun commitAndPush(event: ActionEvent) {
         commit(event)

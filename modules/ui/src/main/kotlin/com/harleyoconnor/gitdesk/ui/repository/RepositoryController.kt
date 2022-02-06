@@ -27,11 +27,11 @@ import javafx.scene.layout.VBox
  */
 class RepositoryController : ViewController<RepositoryController.Context> {
 
-    object Loader: ResourceViewLoader<Context, RepositoryController, BorderPane>(
+    object Loader : ResourceViewLoader<Context, RepositoryController, BorderPane>(
         UIResource("/ui/layouts/repository/Root.fxml")
     )
 
-    class Context(val parent: RepositoryWindow, val repository: LocalRepository): ViewController.Context
+    class Context(val parent: RepositoryWindow, val repository: LocalRepository) : ViewController.Context
 
     private lateinit var parent: RepositoryWindow
     private lateinit var repository: LocalRepository
@@ -47,6 +47,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     @FXML
     private lateinit var viewMenu: ViewMenu
+
+    @FXML
+    private lateinit var repositoryMenu: RepositoryMenu
 
     @FXML
     private lateinit var windowMenu: WindowMenu
@@ -130,6 +133,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         fileMenu.setWindow(parent)
         editMenu.useSelectableAccess(parent.selectableAccess)
         viewMenu.setStage(parent.stage)
+        repositoryMenu.setWindow(parent)
         windowMenu.setStage(parent.stage)
 
         editorTabButton.setOnSelected {
@@ -165,4 +169,10 @@ class RepositoryController : ViewController<RepositoryController.Context> {
             editorTabView.controller.save()
         }
     }
+
+    fun promptCommit() {
+        changesTabButton.fire()
+        changesTab.promptCommit()
+    }
+
 }

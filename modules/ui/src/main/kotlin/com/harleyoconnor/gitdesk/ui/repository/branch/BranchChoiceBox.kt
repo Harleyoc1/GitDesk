@@ -15,10 +15,8 @@ class BranchChoiceBox: ChoiceBox<Selection<Branch>>() {
 
     fun loadChoices(repository: Repository) {
         repository.getAllBranches().ifSuccessful {
-            it.result?.let { branches ->
-                Platform.runLater {
-                    loadItems(branches)
-                }
+            Platform.runLater {
+                loadItems(it.result!!)
             }
         }.ifFailure(::logFailure).begin()
     }

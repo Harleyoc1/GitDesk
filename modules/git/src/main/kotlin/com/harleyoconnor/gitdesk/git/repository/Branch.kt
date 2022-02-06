@@ -6,7 +6,6 @@ import com.harleyoconnor.gitdesk.util.map
 import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.logFailure
-import java.util.concurrent.CompletableFuture
 
 /**
  * @author Harley O'Connor

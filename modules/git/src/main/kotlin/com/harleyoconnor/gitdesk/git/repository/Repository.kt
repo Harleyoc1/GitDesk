@@ -17,10 +17,6 @@ import java.util.regex.Pattern
  */
 data class Repository @Throws(NoSuchRepositoryException::class) constructor(val directory: Directory) {
 
-    companion object {
-        private val REMOTE_BRANCH_PATTERN = Pattern.compile("\\[(.*?)]")
-    }
-
     val name: String by lazy { this.directory.name }
 
     init {

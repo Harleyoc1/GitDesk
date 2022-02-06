@@ -32,4 +32,9 @@ class ChangesTab(
     fun refresh() {
         changesTabView.controller.refresh()
     }
+
+    fun promptCommit() {
+        changesTabView.controller.promptCommit()
+    }
+
 }

@@ -46,6 +46,10 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
         )
     }
 
+    private val commitView by lazy {
+        CommitController.Loader.load(CommitController.Context(this, repository.gitRepository))
+    }
+
     @FXML
     private fun initialize() {
         fileTabs.tabDragPolicy = TabPane.TabDragPolicy.REORDER
@@ -56,9 +60,7 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
         this.repository = context.repository
         titleLabel.text = repository.id
         fileList.content = changedFilesListView.root
-        sideBar.items.add(
-            CommitController.Loader.load(CommitController.Context(this, repository.gitRepository)).root
-        )
+        sideBar.items.add(commitView.root)
         sideBar.setDividerPositions(0.6)
     }
 
@@ -76,6 +78,10 @@ class ChangesTabController : ViewController<ChangesTabController.Context> {
             }
             .ifFailure(::logFailure)
             .begin()
+    }
+
+    fun promptCommit() {
+        commitView.controller.promptCommit()
     }
 
 

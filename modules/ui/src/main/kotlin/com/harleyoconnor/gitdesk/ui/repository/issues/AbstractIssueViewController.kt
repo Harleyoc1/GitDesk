@@ -14,8 +14,8 @@ import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.EventContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.IssueController
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.getViewForEvent
 import com.harleyoconnor.gitdesk.ui.repository.issues.timeline.loadCommentView
+import com.harleyoconnor.gitdesk.ui.style.CLOSED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
-import com.harleyoconnor.gitdesk.ui.style.REJECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.createAvatarNode
@@ -220,7 +220,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
 
     protected open fun loadStateBox() {
         stateBox.pseudoClassStateChanged(OPEN_PSEUDO_CLASS, issue.state == Issue.State.OPEN)
-        stateBox.pseudoClassStateChanged(REJECTED_PSEUDO_CLASS, issue.state == Issue.State.CLOSED)
+        stateBox.pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, issue.state == Issue.State.CLOSED)
         if (issue.state == Issue.State.OPEN) {
             loadStateBoxForOpen()
         } else {

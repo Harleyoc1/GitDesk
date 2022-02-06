@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<fx:root type="Menu" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" text="%ui.menu.repository">
+    <MenuItem text="%ui.menu.repository.fetch" accelerator="Shortcut+Alt+F" onAction="#fetch"/>
+    <MenuItem text="%ui.menu.repository.pull" accelerator="Shortcut+Alt+Shift+P" onAction="#push"/>
+    <MenuItem text="%ui.menu.repository.commit" accelerator="Shortcut+Alt+C" onAction="#commit"/>
+    <MenuItem text="%ui.menu.repository.push" accelerator="Shortcut+Alt+P" onAction="#push"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="%ui.menu.repository.branches" accelerator="Shortcut+Alt+B" onAction="#openBranchesWindow"/>
+    <MenuItem text="%ui.menu.repository.new_branch" accelerator="Shortcut+Alt+Shift+B" onAction="#openNewBranchWindow"/>
+</fx:root>

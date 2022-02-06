@@ -9,6 +9,7 @@ import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.repository.issues.AbstractIssueViewController
 import com.harleyoconnor.gitdesk.ui.style.DRAFT_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.MERGED_PSEUDO_CLASS
+import com.harleyoconnor.gitdesk.ui.style.REJECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import com.harleyoconnor.gitdesk.ui.util.CLOSED_PULL_REQUEST_ICON
@@ -102,6 +103,7 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
 
     override fun loadStateBox() {
         super.loadStateBox()
+        stateBox.pseudoClassStateChanged(REJECTED_PSEUDO_CLASS, issue.state == Issue.State.CLOSED)
         stateBox.pseudoClassStateChanged(DRAFT_PSEUDO_CLASS, issue.draft)
         stateBox.pseudoClassStateChanged(MERGED_PSEUDO_CLASS, issue.merged)
         if (issue.draft) {

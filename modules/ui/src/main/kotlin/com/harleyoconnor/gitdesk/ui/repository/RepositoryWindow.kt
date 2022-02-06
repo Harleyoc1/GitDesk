@@ -7,7 +7,6 @@ import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
-import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
 import com.harleyoconnor.gitdesk.ui.window.Window
 import javafx.scene.layout.Region
@@ -34,7 +33,7 @@ class RepositoryWindow(
 
     override val id: String get() = repository.id
 
-    private val branchesWindow: Window by lazy { BranchesWindow(this, repository) }
+    private val branchesWindow by lazy { BranchesWindow(this, repository) }
 
     override var title: String = ""
         set(value) {
@@ -46,9 +45,13 @@ class RepositoryWindow(
         Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY
     )
 
+    private val rootView by lazy {
+        RepositoryController.Loader.load(RepositoryController.Context(this, repository))
+    }
+
     init {
         title = repository.id
-        root = RepositoryController.Loader.load(RepositoryController.Context(this, repository)).root
+        root = rootView.root
         loadFromWindowCache(repository.windowCache)
     }
 
@@ -62,7 +65,7 @@ class RepositoryWindow(
 
     fun refreshView() {
         closeAndSaveResources()
-        root = RepositoryController.Loader.load(RepositoryController.Context(this, repository)).root
+        root = rootView.root
     }
 
     override fun open() {
@@ -100,6 +103,15 @@ class RepositoryWindow(
 
     fun openBranchesWindow() {
         branchesWindow.open()
+    }
+
+    fun openNewBranchWindow() {
+        openBranchesWindow()
+        branchesWindow.openAddView()
+    }
+
+    fun promptCommit() {
+        rootView.controller.promptCommit()
     }
 
 }
