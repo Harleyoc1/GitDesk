@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.ui.node
 
-import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.util.syntax.SyntaxHighlighter
 import com.harleyoconnor.gitdesk.util.system.MacOSManager
 import com.harleyoconnor.gitdesk.util.system.SystemManager
@@ -8,7 +7,6 @@ import javafx.concurrent.Task
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCombination
 import javafx.scene.input.KeyEvent
-import org.apache.logging.log4j.LogManager
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
 import org.fxmisc.richtext.NavigationActions.SelectionPolicy
@@ -20,7 +18,8 @@ import org.fxmisc.wellbehaved.event.Nodes
 import org.reactfx.Subscription
 import java.lang.Character.isWhitespace
 import java.time.Duration
-import java.util.*
+import java.util.Optional
+import java.util.concurrent.Executors
 import kotlin.math.min
 
 /**
@@ -30,6 +29,8 @@ import kotlin.math.min
  * @author Harley O'Connor
  */
 class CodeEditor : CodeArea() {
+
+    private val highlightingExecutor = Executors.newSingleThreadExecutor()
 
     private lateinit var highlighter: SyntaxHighlighter
     private var highlightingSubscription: Subscription? = null
@@ -48,7 +49,7 @@ class CodeEditor : CodeArea() {
         this.highlighter = highlighter
         this.highlightingSubscription = this.multiPlainChanges()
             .successionEnds(Duration.ofMillis(500))
-            .retainLatestUntilLater(Application.getInstance().backgroundExecutor)
+            .retainLatestUntilLater(highlightingExecutor)
             .supplyTask(this::computeHighlightingAsync)
             .awaitLatest(this.multiPlainChanges())
             .filterMap { t ->
@@ -145,7 +146,7 @@ class CodeEditor : CodeArea() {
                 return highlighter.highlight(text) as StyleSpans<Collection<String>>
             }
         }
-        Application.getInstance().backgroundExecutor.execute(task)
+        highlightingExecutor.execute(task)
         return task
     }
 
