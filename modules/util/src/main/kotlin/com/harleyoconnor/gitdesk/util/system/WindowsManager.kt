@@ -28,4 +28,11 @@ class WindowsManager : AbstractSystemManager() {
 
     override fun openInFileBrowser(file: File): ProceduralProcessBuilder =
         ProceduralProcessBuilder().command("explorer").arguments("/select, ${file.path}")
+
+    override fun openInApp(file: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("\"${file.canonicalPath}\"")
+
+    override fun openInApp(file: File, applicationFile: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("\"${applicationFile.canonicalPath}\" \"${file.canonicalPath}\"")
+
 }

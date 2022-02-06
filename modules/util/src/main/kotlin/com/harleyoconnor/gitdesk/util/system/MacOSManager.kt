@@ -83,4 +83,11 @@ class MacOSManager : AbstractSystemManager() {
 
     override fun openInFileBrowser(file: File): ProceduralProcessBuilder =
         ProceduralProcessBuilder().command("open").arguments("-R", file.path)
+
+    override fun openInApp(file: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("open").arguments(file.canonicalPath)
+
+    override fun openInApp(file: File, applicationFile: File): ProceduralProcessBuilder =
+        ProceduralProcessBuilder().command("open").arguments(file.canonicalPath, "-a", applicationFile.canonicalPath)
+
 }

@@ -48,7 +48,32 @@ class UnsupportedManager : SystemManager {
 
     override fun openInFileBrowser(file: File): ProceduralProcessBuilder {
         LogManager.getLogger()
-            .warn("Tried to open file {} in browser, but {} does not support this action.", file, getOsName())
+            .warn(
+                "Tried to open file {} in file browser, but {} does not support this action.",
+                file,
+                getOsName()
+            )
+        return ProceduralProcessBuilder().command("")
+    }
+
+    override fun openInApp(file: File): ProceduralProcessBuilder {
+        LogManager.getLogger()
+            .warn(
+                "Tried to open file {} in default app, but {} does not support this action.",
+                file,
+                getOsName()
+            )
+        return ProceduralProcessBuilder().command("")
+    }
+
+    override fun openInApp(file: File, applicationFile: File): ProceduralProcessBuilder {
+        LogManager.getLogger()
+            .warn(
+                "Tried to open file {} in app {}, but {} does not support this action.",
+                file,
+                applicationFile,
+                getOsName()
+            )
         return ProceduralProcessBuilder().command("")
     }
 }

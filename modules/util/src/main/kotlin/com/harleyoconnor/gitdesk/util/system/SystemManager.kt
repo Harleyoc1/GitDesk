@@ -74,6 +74,19 @@ interface SystemManager {
      */
     fun getAppDataLocation(): String
 
+    /**
+     * @return A process that opens the given [file] in the default file browser.
+     */
     fun openInFileBrowser(file: File): ProceduralProcessBuilder
+
+    /**
+     * @return A process that opens the given [file] in the default application.
+     */
+    fun openInApp(file: File): ProceduralProcessBuilder
+
+    /**
+     * @return A process that opens the given [file] in the specified [applicationFile].
+     */
+    fun openInApp(file: File, applicationFile: File): ProceduralProcessBuilder
 
 }
