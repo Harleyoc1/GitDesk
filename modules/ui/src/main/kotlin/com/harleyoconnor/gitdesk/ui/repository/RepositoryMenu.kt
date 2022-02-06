@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.util.process.logFailure
@@ -38,7 +39,7 @@ class RepositoryMenu : Menu() {
 
     @FXML
     private fun push(event: ActionEvent) {
-        // TODO: Push
+        // not implemented
     }
 
     @FXML
@@ -48,7 +49,9 @@ class RepositoryMenu : Menu() {
 
     @FXML
     private fun pull(event: ActionEvent) {
-        // TODO: Pull
+        window.repository.gitRepository.pull()
+            .ifFailure(::logFailure)
+            .begin()
     }
 
     @FXML

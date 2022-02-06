@@ -6,9 +6,12 @@ import com.harleyoconnor.gitdesk.util.Directory
 import com.harleyoconnor.gitdesk.util.process.FunctionalProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.ProceduralProcessBuilder
 import com.harleyoconnor.gitdesk.util.process.Response
+import com.harleyoconnor.gitdesk.util.process.logFailure
 import com.harleyoconnor.gitdesk.util.substringUntil
 import com.harleyoconnor.gitdesk.util.toTypedArray
 import java.io.File
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -139,6 +142,13 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .directory(directory)
     }
 
+    fun pull(): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("pull")
+            .directory(directory)
+    }
+
     fun addToStage(file: File): ProceduralProcessBuilder = ProceduralProcessBuilder()
         .gitCommand()
         .arguments("add", file.canonicalFile.relativeTo(directory).path)
@@ -219,6 +229,28 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .arguments("commit", "-m", summary, "-m", description)
             .directory(directory)
     }
+
+    /**
+     * Forces Git to update which files are tracked on the stage. This can be used to refresh the stage after making
+     * edits to the `.gitignore` file.
+     */
+    fun updateTrackedFiles(executor: Executor): CompletableFuture<Void> {
+        return CompletableFuture.runAsync({
+            stageAll().ifFailure(::logFailure).beginAndWaitFor()
+            unStageAll().ifFailure(::logFailure).beginAndWaitFor()
+            stageAll().ifFailure(::logFailure).beginAndWaitFor()
+        }, executor)
+    }
+
+    private fun unStageAll(): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("rm", "-r", "--cached", ".")
+        .directory(directory)
+
+    private fun stageAll(): ProceduralProcessBuilder = ProceduralProcessBuilder()
+        .gitCommand()
+        .arguments("add", ".")
+        .directory(directory)
 
     @Throws(NoSuchRepositoryException::class)
     private fun throwIfDoesNotExist() {

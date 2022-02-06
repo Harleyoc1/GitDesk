@@ -6,4 +6,5 @@ package com.harleyoconnor.gitdesk.data.remote
 interface PlatformAccount {
     val platform: Platform
     val username: String
+    val accessToken: String
 }

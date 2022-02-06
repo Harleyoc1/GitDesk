@@ -5,10 +5,12 @@ import com.harleyoconnor.gitdesk.data.WindowCache
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.repository.branch.BranchesWindow
+import com.harleyoconnor.gitdesk.ui.repository.ignored.IgnoredWindow
 import com.harleyoconnor.gitdesk.ui.style.Stylesheet
 import com.harleyoconnor.gitdesk.ui.style.Stylesheets
+import com.harleyoconnor.gitdesk.ui.view.ViewLoader
 import com.harleyoconnor.gitdesk.ui.window.AbstractWindow
-import com.harleyoconnor.gitdesk.ui.window.Window
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Region
 import javafx.stage.Stage
 
@@ -35,6 +37,8 @@ class RepositoryWindow(
 
     private val branchesWindow by lazy { BranchesWindow(this, repository) }
 
+    private val ignoredWindow by lazy { IgnoredWindow(this, repository) }
+
     override var title: String = ""
         set(value) {
             field = value
@@ -45,9 +49,9 @@ class RepositoryWindow(
         Stylesheets.DEFAULT_THEMED, Stylesheets.DEFAULT, Stylesheets.REPOSITORY_THEMED, Stylesheets.REPOSITORY
     )
 
-    private val rootView by lazy {
+    private var rootView: ViewLoader.View<RepositoryController, BorderPane> =
         RepositoryController.Loader.load(RepositoryController.Context(this, repository))
-    }
+        set(value) { field = value; root = value.root }
 
     init {
         title = repository.id
@@ -65,7 +69,7 @@ class RepositoryWindow(
 
     fun refreshView() {
         closeAndSaveResources()
-        root = rootView.root
+        rootView = RepositoryController.Loader.load(RepositoryController.Context(this, repository))
     }
 
     override fun open() {
@@ -110,8 +114,16 @@ class RepositoryWindow(
         branchesWindow.openAddView()
     }
 
+    fun openIgnoredWindow() {
+        ignoredWindow.open()
+    }
+
     fun promptCommit() {
         rootView.controller.promptCommit()
+    }
+
+    fun getCurrentRemote(): RemoteContext {
+        return rootView.controller.remoteContext
     }
 
 }

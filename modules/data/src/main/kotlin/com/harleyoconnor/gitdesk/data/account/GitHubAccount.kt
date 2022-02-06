@@ -11,7 +11,7 @@ import com.squareup.moshi.JsonAdapter
  */
 class GitHubAccount(
     override val username: String,
-    @Json(name = "access_token") val accessToken: String
+    @Json(name = "access_token") override val accessToken: String
 ) : PlatformAccount {
     companion object {
         val ADAPTER: JsonAdapter<GitHubAccount> = MOSHI.adapter(GitHubAccount::class.java)

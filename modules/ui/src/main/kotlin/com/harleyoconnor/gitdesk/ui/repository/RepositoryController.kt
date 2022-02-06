@@ -72,7 +72,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     @FXML
     private lateinit var checklistsTabButton: RadioButton
 
-    private val remoteContext by lazy {
+    val remoteContext by lazy {
         val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
         RemoteContext(
             repository,

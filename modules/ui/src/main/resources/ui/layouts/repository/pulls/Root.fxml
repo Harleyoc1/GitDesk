@@ -11,7 +11,7 @@
            fx:controller="com.harleyoconnor.gitdesk.ui.repository.pulls.PullRequestsTabController" fx:id="root"
            styleClass="pull-requests-tab">
     <VBox fx:id="sideBar" styleClass="side-bar">
-        <HBox fx:id="toolBarBox" alignment="CENTER_LEFT" minHeight="25" prefHeight="25" styleClass="tool-bar">
+        <HBox fx:id="toolBarBox" alignment="CENTER_LEFT" minHeight="25" prefHeight="25" styleClass="toolbar">
             <Label fx:id="titleLabel" styleClass="text, body"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="createButton" onAction="#create" styleClass="icon-button, no-padding">

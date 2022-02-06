@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.pulls.PullRequestToolbarController" fx:id="root"
-      minHeight="25" prefHeight="25" styleClass="tool-bar">
+      minHeight="25" prefHeight="25" styleClass="toolbar">
     <Button onAction="#refresh" styleClass="icon-button, no-padding">
         <graphic>
             <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/refresh.svg" styleClass="icon"/>

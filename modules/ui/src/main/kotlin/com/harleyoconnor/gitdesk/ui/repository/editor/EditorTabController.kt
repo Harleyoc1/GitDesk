@@ -83,7 +83,7 @@ class EditorTabController : ViewController<EditorTabController.Context> {
 
     @FXML
     private fun openIgnoredWindow(event: ActionEvent) {
-
+        window.openIgnoredWindow()
     }
 
     @FXML

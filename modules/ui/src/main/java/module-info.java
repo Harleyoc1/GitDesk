@@ -39,6 +39,7 @@ module gitdesk.ui {
     opens com.harleyoconnor.gitdesk.ui.repository.issues to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.repository.issues.timeline to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.repository.pulls to javafx.fxml;
+    opens com.harleyoconnor.gitdesk.ui.repository.ignored to javafx.fxml;
 
     opens ui.images;
     opens ui.stylesheets;

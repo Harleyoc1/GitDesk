@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.BranchCellController" fx:id="root"
-      alignment="CENTER_LEFT" styleClass="cell, repository-cell" onMouseClicked="#onCellPressed" spacing="5">
+      alignment="CENTER_LEFT" styleClass="cell" onMouseClicked="#onCellPressed" spacing="5">
     <fx:define>
         <ContextMenu fx:id="contextMenu">
             <items>

@@ -2,7 +2,6 @@
 
 <?import com.harleyoconnor.gitdesk.ui.node.BranchCellList?>
 <?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -11,10 +10,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.branch.BranchesController">
-    <HBox minHeight="50" prefHeight="50" styleClass="tool-bar">
-        <padding>
-            <Insets top="6" right="8" bottom="6" left="6"/>
-        </padding>
+    <HBox minHeight="50" prefHeight="50" styleClass="toolbar, large">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" onKeyTyped="#onSearchQueryUpdated"
                    prefHeight="35" HBox.hgrow="ALWAYS"/>
         <Button onAction="#toAddBranchView" styleClass="icon-button">
