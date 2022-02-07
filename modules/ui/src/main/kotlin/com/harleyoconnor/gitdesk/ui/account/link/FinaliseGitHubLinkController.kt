@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox
 class FinaliseGitHubLinkController : ViewController<FinaliseGitHubLinkController.Context> {
 
     object Loader : ResourceViewLoader<Context, FinaliseGitHubLinkController, VBox>(
-        UIResource("/ui/layouts/account/tabs/link/FinaliseGitHubLink.fxml")
+        UIResource("/ui/layouts/account/link/FinaliseGitHubLink.fxml")
     )
 
     class Context(val parent: GitHubLinkTab, val account: Account, val linkingData: GitHubLinkingData) :

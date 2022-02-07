@@ -31,7 +31,7 @@ class LinkGitHubController : ViewController<LinkGitHubController.Context> {
     }
 
     object Loader: ResourceViewLoader<Context, LinkGitHubController, VBox>(
-        UIResource("/ui/layouts/account/tabs/link/LinkGitHub.fxml")
+        UIResource("/ui/layouts/account/link/LinkGitHub.fxml")
     )
 
     class Context(val parent: GitHubLinkTab, val account: Account): ViewController.Context

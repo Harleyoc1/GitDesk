@@ -23,7 +23,7 @@ import java.io.File
 class CreateTabController : ViewController<CreateTabController.Context> {
 
     object Loader: ResourceViewLoader<Context, CreateTabController, VBox>(
-        UIResource("/ui/layouts/menu/tabs/create/Root.fxml")
+        UIResource("/ui/layouts/menu/create/CreateTab.fxml")
     )
 
     class Context(val parent: MenuController): ViewController.Context

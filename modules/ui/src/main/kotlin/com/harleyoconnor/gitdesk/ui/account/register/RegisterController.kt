@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox
 class RegisterController : ViewController<RegisterController.Context> {
 
     object Loader: ResourceViewLoader<Context, RegisterController, VBox>(
-        UIResource("/ui/layouts/account/tabs/register/Root.fxml")
+        UIResource("/ui/layouts/account/register/RegisterTab.fxml")
     )
 
     class Context(val parent: RegisterTab): ViewController.Context

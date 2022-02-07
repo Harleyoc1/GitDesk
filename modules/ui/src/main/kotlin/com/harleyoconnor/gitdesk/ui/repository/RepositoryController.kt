@@ -32,7 +32,7 @@ import javafx.scene.layout.VBox
 class RepositoryController : ViewController<RepositoryController.Context> {
 
     object Loader : ResourceViewLoader<Context, RepositoryController, BorderPane>(
-        UIResource("/ui/layouts/repository/Root.fxml")
+        UIResource("/ui/layouts/repository/Repository.fxml")
     )
 
     class Context(val parent: RepositoryWindow, val repository: LocalRepository) : ViewController.Context

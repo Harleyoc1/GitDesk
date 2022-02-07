@@ -20,7 +20,7 @@ import javafx.stage.Stage
 class ChangesTabController : ViewController<ChangesTabController.Context> {
 
     object Loader : ResourceViewLoader<Context, ChangesTabController, SplitPane>(
-        UIResource("/ui/layouts/repository/changes/Root.fxml")
+        UIResource("/ui/layouts/repository/changes/ChangesTab.fxml")
     )
 
     class Context(val stage: Stage, val repository: LocalRepository) : ViewController.Context

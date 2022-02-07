@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture
 class RepositoryCellController : ViewController<RepositoryCellController.Context> {
 
     object Loader: ResourceViewLoader<Context, RepositoryCellController, HBox>(
-        UIResource("/ui/layouts/menu/tabs/open/RepositoryCell.fxml")
+        UIResource("/ui/layouts/menu/open/RepositoryCell.fxml")
     )
 
     class Context(val menuView: MenuController, val repository: LocalRepository): ViewController.Context

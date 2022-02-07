@@ -36,7 +36,7 @@ import java.util.concurrent.CompletableFuture
 class SelectRemoteTabController : ViewController<SelectRemoteTabController.Context> {
 
     object Loader : ResourceViewLoader<Context, SelectRemoteTabController, VBox>(
-        UIResource("/ui/layouts/menu/tabs/clone/SelectRemote.fxml")
+        UIResource("/ui/layouts/menu/clone/SelectRemote.fxml")
     )
 
     class Context(val parent: CloneTab) : ViewController.Context

@@ -26,7 +26,7 @@ import org.fxmisc.wellbehaved.event.Nodes
 class IgnoredController : ViewController<IgnoredController.Context> {
 
     object Loader : ResourceViewLoader<Context, IgnoredController, VBox>(
-        UIResource("/ui/layouts/repository/ignored/Root.fxml")
+        UIResource("/ui/layouts/repository/ignored/Ignored.fxml")
     )
 
     class Context(

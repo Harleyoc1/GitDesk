@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox
 class CloneController : ViewController<CloneController.Context> {
 
     object Loader: ResourceViewLoader<Context, CloneController, VBox>(
-        UIResource("/ui/layouts/clone/Root.fxml")
+        UIResource("/ui/layouts/clone/Clone.fxml")
     )
 
     class Context(val parent: CloneWindow): ViewController.Context

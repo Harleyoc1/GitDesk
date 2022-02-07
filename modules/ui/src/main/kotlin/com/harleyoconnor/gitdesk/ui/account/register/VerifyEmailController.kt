@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox
 class VerifyEmailController : ViewController<VerifyEmailController.Context> {
 
     object Loader: ResourceViewLoader<Context, VerifyEmailController, VBox>(
-        UIResource("/ui/layouts/account/tabs/register/VerifyEmail.fxml")
+        UIResource("/ui/layouts/account/register/VerifyEmail.fxml")
     )
 
     class Context(val parent: RegisterTab, val verificationData: VerificationData): ViewController.Context

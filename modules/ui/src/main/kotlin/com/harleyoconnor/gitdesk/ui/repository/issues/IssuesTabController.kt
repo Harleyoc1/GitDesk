@@ -22,7 +22,7 @@ import javafx.stage.Stage
 class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     object Loader : ResourceViewLoader<Context, IssuesTabController, SplitPane>(
-        UIResource("/ui/layouts/repository/issues/Root.fxml")
+        UIResource("/ui/layouts/repository/issues/IssuesTab.fxml")
     )
 
     class Context(val stage: Stage, val repository: LocalRepository, val remoteContext: RemoteContext) :

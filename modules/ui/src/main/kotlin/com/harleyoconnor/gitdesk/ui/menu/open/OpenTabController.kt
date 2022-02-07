@@ -28,7 +28,7 @@ import org.fxmisc.wellbehaved.event.Nodes
 class OpenTabController : ViewController<OpenTabController.Context> {
 
     object Loader: ResourceViewLoader<Context, OpenTabController, VBox>(
-        UIResource("/ui/layouts/menu/tabs/open/Root.fxml")
+        UIResource("/ui/layouts/menu/open/OpenTab.fxml")
     )
 
     class Context(val parent: MenuController): ViewController.Context

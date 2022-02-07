@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane
 class LabelController : ViewController<LabelController.Context> {
 
     object Loader: ResourceViewLoader<Context, LabelController, Pane>(
-        UIResource("/ui/layouts/repository/issues/Label.fxml")
+        UIResource("/ui/layouts/repository/issues/IssueLabel.fxml")
     )
 
     class Context(val label: Label): ViewController.Context

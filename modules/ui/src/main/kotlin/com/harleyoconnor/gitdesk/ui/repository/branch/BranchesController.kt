@@ -26,7 +26,7 @@ import org.fxmisc.wellbehaved.event.Nodes
 class BranchesController : ViewController<BranchesController.Context> {
 
     object Loader: ResourceViewLoader<Context, BranchesController, VBox>(
-        UIResource("/ui/layouts/repository/branches/Root.fxml")
+        UIResource("/ui/layouts/repository/branches/Branches.fxml")
     )
 
     class Context(val parent: BranchesWindow, val repository: LocalRepository): ViewController.Context

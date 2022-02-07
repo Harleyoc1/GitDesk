@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox
 class SelectableRemoteCellController: RemoteCellController<SelectableRemoteCellController.Context>() {
 
     object Loader : ResourceViewLoader<Context, SelectableRemoteCellController, HBox>(
-        UIResource("/ui/layouts/menu/tabs/clone/SelectableRemoteCell.fxml")
+        UIResource("/ui/layouts/menu/clone/SelectableRemoteCell.fxml")
     )
 
     class Context(val parent: CloneTab, remote: Remote) : RemoteCellController.Context(remote)

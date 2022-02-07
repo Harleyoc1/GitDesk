@@ -19,7 +19,7 @@ import javafx.scene.control.TabPane
 class EditorTabController : ViewController<EditorTabController.Context> {
 
     object Loader: ResourceViewLoader<Context, EditorTabController, SplitPane>(
-        UIResource("/ui/layouts/repository/editor/Root.fxml")
+        UIResource("/ui/layouts/repository/editor/EditorTab.fxml")
     )
 
     class Context(val window: RepositoryWindow, val repository: LocalRepository): ViewController.Context

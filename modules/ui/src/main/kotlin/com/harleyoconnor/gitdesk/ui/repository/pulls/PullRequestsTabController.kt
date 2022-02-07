@@ -25,7 +25,7 @@ import javafx.stage.Stage
 class PullRequestsTabController : ViewController<PullRequestsTabController.Context> {
 
     object Loader : ResourceViewLoader<Context, PullRequestsTabController, SplitPane>(
-        UIResource("/ui/layouts/repository/pulls/Root.fxml")
+        UIResource("/ui/layouts/repository/pulls/PullRequestsTab.fxml")
     )
 
     class Context(val stage: Stage, val repository: LocalRepository, val remoteContext: RemoteContext) :

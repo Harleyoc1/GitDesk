@@ -22,7 +22,7 @@ import java.io.File
 class SelectLocationController : ViewController<SelectLocationController.Context> {
 
     object Loader : ResourceViewLoader<Context, SelectLocationController, VBox>(
-        UIResource("/ui/layouts/menu/tabs/clone/SelectLocation.fxml")
+        UIResource("/ui/layouts/menu/clone/SelectLocation.fxml")
     )
 
     class Context(val parent: CloneTab, val remote: Remote) : ViewController.Context

@@ -25,7 +25,7 @@ import java.util.function.Consumer
 class SignInController : ViewController<SignInController.Context> {
 
     object Loader: ResourceViewLoader<Context, SignInController, VBox>(
-        UIResource("/ui/layouts/account/tabs/sign_in/Root.fxml")
+        UIResource("/ui/layouts/account/sign_in/SignInTab.fxml")
     )
 
     class Context(val openSignedInViewCallback: Consumer<Account>): ViewController.Context

@@ -28,7 +28,7 @@ import javafx.stage.Stage
 class MenuController : ViewController<MenuController.Context> {
 
     object Loader: ResourceViewLoader<Context, MenuController, BorderPane>(
-        UIResource("/ui/layouts/menu/Root.fxml")
+        UIResource("/ui/layouts/menu/Menu.fxml")
     )
 
     class Context(val parent: MenuWindow): ViewController.Context

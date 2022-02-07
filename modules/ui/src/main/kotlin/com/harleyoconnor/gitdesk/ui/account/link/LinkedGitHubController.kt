@@ -27,7 +27,7 @@ import javafx.scene.shape.Circle
 class LinkedGitHubController : ViewController<LinkedGitHubController.Context> {
 
     object Loader: ResourceViewLoader<Context, LinkedGitHubController, VBox>(
-        UIResource("/ui/layouts/account/tabs/link/LinkedGitHub.fxml")
+        UIResource("/ui/layouts/account/link/LinkedGitHub.fxml")
     )
 
     class Context(val parent: GitHubLinkTab, val account: GitHubAccount): ViewController.Context
