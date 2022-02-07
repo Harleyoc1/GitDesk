@@ -3,6 +3,8 @@ package com.harleyoconnor.gitdesk.ui.util
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
 import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
+import javafx.scene.control.Dialog
 
 fun createErrorDialogue(errorTitle: String, cause: Throwable): Alert {
     val alert = Alert(Alert.AlertType.ERROR)

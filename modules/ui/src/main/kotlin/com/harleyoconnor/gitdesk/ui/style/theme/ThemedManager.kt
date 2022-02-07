@@ -1,9 +1,11 @@
 package com.harleyoconnor.gitdesk.ui.style.theme
 
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.style.theme.ThemedManager.register
 import com.harleyoconnor.gitdesk.util.schedule
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import java.time.Duration
+import java.util.*
 
 /**
  * Handles managing [Themed] objects, by keeping them up to date with the current
@@ -17,8 +19,22 @@ object ThemedManager {
 
     private val themed: MutableSet<Themed> = mutableSetOf()
 
+    private var updater: Timer? = null
+
     init {
-        schedule(this::update, Duration.ofSeconds(1))
+        if (AppSettings.get().getOrLoad().appearance.theme == AppSettings.Appearance.ThemeSelection.AUTO) {
+            startTimer()
+        }
+    }
+
+    fun startTimer() {
+        updater?.cancel() // Cancel timer if there is one already running.
+        updater = schedule(this::update, Duration.ofSeconds(1))
+    }
+
+    fun forceTheme(theme: SystemManager.Theme) {
+        updater?.cancel()
+//        updateAll()
     }
 
     /**

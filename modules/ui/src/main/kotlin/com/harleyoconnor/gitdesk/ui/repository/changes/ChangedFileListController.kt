@@ -119,21 +119,21 @@ class ChangedFileListController : ViewController<ChangedFileListController.Conte
 
     fun refresh() = this.repository.gitRepository.getChangedFiles()
         .ifSuccessful {
-            refreshCells(it.result!!)
+            val cells = buildCells(it.result!!)
+            Platform.runLater {
+                refreshCells(cells)
+            }
         }
         .ifFailure(::logFailure)
         .begin()
 
-    private fun refreshCells(changedFiles: Array<Repository.ChangedFile>) {
-        Platform.runLater {
-            root.children.remove(1, root.children.size)
-            val cells = buildCells(changedFiles)
-            root.children.addAll(cells)
-            stageAllCheckbox.isDisable = cells.isEmpty()
-            changedFilesLabel.text =
-                TRANSLATIONS_BUNDLE.getString("ui.repository.tab.changes.changed_files", cells.size.toString())
-            updateStageAllCheckbox()
-        }
+    private fun refreshCells(cells: Array<out Node>) {
+        root.children.remove(1, root.children.size)
+        root.children.addAll(cells)
+        stageAllCheckbox.isDisable = cells.isEmpty()
+        changedFilesLabel.text =
+            TRANSLATIONS_BUNDLE.getString("ui.repository.tab.changes.changed_files", cells.size.toString())
+        updateStageAllCheckbox()
     }
 
     private fun buildCells(changedFiles: Array<Repository.ChangedFile>): Array<out Node> = changedFiles.stream()
