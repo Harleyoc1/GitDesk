@@ -17,6 +17,10 @@ interface ViewController<C : ViewController.Context> {
     /**
      * An object holding context required to set up this view. Effectively holds its parameters.
      */
-    interface Context
+    interface Context {
+        companion object {
+            val NONE = object : Context {}
+        }
+    }
 
 }

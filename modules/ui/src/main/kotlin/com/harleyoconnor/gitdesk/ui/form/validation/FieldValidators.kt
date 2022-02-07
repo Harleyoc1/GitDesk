@@ -20,7 +20,8 @@ object FieldValidators {
         "Regex" to { arguments -> constructRegexValidator(arguments[0], arguments[1]) },
         "Email" to { EMAIL },
         "UsernameAvailable" to { UsernameAvailableValidator },
-        "LocationFree" to { LocationFreeValidator }
+        "LocationFree" to { LocationFreeValidator },
+        "IsExecutable" to { IsExecutableValidator }
     )
 
     fun getValidator(id: String, arguments: Array<String>): FieldValidator? {

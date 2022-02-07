@@ -31,9 +31,15 @@ fun RadioButton.setOnSelected(action: () -> Unit) {
     }
 }
 
+fun CheckBox.setOnAction(action: (Boolean) -> Unit) {
+    this.selectedProperty().addListener { _, _, new ->
+        action(new)
+    }
+}
+
 fun CheckBox.setOnActions(selected: () -> Unit, deselected: () -> Unit) {
-    this.selectedProperty().addListener { _, _, newValue ->
-        if (newValue) {
+    this.selectedProperty().addListener { _, _, new ->
+        if (new) {
             selected()
         } else {
             deselected()

@@ -11,7 +11,7 @@ object FileAdapter {
 
     @ToJson
     fun toJson(file: File): String {
-        return file.absolutePath
+        return file.canonicalPath
     }
 
     @FromJson

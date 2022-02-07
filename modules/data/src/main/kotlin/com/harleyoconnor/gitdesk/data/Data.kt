@@ -36,7 +36,7 @@ object Data {
         Directory(getPath("Syntax Highlighting").toFile())
     )
 
-    private fun getPath(relativePath: String): Path {
+    fun getPath(relativePath: String): Path {
         return getAppDataPath() + (File.separatorChar + relativePath)
     }
 

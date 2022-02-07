@@ -20,7 +20,8 @@ module gitdesk.ui {
     exports com.harleyoconnor.gitdesk.ui.highlighting;
 
     opens com.harleyoconnor.gitdesk.ui.highlighting to kotlin.reflect;
-    opens com.harleyoconnor.gitdesk.ui.settings to kotlin.reflect;
+
+    opens com.harleyoconnor.gitdesk.ui.settings to kotlin.reflect, javafx.fxml;
 
     opens com.harleyoconnor.gitdesk.ui.node to javafx.fxml;
     opens com.harleyoconnor.gitdesk.ui.menubar to javafx.fxml;

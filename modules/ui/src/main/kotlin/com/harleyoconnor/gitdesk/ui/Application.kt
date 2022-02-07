@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.ui
 
 import com.harleyoconnor.gitdesk.data.Data
-import com.harleyoconnor.gitdesk.ui.account.AccountWindow
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
 import com.harleyoconnor.gitdesk.ui.settings.AppSettings
@@ -50,7 +49,6 @@ class Application : javafx.application.Application() {
 
         if (windowManager.noWindowsOpen()) {
             MenuWindow(primaryStage).open()
-            AccountWindow(Stage()).open() // TODO: Proper way of accessing account window.
         }
     }
 

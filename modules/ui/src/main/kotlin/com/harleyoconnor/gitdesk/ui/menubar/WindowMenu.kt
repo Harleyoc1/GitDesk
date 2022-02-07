@@ -1,7 +1,9 @@
 package com.harleyoconnor.gitdesk.ui.menubar
 
+import com.harleyoconnor.gitdesk.ui.Application
+import com.harleyoconnor.gitdesk.ui.account.AccountWindow
+import com.harleyoconnor.gitdesk.ui.settings.SettingsWindow
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.control.Menu
@@ -34,5 +36,18 @@ class WindowMenu : Menu() {
         stage.isIconified = true
     }
 
+    @FXML
+    private fun openSettingsWindow() {
+        val window = (Application.getInstance().windowManager.get("Settings") ?: SettingsWindow())
+        window.open()
+        window.focus() // Focus (bring to front) in case window was already open.
+    }
+
+    @FXML
+    private fun openAccountWindow() {
+        val window = (Application.getInstance().windowManager.get("Account") ?: AccountWindow())
+        window.open()
+        window.focus() // Focus (bring to front) in case window was already open.
+    }
 
 }

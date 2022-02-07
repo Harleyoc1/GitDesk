@@ -1,21 +1,20 @@
 package com.harleyoconnor.gitdesk.ui.node
 
-import com.harleyoconnor.gitdesk.util.Directory
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
-import javafx.stage.DirectoryChooser
+import javafx.stage.FileChooser
 import javafx.stage.Stage
 
 /**
  *
  * @author Harley O'Connor
  */
-class DirectoryField : ValidatedField<TextField>() {
+class FileField : ValidatedField<TextField>() {
 
     private lateinit var stage: Stage
 
     init {
-        load("/ui/nodes/DirectoryField.fxml", this)
+        load("/ui/nodes/FileField.fxml", this)
     }
 
     fun setStage(stage: Stage) {
@@ -24,9 +23,9 @@ class DirectoryField : ValidatedField<TextField>() {
 
     @FXML
     private fun openChooser() {
-        val directoryChooser = DirectoryChooser()
-        directoryChooser.showDialog(stage)?.let {
-            setText(Directory(it).path)
+        val fileChooser = FileChooser()
+        fileChooser.showOpenDialog(stage)?.let {
+            setText(it.canonicalPath)
         }
     }
 

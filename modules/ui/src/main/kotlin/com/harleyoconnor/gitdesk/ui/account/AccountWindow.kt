@@ -12,8 +12,8 @@ import javafx.stage.Stage
  *
  * @author Harley O'Connor
  */
-class AccountWindow(stage: Stage) :
-    AbstractWindow(stage, Region(), Application.getInstance().windowManager) {
+class AccountWindow :
+    AbstractWindow(Stage(), Region(), Application.getInstance().windowManager) {
 
     override val minWidth: Double get() = 500.0
     override val minHeight: Double get() = 400.0

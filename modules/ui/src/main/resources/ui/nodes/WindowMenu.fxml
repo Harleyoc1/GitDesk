@@ -3,4 +3,7 @@
 <?import javafx.scene.control.*?>
 <fx:root type="Menu" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" text="%ui.menu.window">
     <MenuItem text="%ui.menu.window.minimise" accelerator="Shortcut+M" onAction="#minimise"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="%ui.menu.window.settings" accelerator="Shortcut+Comma" onAction="#openSettingsWindow"/>
+    <MenuItem text="%ui.menu.window.account" accelerator="Shortcut+Alt+A" onAction="#openAccountWindow"/>
 </fx:root>

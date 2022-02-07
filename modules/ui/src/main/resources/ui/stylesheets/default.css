@@ -20,6 +20,10 @@
     -fx-border-radius: 4px;
 }
 
+.choice-box .label {
+    -fx-text-fill: -primary-text-color;
+}
+
 .text-area .content {
     -fx-background-color: -tertiary-background-color;
 }
@@ -130,9 +134,13 @@
     -fx-shape: "M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z";
 }
 
+.check-box:selected > .box {
+    -fx-background-color: -accent-color;
+}
+
 .check-box:selected > .box > .mark {
     -fx-background-insets: 1 0 -1 0;
-    -fx-background-color: -accent-color;
+    -fx-background-color: -accent-contrast-color;
 }
 
 .progress-bar > .bar {

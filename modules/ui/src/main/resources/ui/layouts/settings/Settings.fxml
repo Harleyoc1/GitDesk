@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.harleyoconnor.gitdesk.ui.node.SVGIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.harleyoconnor.gitdesk.ui.settings.SettingsController" fx:id="root">
+    <left>
+        <VBox styleClass="side-bar" prefWidth="150">
+            <padding>
+                <Insets left="3" right="3"/>
+            </padding>
+            <HBox maxWidth="Infinity" prefHeight="50" styleClass="cell, top" spacing="5" alignment="CENTER_LEFT">
+                <ImageView>
+                    <Image url="/ui/images/icon-borderless.png" preserveRatio="true" requestedWidth="32" smooth="true"/>
+                </ImageView>
+                <Label text="%ui.account.title" styleClass="text, title, bold"/>
+            </HBox>
+            <fx:define>
+                <ToggleGroup fx:id="navigationGroup"/>
+            </fx:define>
+            <RadioButton fx:id="appearanceTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/brush.svg" styleClass="icon"/>
+                        <Label text="%ui.settings.tab.appearance" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton fx:id="integrationsTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/windows.svg" styleClass="icon"/>
+                        <Label text="%ui.settings.tab.integrations" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+            <RadioButton fx:id="repositoriesTabButton" toggleGroup="$navigationGroup" styleClass="cell, nav-cell"
+                         maxWidth="Infinity">
+                <graphic>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <SVGIcon prefWidth="12" prefHeight="12" path="/ui/icons/directory.svg" styleClass="icon"/>
+                        <Label text="%ui.settings.tab.repositories" styleClass="text, heading-3"/>
+                    </HBox>
+                </graphic>
+            </RadioButton>
+        </VBox>
+    </left>
+</BorderPane>

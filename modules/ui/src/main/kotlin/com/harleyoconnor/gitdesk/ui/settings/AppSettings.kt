@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.ui.settings
 
+import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.data.MOSHI
 import com.harleyoconnor.gitdesk.data.settings.JsonSettings
 import com.harleyoconnor.gitdesk.data.settings.Settings
@@ -18,7 +19,7 @@ class AppSettings(
         private val settings = JsonSettings<AppSettings>(
             MOSHI.adapter(AppSettings::class.java),
             AppSettings(),
-            File(SystemManager.get().getAppDataLocation() + File.separatorChar + "Settings.json")
+            Data.getPath("Settings.json").toFile()
         )
 
         fun get(): Settings<AppSettings> = settings
@@ -31,7 +32,7 @@ class AppSettings(
     private val categories: Array<Settings.SettingsData> = arrayOf(appearance, integrations, repositories)
 
     class Appearance(
-        var theme: ThemeSelection = ThemeSelection.AUTO
+        var theme: ThemeSelection = ThemeSelection.SYSTEM
     ) : Settings.SettingsData {
 
         enum class ThemeSelection(
@@ -47,14 +48,16 @@ class AppSettings(
             }),
 
             /** Attempt to match system theme if possible. Otherwise fallback to light mode. */
-            @Json(name = "auto")
-            AUTO({
+            @Json(name = "system")
+            SYSTEM({
                 ThemedManager.startTimer()
             });
 
             fun apply() {
                 applier()
             }
+
+            override fun toString() = super.toString().lowercase().replaceFirstChar { it.uppercase() }
         }
 
         override fun onLoad() {
@@ -84,7 +87,7 @@ class AppSettings(
     }
 
     class Repositories(
-        @Json(name = "default_external_editor") var showHiddenFilesByDefault: Boolean = false
+        @Json(name = "show_hidden_files_by_default") var showHiddenFilesByDefault: Boolean = false
     ) : Settings.SettingsData {
 
         override fun onLoad() {

@@ -18,7 +18,7 @@
         <TextField fx:id="field"/>
         <Button onAction="#openChooser" styleClass="icon-button" StackPane.alignment="CENTER_RIGHT">
             <graphic>
-                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/directory.svg" styleClass="icon"/>
+                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/file.svg" styleClass="icon"/>
             </graphic>
         </Button>
     </StackPane>

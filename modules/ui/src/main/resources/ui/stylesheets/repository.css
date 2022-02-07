@@ -41,15 +41,17 @@
     -fx-background-color: -accent-contrast-color;
 }
 
+/* Check Box */
+
 .stage-check-box {
     -fx-padding: 0 5px 0 0;
 }
 
-.stage-check-box:selected > .box {
+.check-box:selected > .box {
     -fx-background-color: -accent-color;
 }
 
-.stage-check-box:selected > .box > .mark {
+.check-box:selected > .box > .mark {
     -fx-background-color: -accent-contrast-color;
 }
 
