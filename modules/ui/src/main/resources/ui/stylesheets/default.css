@@ -236,7 +236,7 @@
 }
 
 .mono {
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Menlo", "Courier New";
 }
 
 .label.error {

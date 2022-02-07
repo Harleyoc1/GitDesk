@@ -120,7 +120,7 @@
 }
 
 .code-area .text {
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Menlo", "Courier New";
     -fx-font-style: normal;
     -fx-fill: -primary-text-color;
 }
@@ -259,5 +259,4 @@
 .terminal-input {
     -fx-text-fill: -primary-text-color;
     -fx-font-size: 11px;
-    -fx-font-family: "Courier New";
 }

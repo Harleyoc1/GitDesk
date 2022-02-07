@@ -7,6 +7,6 @@
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.TerminalLineController" fx:id="root" prefHeight="20"
       alignment="CENTER_LEFT" maxWidth="Infinity">
     <Label fx:id="outputLabel" styleClass="text, body, mono"/>
-    <TextField fx:id="inputField" onKeyPressed="#keyPressed" maxHeight="20" styleClass="terminal-input"
+    <TextField fx:id="inputField" onKeyPressed="#keyPressed" maxHeight="20" styleClass="terminal-input, mono"
                HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
 </HBox>
