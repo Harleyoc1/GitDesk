@@ -9,7 +9,7 @@ import java.io.File
  *
  * @author Harley O'Connor
  */
-class WindowsManager : AbstractSystemManager() {
+class WindowsManager : SystemManager {
 
     companion object {
         const val NAME = "Windows 10"

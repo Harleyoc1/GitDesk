@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  *
  * @author Harley O'Connor
  */
-class MacOSManager : AbstractSystemManager() {
+class MacOSManager : SystemManager {
 
     companion object {
         const val NAME = "Mac OS X"
@@ -32,39 +32,25 @@ class MacOSManager : AbstractSystemManager() {
     }
 
     /**
-     * Updates [lastTheme] and returns the given [Theme] for
-     * in-line calls.
-     *
-     * @param currentTheme The current [Theme].
-     * @return The `currentTheme` given.
-     */
-    private fun updateLastTheme(currentTheme: Theme): Theme {
-        return currentTheme.also { this.setLastTheme(it) }
-    }
-
-    /**
      * Gets the current [Theme] for the operating system.
      *
      * Implementations should set a `lastTheme` in this method, which can
      * be queried from [getLastTheme].
      *
-     * @return The current [Theme], or [Theme.LIGHT] as a default if
-     * it could not be found.
+     * @return the current [Theme], or `null` if it could not be found
      */
-    override fun getTheme(): Theme {
+    override fun getTheme(): Theme? {
         return try {
             if (isDarkMode()) Theme.DARK
             else Theme.LIGHT
         } catch (e: IOException) {
-            // If there was an error for whatever reason, log it and default to whatever the last detected theme was.
             this.logException(e)
-            this.getLastTheme()
+            null
         } catch (e: InterruptedException) {
             this.logException(e)
-            this.getLastTheme()
+            null
         } catch (e: IllegalThreadStateException) {
-            // The operation timed out, so just default to whatever the last detected theme was.
-            this.getLastTheme()
+            null
         }
     }
 

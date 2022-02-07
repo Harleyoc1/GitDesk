@@ -28,7 +28,7 @@ data class ThemedStylesheet(
 
     init {
         ThemedManager.register(this)
-        this.path = this.pathForTheme(SystemManager.get().getLastTheme())
+        this.path = this.pathForTheme(ThemedManager.getLastTheme())
     }
 
     override fun update(previous: SystemManager.Theme, new: SystemManager.Theme) {

@@ -1,11 +1,10 @@
 package com.harleyoconnor.gitdesk.ui.style.theme
 
-import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.style.theme.ThemedManager.register
 import com.harleyoconnor.gitdesk.util.schedule
 import com.harleyoconnor.gitdesk.util.system.SystemManager
 import java.time.Duration
-import java.util.*
+import java.util.Timer
 
 /**
  * Handles managing [Themed] objects, by keeping them up to date with the current
@@ -20,12 +19,9 @@ object ThemedManager {
     private val themed: MutableSet<Themed> = mutableSetOf()
 
     private var updater: Timer? = null
+    private var lastTheme: SystemManager.Theme = SystemManager.Theme.LIGHT
 
-    init {
-        if (AppSettings.get().getOrLoad().appearance.theme == AppSettings.Appearance.ThemeSelection.AUTO) {
-            startTimer()
-        }
-    }
+    fun getLastTheme(): SystemManager.Theme = lastTheme
 
     fun startTimer() {
         updater?.cancel() // Cancel timer if there is one already running.
@@ -34,7 +30,10 @@ object ThemedManager {
 
     fun forceTheme(theme: SystemManager.Theme) {
         updater?.cancel()
-//        updateAll()
+        if (lastTheme != theme) {
+            updateAll(lastTheme, theme)
+            lastTheme = theme
+        }
     }
 
     /**
@@ -50,15 +49,14 @@ object ThemedManager {
     }
 
     /**
-     * Updates any registered [themed] by calling [Themed.update] if the
-     * [SystemManager.Theme] has changed since the last query.
+     * Updates any registered [themed] objects by calling [Themed.update] if the theme has changed.
      */
     private fun update() {
-        val lastTheme = SystemManager.get().getLastTheme()
-        val newTheme = SystemManager.get().getTheme()
+        val newTheme = SystemManager.get().getTheme() ?: lastTheme
 
         if (lastTheme != newTheme) {
             updateAll(lastTheme, newTheme)
+            lastTheme = newTheme
         }
     }
 

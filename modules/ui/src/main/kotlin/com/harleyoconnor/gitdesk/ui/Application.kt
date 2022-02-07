@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.data.Data
 import com.harleyoconnor.gitdesk.ui.account.AccountWindow
 import com.harleyoconnor.gitdesk.ui.menu.MenuWindow
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.window.SetWindowManager
 import javafx.application.Platform
 import javafx.stage.Stage
@@ -39,6 +40,7 @@ class Application : javafx.application.Application() {
 
     init {
         INSTANCE = this
+        AppSettings.load()
     }
 
     override fun start(primaryStage: Stage) {

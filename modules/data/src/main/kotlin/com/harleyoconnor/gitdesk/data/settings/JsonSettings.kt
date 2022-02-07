@@ -1,6 +1,8 @@
 package com.harleyoconnor.gitdesk.data.settings
 
+import com.harleyoconnor.gitdesk.util.create
 import com.squareup.moshi.JsonAdapter
+import java.io.EOFException
 import java.io.File
 
 class JsonSettings<T : Settings.SettingsData>(
@@ -10,17 +12,26 @@ class JsonSettings<T : Settings.SettingsData>(
 ) : Settings<T> {
 
     override fun getOrLoad(): T {
-        return load() ?: defaultData
+        return load() ?: defaultData.also {
+            it.onLoad()
+        }
     }
 
     private fun load(): T? {
-        return dataAdapter.fromJson(
-            dataFile.readText()
-        )
+        return try {
+            dataAdapter.fromJson(
+                dataFile.create().readText()
+            ).also {
+                it?.onLoad()
+            }
+        } catch (e: EOFException) {
+            null
+        }
     }
 
     override fun save(data: T) {
-        dataFile.writeText(
+        data.onSave()
+        dataFile.create().writeText(
             dataAdapter.toJson(data)
         )
     }

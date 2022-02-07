@@ -53,20 +53,9 @@ interface SystemManager {
     /**
      * Gets the current [Theme] for the operating system.
      *
-     * Implementations should set a `lastTheme` in this method, which can
-     * be queried from [getLastTheme].
-     *
-     * @return The current [Theme], or [Theme.LIGHT] as a default if
-     *         it could not be found.
+     * @return the current [Theme], or `null` if it could not be found
      */
-    fun getTheme(): Theme
-
-    /**
-     * Gets the [Theme] last recorded from a [getTheme] query.
-     *
-     * @return The last recorded [Theme].
-     */
-    fun getLastTheme(): Theme
+    fun getTheme(): Theme?
 
     /**
      * Gets the location at which application-specific data should be stored. This

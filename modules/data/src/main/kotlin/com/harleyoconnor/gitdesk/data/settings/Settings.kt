@@ -7,7 +7,8 @@ interface Settings<T> {
     fun save(data: T)
 
     interface SettingsData {
-        fun onSaved()
+        fun onLoad()
+        fun onSave()
     }
 
 }

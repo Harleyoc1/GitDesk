@@ -35,13 +35,6 @@ class UnsupportedManager : SystemManager {
     }
 
     /**
-     * @return [Theme.LIGHT]
-     */
-    override fun getLastTheme(): Theme {
-        return Theme.LIGHT
-    }
-
-    /**
      * @return The user's home directory.
      */
     override fun getAppDataLocation() = getUserHome() + separatorChar
