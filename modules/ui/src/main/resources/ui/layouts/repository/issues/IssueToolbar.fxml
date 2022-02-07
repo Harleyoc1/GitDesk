@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Region?>
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssueToolbarController" fx:id="root"
-      minHeight="25" prefHeight="25" styleClass="toolbar" alignment="CENTER_LEFT">
+      minHeight="25" prefHeight="25" styleClass="toolbar" alignment="CENTER_LEFT" spacing="10">
     <Button onAction="#refresh" styleClass="icon-button, no-padding">
         <graphic>
             <SVGIcon prefWidth="14" prefHeight="14" path="/ui/icons/refresh.svg" styleClass="icon"/>

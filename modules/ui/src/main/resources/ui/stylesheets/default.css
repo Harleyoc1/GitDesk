@@ -235,9 +235,9 @@
     -fx-font-weight: bold !important;
 }
 
-/*.mono {*/
-/*    -fx-font-family: "ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace";*/
-/*}*/
+.mono {
+    -fx-font-family: "Courier New";
+}
 
 .label.error {
     -fx-text-fill: -error-color;

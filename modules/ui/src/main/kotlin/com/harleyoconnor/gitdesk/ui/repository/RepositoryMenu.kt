@@ -50,6 +50,10 @@ class RepositoryMenu : Menu() {
     @FXML
     private fun pull(event: ActionEvent) {
         window.repository.gitRepository.pull()
+            .ifSuccessful {
+                // Pull will change files, so we refresh the view.
+                window.refreshView()
+            }
             .ifFailure(::logFailure)
             .begin()
     }
