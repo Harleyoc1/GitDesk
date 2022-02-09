@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.checklists.ChecklistItemCellController" fx:id="root"
+      alignment="CENTER_LEFT" styleClass="cell, issue-cell" spacing="8" onMousePressed="#select">
+    <fx:define>
+        <ContextMenu fx:id="contextMenu">
+            <items>
+                <MenuItem text="%ui.button.open" onAction="#open"/>
+            </items>
+        </ContextMenu>
+    </fx:define>
+    <CheckBox fx:id="completedCheckbox"/>
+    <VBox>
+        <Label fx:id="titleLabel" styleClass="text, heading-2">
+            <tooltip>
+                <Tooltip/>
+            </tooltip>
+        </Label>
+        <Label fx:id="otherInfoLabel" styleClass="body, secondary-text"/>
+    </VBox>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Circle fx:id="assigneeAvatar" styleClass="bordered" radius="10"/>
+</HBox>

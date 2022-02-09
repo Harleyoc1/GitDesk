@@ -1,17 +1,16 @@
 package com.harleyoconnor.gitdesk.data.account
 
 import com.harleyoconnor.gitdesk.data.MOSHI
+import com.harleyoconnor.gitdesk.data.util.startBuildingUri
 import com.harleyoconnor.gitdesk.util.network.CLIENT
 import com.harleyoconnor.gitdesk.util.network.HttpHeader
 import com.harleyoconnor.gitdesk.util.network.Response
-import com.harleyoconnor.gitdesk.util.network.URIBuilder
 import com.harleyoconnor.gitdesk.util.network.toHttpFormData
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.concurrent.CompletableFuture
-import java.util.stream.Collectors
 
 fun isUsernameAvailableQuery(username: String): CompletableFuture<Response<Boolean>> {
     val request = createIsUsernameAvailableQueryRequest(username)
@@ -258,10 +257,4 @@ private fun createUnlinkGitHubRequest(session: Session): HttpRequest {
         )
         .header(HttpHeader.SESSION_KEY, session.key)
         .build()
-}
-
-private fun startBuildingUri(): URIBuilder {
-    return URIBuilder()
-        .https()
-        .append("harleyoconnor.com/gitdesk/")
 }

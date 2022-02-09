@@ -124,7 +124,7 @@ class RepositoryWindow(
         rootView.controller.promptCommit()
     }
 
-    fun getCurrentRemote(): RemoteContext {
+    fun getCurrentRemote(): RemoteContext? {
         return rootView.controller.remoteContext
     }
 

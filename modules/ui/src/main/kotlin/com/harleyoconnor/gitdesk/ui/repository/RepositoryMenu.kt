@@ -1,6 +1,5 @@
 package com.harleyoconnor.gitdesk.ui.repository
 
-import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.util.process.logFailure

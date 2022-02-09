@@ -56,6 +56,7 @@ class Session(
                 )
             }
         File(FILE_PATH).delete()
+        SESSION = null
     }
 
     fun getAccount(): Account? {

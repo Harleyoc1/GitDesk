@@ -51,7 +51,6 @@ class CommitController : ViewController<CommitController.Context> {
     @FXML
     private fun commitAndPush(event: ActionEvent) {
         commit(event)
-        // TODO: Pushing
     }
 
     @FXML

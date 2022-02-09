@@ -47,9 +47,6 @@ class PullRequestViewController : AbstractIssueViewController<PullRequest, PullR
     }
 
     @FXML
-    private lateinit var commentButtonsBox: HBox
-
-    @FXML
     private lateinit var mergeButton: Button
 
     override fun setup(context: Context) {

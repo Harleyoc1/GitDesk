@@ -49,6 +49,13 @@ class URIBuilder {
         return this.append("$key=$value")
     }
 
+    fun parameters(parameters: Map<String, String>): URIBuilder {
+        parameters.forEach { (key, value) ->
+            parameter(key, value)
+        }
+        return this
+    }
+
     fun build(): URI {
         return URI.create(this.uriStr.toString())
     }

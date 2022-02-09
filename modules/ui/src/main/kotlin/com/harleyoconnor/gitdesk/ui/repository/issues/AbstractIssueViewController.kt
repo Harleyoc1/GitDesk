@@ -114,6 +114,9 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
     private lateinit var commentField: TextArea
 
     @FXML
+    protected lateinit var commentButtonsBox: HBox
+
+    @FXML
     private lateinit var commentAndToggleStateButton: Button
 
     @FXML
@@ -167,7 +170,7 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         loadSubHeading()
         loadLabels()
         loadTimeline()
-        loadCommentBox()
+        loadCommentCompositionBox()
         updateForEmptyCommentField()
     }
 
@@ -342,7 +345,11 @@ abstract class AbstractIssueViewController<I : Issue, C : AbstractIssueViewContr
         return nodes
     }
 
-    private fun loadCommentBox() {
+    private fun loadCommentCompositionBox() {
+        // User must be a collaborator to toggle the state.
+        if (!remoteContext.loggedInUserIsCollaborator) {
+            commentButtonsBox.children.remove(commentAndToggleStateButton)
+        }
         // If user not logged in and linked to platform or issue locked, do not show comment box.
         if (remoteContext.loggedInUser == null || issue.locked) {
             root.children.remove(commentBox)

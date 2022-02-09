@@ -11,14 +11,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.repository.issues.IssuesListController" spacing="2">
+      fx:controller="com.harleyoconnor.gitdesk.ui.repository.checklists.ChecklistItemListController" spacing="2">
     <StackPane minHeight="35" prefHeight="35" maxWidth="Infinity">
         <VBox.margin>
             <Insets top="10" left="8" bottom="10" right="8"/>
         </VBox.margin>
-        <TextField fx:id="searchBar" promptText="%ui.search.prompt" minHeight="35" maxWidth="Infinity">
-            is:open
-        </TextField>
+        <TextField fx:id="searchBar" promptText="%ui.search.prompt" minHeight="35" maxWidth="Infinity"/>
         <HBox fx:id="searchOptionsBox" spacing="8" StackPane.alignment="CENTER_RIGHT" alignment="CENTER_RIGHT"
               maxWidth="50">
             <StackPane.margin>

@@ -1,5 +1,6 @@
 package com.harleyoconnor.gitdesk.util.network
 
+import com.harleyoconnor.gitdesk.util.stream
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -35,10 +36,18 @@ fun <T> HttpResponse<T>.orElseThrow(messageSupplier: () -> String): T {
     } else throw HttpRequestException(messageSupplier(), this.statusCode(), this.body())
 }
 
-fun <K, V> Map<K, V>.toHttpFormData(): String {
+fun Map<out Any?, Any?>.toHttpFormData(): String {
     return this.entries.stream()
         .map { "${it.key}=${it.value}" }
         .collect(Collectors.joining("&"))
+}
+
+fun httpFormData(vararg maps: Map<out Any?, Any?>): HttpRequest.BodyPublisher {
+    return HttpRequest.BodyPublishers.ofString(
+        maps.stream()
+            .map { it.toHttpFormData() }
+            .collect(Collectors.joining("&"))
+    )
 }
 
 fun sendRequest(uri: URI): HttpResponse<Void> {

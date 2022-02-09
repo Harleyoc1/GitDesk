@@ -36,10 +36,17 @@ fun <T> mergeSort(
     return ComparatorArrayMerger(split.first, split.second, comparator).merge()
 }
 
+/**
+ * A class that handles merging two arrays together, in some particular order.
+ */
 private interface ArrayMerger<T> {
     fun merge(): Array<T>
 }
 
+/**
+ * An [ArrayMerger] that uses the specified [comparator] to determine the order by which to merge elements in the
+ * [merge] array.
+ */
 private class ComparatorArrayMerger<T>(
     first: Array<T>,
     private val second: Array<T>,

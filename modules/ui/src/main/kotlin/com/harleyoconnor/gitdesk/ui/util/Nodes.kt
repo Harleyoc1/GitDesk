@@ -23,6 +23,10 @@ fun Node.disableBottomClass() {
     this.pseudoClassStateChanged(BOTTOM_PSEUDO_CLASS, false)
 }
 
+fun Node.flip() {
+    rotate = (rotate + 180) % 360
+}
+
 fun RadioButton.setOnSelected(action: () -> Unit) {
     this.selectedProperty().addListener { _, _, newValue ->
         if (newValue) {

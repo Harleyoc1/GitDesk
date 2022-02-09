@@ -9,6 +9,7 @@ import com.harleyoconnor.gitdesk.ui.menubar.FileMenu
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.menubar.WindowMenu
 import com.harleyoconnor.gitdesk.ui.repository.changes.ChangesTab
+import com.harleyoconnor.gitdesk.ui.repository.checklists.ChecklistsTabController
 import com.harleyoconnor.gitdesk.ui.repository.editor.EditorTabController
 import com.harleyoconnor.gitdesk.ui.repository.issues.IssuesTabController
 import com.harleyoconnor.gitdesk.ui.repository.pulls.PullRequestsTabController
@@ -83,10 +84,12 @@ class RepositoryController : ViewController<RepositoryController.Context> {
     private lateinit var centreSplitPane: SplitPane
 
     val remoteContext by lazy {
-        val remote = repository.gitRepository.getCurrentBranch().getUpstream()!!.remote.remote.withFullData()!!
+        val remote = repository.gitRepository.getCurrentBranch().getUpstream()?.remote?.remote?.withFullData()
+            ?: return@lazy null
         RemoteContext(
             repository,
             remote,
+            Session.getOrLoad()?.getAccount(),
             Session.getOrLoad()?.getUserFor(remote.platform)
         )
     }
@@ -110,7 +113,7 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     private val issuesTabView by lazy {
         IssuesTabController.Loader.load(
-            IssuesTabController.Context(parent.stage, repository, remoteContext)
+            IssuesTabController.Context(parent.stage, remoteContext!!)
         )
     }
 
@@ -120,12 +123,22 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     private val pullRequestsTabView by lazy {
         PullRequestsTabController.Loader.load(
-            PullRequestsTabController.Context(parent.stage, repository, remoteContext)
+            PullRequestsTabController.Context(parent.stage, repository, remoteContext!!)
         )
     }
 
     private val pullRequestsTab by lazy {
         Tab(pullRequestsTabView.root, this::openTab)
+    }
+
+    private val checklistsTabView by lazy {
+        ChecklistsTabController.Loader.load(
+            ChecklistsTabController.Context(remoteContext!!)
+        )
+    }
+
+    private val checklistsTab by lazy {
+        Tab(checklistsTabView.root, this::openTab)
     }
 
     private val terminalView by lazy {
@@ -154,9 +167,12 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         pullRequestsTabButton.setOnSelected {
             pullRequestsTab.open()
         }
+        checklistsTabButton.setOnSelected {
+            checklistsTab.open()
+        }
         editorTabButton.fire()
 
-        removeIssuesTabIfDisabled()
+        disableTabsIfNotNeeded()
     }
 
     private fun openTab(node: Node) {
@@ -167,14 +183,14 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         }
     }
 
-    private fun removeIssuesTabIfDisabled() {
-        if (!remoteContext.remote.hasIssues) {
-            removeIssuesTabButton()
+    private fun disableTabsIfNotNeeded() {
+        if (remoteContext == null) {
+            tabs.children.removeAll(issuesTabButton, pullRequestsTabButton, checklistsTabButton)
+        } else {
+            if (!remoteContext!!.remote.hasIssues) {
+                tabs.children.remove(issuesTabButton)
+            }
         }
-    }
-
-    private fun removeIssuesTabButton() {
-        tabs.children.remove(issuesTabButton)
     }
 
     @FXML

@@ -8,11 +8,12 @@ import java.util.regex.Pattern
  * @author Harley O'Connor
  */
 enum class Platform(
+    val serverName: String?,
     val networking: PlatformNetworking?,
     urlRegex: String
 ) {
-    GITHUB(GitHubNetworking, "http(s?)://(.*@)?(www\\.)?github\\.com/?.*"),
-    WEB(null, "http(s?)://(.*@)?(www\\.)?[a-z0-9\\-\\.]+\\.[a-z]+/?.*");
+    GITHUB("GitHub", GitHubNetworking, "http(s?)://(.*@)?(www\\.)?github\\.com/?.*"),
+    WEB(null, null, "http(s?)://(.*@)?(www\\.)?[a-z0-9\\-\\.]+\\.[a-z]+/?.*");
 
     private val urlRegex: Pattern = Pattern.compile(urlRegex)
 

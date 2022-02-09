@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.node.SelectionCellList
 import com.harleyoconnor.gitdesk.ui.repository.RemoteContext
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
+import com.harleyoconnor.gitdesk.ui.util.flip
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
@@ -118,11 +119,7 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
     @FXML
     private fun toggleSortOrder(event: ActionEvent) {
         sortOrder = sortOrder.other()
-        flipSortOrderIcon()
-    }
-
-    private fun flipSortOrderIcon() {
-        sortOrderIcon.rotate = (sortOrderIcon.rotate + 180) % 360
+        sortOrderIcon.flip()
     }
 
     /**

@@ -6,10 +6,12 @@ import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.translation.getString
+import com.harleyoconnor.gitdesk.ui.util.formatByDate
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.control.CheckBox
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
 import javafx.scene.image.Image
@@ -25,10 +27,6 @@ import java.text.SimpleDateFormat
  * @author Harley O'Connor
  */
 class IssueCellController : ViewController<IssueCellController.Context> {
-
-    companion object {
-        private val DATE_FORMAT = SimpleDateFormat("dd MMM yyyy")
-    }
 
     object Loader : ResourceViewLoader<Context, IssueCellController, HBox>(
         UIResource("/ui/layouts/repository/issues/IssueCell.fxml")
@@ -83,9 +81,9 @@ class IssueCellController : ViewController<IssueCellController.Context> {
         otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
             "cell.issue.closed.info",
             issue.number.toString(),
-            DATE_FORMAT.format(issue.createdAt),
+            issue.createdAt.formatByDate(),
             issue.author.username,
-            DATE_FORMAT.format(issue.closedAt)
+            issue.closedAt!!.formatByDate()
         )
     }
 
@@ -93,7 +91,7 @@ class IssueCellController : ViewController<IssueCellController.Context> {
         otherInfoLabel.text = TRANSLATIONS_BUNDLE.getString(
             "cell.issue.open.info",
             issue.number.toString(),
-            DATE_FORMAT.format(issue.createdAt),
+            issue.createdAt.formatByDate(),
             issue.author.username
         )
     }

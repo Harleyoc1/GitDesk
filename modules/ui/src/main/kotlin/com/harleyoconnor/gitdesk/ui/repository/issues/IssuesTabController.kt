@@ -25,11 +25,9 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
         UIResource("/ui/layouts/repository/issues/IssuesTab.fxml")
     )
 
-    class Context(val stage: Stage, val repository: LocalRepository, val remoteContext: RemoteContext) :
-        ViewController.Context
+    class Context(val stage: Stage, val remoteContext: RemoteContext) : ViewController.Context
 
     private lateinit var stage: Stage
-    private lateinit var repository: LocalRepository
     private lateinit var remoteContext: RemoteContext
 
     @FXML
@@ -49,9 +47,8 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
 
     override fun setup(context: Context) {
         stage = context.stage
-        repository = context.repository
         remoteContext = context.remoteContext
-        titleLabel.text = repository.id
+        titleLabel.text = context.remoteContext.remote.name.getFullName()
         sideBar.children.add(
             loadIssuesList()
         )
@@ -72,7 +69,7 @@ class IssuesTabController : ViewController<IssuesTabController.Context> {
             ?.let { setShownIssue(it) }
     }
 
-    fun setShownIssue(issue: Issue) {
+    private fun setShownIssue(issue: Issue) {
         root.items[1] = IssueViewController.Loader.load(
             IssueViewController.Context(remoteContext, issue, this::setShownIssue)
         ).root
