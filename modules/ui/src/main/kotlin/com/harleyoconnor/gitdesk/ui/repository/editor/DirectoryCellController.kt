@@ -45,6 +45,7 @@ class DirectoryCellController : FileCellController<DirectoryCellController.Conte
         this.insetIndex = context.insetIndex
         this.cells = context.parent.buildCells(directory, insetIndex + 1)
         super.setup(context)
+        removeOpenInExternalEditorMenuItem()
     }
 
     override fun getPadding(insetIndex: Int): Insets =

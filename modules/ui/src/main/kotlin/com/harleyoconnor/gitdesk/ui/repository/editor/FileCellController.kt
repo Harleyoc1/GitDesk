@@ -2,6 +2,7 @@ package com.harleyoconnor.gitdesk.ui.repository.editor
 
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.style.OPEN_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.style.SELECTED_PSEUDO_CLASS
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
@@ -19,6 +20,8 @@ import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Label
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuItem
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
@@ -49,6 +52,12 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
     private lateinit var contextMenu: ContextMenu
 
     @FXML
+    private lateinit var openInMenu: Menu
+
+    @FXML
+    private lateinit var openInExternalEditorMenuItem: MenuItem
+
+    @FXML
     private lateinit var icon: SVGIcon
 
     @FXML
@@ -68,13 +77,28 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
     @FXML
     private fun select(event: MouseEvent) {
         if (event.button == MouseButton.SECONDARY || event.isControlDown) {
-            contextMenu.show(cell, event.screenX, event.screenY)
+            openContextMenu(event)
         } else if (cell.pseudoClassStates.contains(SELECTED_PSEUDO_CLASS)) {
             open(event)
             return
         }
         parent.selected = this
         cell.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true)
+    }
+
+    private fun openContextMenu(event: MouseEvent) {
+        setupOpenInExternalEditorMenuItem()
+        contextMenu.show(cell, event.screenX, event.screenY)
+    }
+
+    private fun setupOpenInExternalEditorMenuItem() {
+        getExternalEditor()?.let { appFile ->
+            openInExternalEditorMenuItem.text = appFile.nameWithoutExtension
+        } ?: run { removeOpenInExternalEditorMenuItem() }
+    }
+
+    protected fun removeOpenInExternalEditorMenuItem() {
+        openInMenu.items.remove(openInExternalEditorMenuItem)
     }
 
     fun deselect() {
@@ -126,5 +150,14 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
     private fun openInFileBrowser(event: ActionEvent) {
         SystemManager.get().openInFileBrowser(file).begin()
     }
+
+    @FXML
+    private fun openInExternalEditor(event: ActionEvent) {
+        getExternalEditor()?.let { appFile ->
+            SystemManager.get().openInApp(file, appFile).begin()
+        }
+    }
+
+    private fun getExternalEditor() = AppSettings.get().getOrLoad().integrations.defaultExternalEditor
 
 }
