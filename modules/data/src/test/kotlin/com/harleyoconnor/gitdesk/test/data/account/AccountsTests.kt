@@ -36,10 +36,10 @@ class AccountsTests {
     fun `test getting user details with invalid session key fails`() {
         // Actual session keys are 128 chars long, so this should always fail.
         val response = getAccountRequest(Session("cvfdfdcc")).get(30, TimeUnit.SECONDS)
-        assert(response.wasSuccess() || response.getCode() == 400) {
+        assert(response.wasSuccess() || response.getCode() == 401) {
             "Server error executing request. HTTP Response Code: " + response.getCode().toString()
         }
-        Assertions.assertTrue(response.getCode() == 400)
+        Assertions.assertTrue(response.getCode() == 401)
     }
 
     @EnabledIf("com.harleyoconnor.gitdesk.test.data.account.AccountsTests#isSessionKeySet", disabledReason = "No session key property set.")
