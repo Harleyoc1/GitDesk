@@ -76,7 +76,7 @@ class GitHubRemoteRepository(
 
     override fun getIssues(
         query: String,
-        sort: RemoteRepository.Sort,
+        sort: Issue.Sort,
         sortOrder: RemoteRepository.SortOrder,
         page: Int,
         executor: Executor
@@ -98,7 +98,7 @@ class GitHubRemoteRepository(
 
     override fun getPullRequests(
         query: String,
-        sort: RemoteRepository.Sort,
+        sort: Issue.Sort,
         sortOrder: RemoteRepository.SortOrder,
         page: Int,
         executor: Executor

@@ -1,7 +1,6 @@
 package com.harleyoconnor.gitdesk.data.remote
 
 import com.harleyoconnor.gitdesk.git.repository.Remote
-import java.net.URI
 import java.net.URL
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -52,7 +51,7 @@ interface RemoteRepository : Remote {
 
     fun getIssues(
         query: String,
-        sort: Sort,
+        sort: Issue.Sort,
         sortOrder: SortOrder,
         page: Int,
         executor: Executor
@@ -62,7 +61,7 @@ interface RemoteRepository : Remote {
 
     fun getPullRequests(
         query: String,
-        sort: Sort,
+        sort: Issue.Sort,
         sortOrder: SortOrder,
         page: Int,
         executor: Executor
@@ -79,10 +78,9 @@ interface RemoteRepository : Remote {
         val gitHubId: String
     ) {
         BEST_MATCH("best match"),
-        COMMENTS("comments"),
-        REACTIONS("reactions"),
-        INTERACTIONS("interactions"),
-        CREATED("created"),
+        STARS("stars"),
+        FORKS("forks"),
+        HELP_WANTED_ISSUES("help-wanted-issues"),
         UPDATED("updated")
     }
 

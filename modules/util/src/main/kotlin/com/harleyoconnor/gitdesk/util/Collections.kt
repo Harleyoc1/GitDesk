@@ -5,3 +5,9 @@ fun <E> MutableCollection<E>.addIfAbsent(element: E) {
         this.add(element)
     }
 }
+
+fun <E> MutableList<E>.addIfAbsent(index: Int, element: E) {
+    if (!this.contains(element)) {
+        this.add(index, element)
+    }
+}

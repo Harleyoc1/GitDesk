@@ -69,4 +69,15 @@ interface Issue {
         }
     }
 
+    enum class Sort(
+        val gitHubId: String
+    ) {
+        BEST_MATCH("best match"),
+        COMMENTS("comments"),
+        REACTIONS("reactions"),
+        INTERACTIONS("interactions"),
+        CREATED("created"),
+        UPDATED("updated")
+    }
+
 }

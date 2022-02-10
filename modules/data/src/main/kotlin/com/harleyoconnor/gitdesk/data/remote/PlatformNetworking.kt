@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.data.remote
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import java.net.URL
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * Gets platform-specific, Git-related data from remote APIs.
@@ -18,6 +19,14 @@ interface PlatformNetworking {
     fun getRemoteRepository(url: URL): RemoteRepository?
 
     fun getRemoteRepositoryReference(url: URL): RemoteRepositoryReference?
+
+    fun getRepositories(
+        query: String,
+        sort: RemoteRepository.Sort,
+        sortOrder: RemoteRepository.SortOrder,
+        page: Int,
+        executor: Executor
+    ): CompletableFuture<Array<out RemoteRepository>>
 
     fun isCollaborator(username: String, repositoryName: RemoteRepository.Name): Boolean?
 

@@ -13,6 +13,7 @@ import com.harleyoconnor.gitdesk.data.remote.PullRequest
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepositoryReference
 import com.harleyoconnor.gitdesk.data.remote.User
+import com.harleyoconnor.gitdesk.data.remote.github.search.RepositorySearch
 import com.harleyoconnor.gitdesk.data.remote.github.timeline.GitHubTimelineAdapter
 import com.harleyoconnor.gitdesk.data.remote.timeline.Timeline
 import com.harleyoconnor.gitdesk.data.serialisation.adapter.toJson
@@ -36,6 +37,7 @@ import java.net.URL
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import java.util.regex.Pattern
 
 private const val ACCEPT_HEADER = "application/vnd.github.v3+json"
@@ -99,6 +101,23 @@ object GitHubNetworking : PlatformNetworking {
         val username = url.substring(url.indexOf(3, '/') + 1, indexOfFourthSlash)
         val repository = url.substring(indexOfFourthSlash + 1)
         return RemoteRepository.Name(username, repository)
+    }
+
+    override fun getRepositories(
+        query: String,
+        sort: RemoteRepository.Sort,
+        sortOrder: RemoteRepository.SortOrder,
+        page: Int,
+        executor: Executor
+    ): CompletableFuture<Array<out RemoteRepository>> = RepositorySearch(
+        query,
+        sort.gitHubId,
+        sortOrder.gitHubId,
+        50,
+        page,
+        executor
+    ).run().thenApply {
+        it.items
     }
 
     override fun isCollaborator(username: String, repositoryName: RemoteRepository.Name): Boolean? {

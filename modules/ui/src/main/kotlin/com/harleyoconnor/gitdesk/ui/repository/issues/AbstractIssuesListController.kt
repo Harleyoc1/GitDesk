@@ -41,7 +41,7 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
 
     protected var searchQuery = ""
 
-    protected var sort: RemoteRepository.Sort = RemoteRepository.Sort.BEST_MATCH
+    protected var sort: Issue.Sort = Issue.Sort.BEST_MATCH
         set(value) {
             field = value; updateSearchResults()
         }
@@ -67,10 +67,10 @@ abstract class AbstractIssuesListController<I : Issue, C : AbstractIssuesListCon
 
     private val sortContextMenu by lazy {
         RadioContextMenu(
-            RemoteRepository.Sort.values().associateBy {
+            Issue.Sort.values().associateBy {
                 TRANSLATIONS_BUNDLE.getString("sort.${it.name.lowercase()}")
             },
-            RemoteRepository.Sort.BEST_MATCH
+            Issue.Sort.BEST_MATCH
         ) {
             sort = it
         }

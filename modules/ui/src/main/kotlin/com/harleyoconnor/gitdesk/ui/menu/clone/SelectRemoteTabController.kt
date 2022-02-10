@@ -1,23 +1,30 @@
 package com.harleyoconnor.gitdesk.ui.menu.clone
 
+import com.harleyoconnor.gitdesk.data.remote.Platform
 import com.harleyoconnor.gitdesk.data.remote.RemoteRepository
-import com.harleyoconnor.gitdesk.data.remote.github.search.RepositorySearch
+import com.harleyoconnor.gitdesk.data.remote.github.GitHubNetworking
 import com.harleyoconnor.gitdesk.git.repository.Remote
 import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.Application
 import com.harleyoconnor.gitdesk.ui.UIResource
+import com.harleyoconnor.gitdesk.ui.node.RadioContextMenu
 import com.harleyoconnor.gitdesk.ui.node.RemoteCellList
 import com.harleyoconnor.gitdesk.ui.node.SVGIcon
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.util.exceptionallyOnMainThread
+import com.harleyoconnor.gitdesk.ui.util.flip
 import com.harleyoconnor.gitdesk.ui.util.logErrorAndCreateDialogue
 import com.harleyoconnor.gitdesk.ui.util.thenAcceptOnMainThread
 import com.harleyoconnor.gitdesk.ui.util.whenScrolledToBottom
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.addIfAbsent
 import com.harleyoconnor.gitdesk.util.xml.SVG
 import com.harleyoconnor.gitdesk.util.xml.SVGCache
 import javafx.application.Platform.runLater
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.geometry.Side
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
@@ -42,7 +49,6 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     class Context(val parent: CloneTab) : ViewController.Context
 
     private lateinit var parent: CloneTab
-
     @FXML
     private lateinit var root: VBox
 
@@ -50,7 +56,41 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     private lateinit var searchBar: TextField
 
     @FXML
+    private lateinit var searchOptionsBox: HBox
+
+    @FXML
+    private lateinit var sortButton: Button
+
+    private var sort: RemoteRepository.Sort = RemoteRepository.Sort.BEST_MATCH
+        set(value) {
+            field = value; updateSearchResults()
+        }
+
+    private val sortContextMenu by lazy {
+        RadioContextMenu(
+            RemoteRepository.Sort.values().associateBy {
+                TRANSLATIONS_BUNDLE.getString("sort.${it.name.lowercase()}")
+            },
+            RemoteRepository.Sort.BEST_MATCH
+        ) {
+            sort = it
+        }
+    }
+
+    @FXML
+    private lateinit var toggleSortOrderButton: Button
+
+    @FXML
+    private lateinit var sortOrderIcon: SVGIcon
+
+    private var sortOrder: RemoteRepository.SortOrder = RemoteRepository.SortOrder.DESCENDING
+        set(value) {
+            field = value; updateSearchResults()
+        }
+
+    @FXML
     private lateinit var platformToggle: Button
+
     private var platform: Platform = Platform.GITHUB
 
     @FXML
@@ -89,8 +129,20 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     }
 
     @FXML
+    private fun openSortMenu(event: ActionEvent) {
+        sortContextMenu.show(searchOptionsBox, Side.BOTTOM, 0.0, 0.0)
+    }
+
+    @FXML
+    private fun toggleSortOrder(event: ActionEvent) {
+        sortOrder = sortOrder.other()
+        sortOrderIcon.flip()
+    }
+
+    @FXML
     private fun togglePlatform() {
         platform = Platform.values()[(platform.ordinal + 1) % Platform.values().size]
+        updateShowingSortButtons()
         updatePlatformToggleGraphic()
         clearResults()
         updateSearchResults(searchBar.text)
@@ -105,11 +157,23 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
         platformToggle.graphic = icon
     }
 
+    private fun updateShowingSortButtons() {
+        if (platform.cellLoader.supportsSorting) {
+            searchOptionsBox.children.addIfAbsent(0, sortButton)
+            searchOptionsBox.children.addIfAbsent(1, toggleSortOrderButton)
+        } else {
+            searchOptionsBox.children.removeAll(sortButton, toggleSortOrderButton)
+        }
+    }
+
+    /**
+     * @return `true` if a search will be completed
+     */
     private fun updateSearchResults(query: String): Boolean {
         if (query == this.searchQuery || query.isEmpty()) {
             return false
         }
-        this.searchQuery = searchBar.text
+        this.searchQuery = query
         updateSearchResults()
         return true
     }
@@ -138,6 +202,8 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     }
 
     interface RemoteCellLoader {
+        val supportsSorting: Boolean
+
         fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String)
 
         fun loadMore(controller: SelectRemoteTabController, query: String)
@@ -145,6 +211,8 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
 
     object GitHubRemoteCellLoader : RemoteCellLoader {
         private var nextPage = 1
+
+        override val supportsSorting: Boolean = true
 
         override fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String) {
             nextPage = 1
@@ -167,7 +235,7 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
         }
 
         private fun loadPage(controller: SelectRemoteTabController, query: String, page: Int) {
-            getRemotes(query, page)
+            getRemotes(query, controller.sort, controller.sortOrder, page)
                 .thenApply {
                     loadCells(it, controller)
                 }
@@ -180,15 +248,19 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
         }
 
         @Suppress("UNCHECKED_CAST")
-        private fun getRemotes(query: String, page: Int): CompletableFuture<Array<out RemoteRepository>> {
-            return RepositorySearch(
-                query = query,
-                perPage = 50,
-                page = page,
-                executor = Application.getInstance().backgroundExecutor
-            ).run().thenApply {
-                it.items
-            }
+        private fun getRemotes(
+            query: String,
+            sort: RemoteRepository.Sort,
+            sortOrder: RemoteRepository.SortOrder,
+            page: Int
+        ): CompletableFuture<Array<out RemoteRepository>> {
+            return GitHubNetworking.getRepositories(
+                query,
+                sort,
+                sortOrder,
+                page,
+                Application.getInstance().backgroundExecutor
+            )
         }
 
         private fun loadCells(
@@ -213,6 +285,8 @@ class SelectRemoteTabController : ViewController<SelectRemoteTabController.Conte
     }
 
     object UrlRemoteCellLoader : RemoteCellLoader {
+        override val supportsSorting: Boolean = false
+
         override fun updateSearchResults(controller: SelectRemoteTabController, newQuery: String) {
             CompletableFuture.runAsync({
                 val url = getUrlFromQuery(newQuery)

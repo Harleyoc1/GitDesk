@@ -6,25 +6,46 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController" fx:id="root"
-      styleClass="open-existing-tab">
+      fx:controller="com.harleyoconnor.gitdesk.ui.menu.clone.SelectRemoteTabController" fx:id="root">
     <StackPane styleClass="cell, top-bar" minHeight="50" prefHeight="50">
         <TextField fx:id="searchBar" promptText="%ui.search.prompt" prefHeight="35" HBox.hgrow="ALWAYS">
             <StackPane.margin>
                 <Insets right="10" left="10"/>
             </StackPane.margin>
         </TextField>
-        <Button onAction="#togglePlatform" fx:id="platformToggle" styleClass="icon-button"
-                StackPane.alignment="CENTER_RIGHT">
+        <HBox fx:id="searchOptionsBox" spacing="4" StackPane.alignment="CENTER_RIGHT" alignment="CENTER_RIGHT"
+              maxWidth="50">
             <StackPane.margin>
-                <Insets right="10"/>
+                <Insets right="16"/>
             </StackPane.margin>
-            <graphic>
-                <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/github.svg" styleClass="icon"/>
-            </graphic>
-        </Button>
+            <Button fx:id="sortButton" onAction="#openSortMenu" styleClass="icon-button">
+                <graphic>
+                    <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/sort.svg" styleClass="icon"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.sort"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="toggleSortOrderButton" onAction="#toggleSortOrder" styleClass="icon-button">
+                <graphic>
+                    <SVGIcon fx:id="sortOrderIcon" prefWidth="16" prefHeight="16" path="/ui/icons/arrow.svg"
+                             styleClass="icon" rotate="90"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ui.tooltip.sort_order"/>
+                </tooltip>
+            </Button>
+            <Button onAction="#togglePlatform" fx:id="platformToggle" styleClass="icon-button">
+                <graphic>
+                    <SVGIcon prefWidth="16" prefHeight="16" path="/ui/icons/github.svg" styleClass="icon"/>
+                </graphic>
+            </Button>
+        </HBox>
     </StackPane>
     <ScrollPane fx:id="contentScrollPane" fitToWidth="true" styleClass="padded">
         <RemoteCellList fx:id="content"/>
