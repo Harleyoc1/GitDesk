@@ -20,7 +20,7 @@
         <BranchChoiceBox fx:id="baseField" prefHeight="35" maxWidth="Infinity"/>
     </VBox>
     <TextField fx:id="nameField" labelText="%ui.repository.branches.create.field.name.label" fieldPrefHeight="35"
-               validation="Length [1,]"
+               validation="NotEmpty"
                styleClass="field"/> <!-- BranchNameAvailableValidator added programmatically -->
     <VBox spacing="8" styleClass="field">
         <Label text="%ui.repository.branches.create.field.upstream.label" styleClass="label"/>
