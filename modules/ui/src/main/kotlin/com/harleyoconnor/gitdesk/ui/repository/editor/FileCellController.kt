@@ -92,9 +92,18 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
     }
 
     private fun setupOpenInExternalEditorMenuItem() {
+        addOpenInExternalEditorMenuItem() // Add item in case the config option has been changed from unset.
         getExternalEditor()?.let { appFile ->
             openInExternalEditorMenuItem.text = appFile.nameWithoutExtension
-        } ?: run { removeOpenInExternalEditorMenuItem() }
+        } ?: run {
+            removeOpenInExternalEditorMenuItem() // Remove item if the config option is not set.
+        }
+    }
+
+    private fun addOpenInExternalEditorMenuItem() {
+        if (openInMenu.items.size < 2) {
+            openInMenu.items.add(openInExternalEditorMenuItem)
+        }
     }
 
     protected fun removeOpenInExternalEditorMenuItem() {

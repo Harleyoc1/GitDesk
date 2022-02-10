@@ -58,6 +58,7 @@ class IntegrationsTabController : ViewController<IntegrationsTabController.Conte
 
     @FXML
     private fun save(event: ActionEvent) {
+        defaultExternalEditorField.getTextOrNull() ?: return // Don't save and exit if field is invalid.
         AppSettings.get().save(settings)
         closeCallback()
     }
