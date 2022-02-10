@@ -2,17 +2,20 @@ package com.harleyoconnor.gitdesk.ui.account.signin
 
 import com.harleyoconnor.gitdesk.data.account.Account
 import com.harleyoconnor.gitdesk.data.account.AccountCredentials
+import com.harleyoconnor.gitdesk.data.account.Session
 import com.harleyoconnor.gitdesk.data.account.signInRequest
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.form.validation.FieldValidator
 import com.harleyoconnor.gitdesk.ui.node.PasswordField
 import com.harleyoconnor.gitdesk.ui.node.TextField
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.VBox
@@ -31,17 +34,27 @@ class SignInController : ViewController<SignInController.Context> {
     class Context(val openSignedInViewCallback: Consumer<Account>): ViewController.Context
 
     private lateinit var openSignedInViewCallback: Consumer<Account>
-
     @FXML
     private lateinit var usernameField: TextField
+
     @FXML
     private lateinit var passwordField: PasswordField
-
     @FXML
     private lateinit var signInButton: Button
 
+    @FXML
+    private lateinit var errorLabel: Label
+
     override fun setup(context: Context) {
         openSignedInViewCallback = context.openSignedInViewCallback
+
+        // Clears error label contents when user starts typing again.
+        usernameField.onTextChanged { _, _ ->
+            errorLabel.text = ""
+        }
+        passwordField.onTextChanged { _, _ ->
+            errorLabel.text = ""
+        }
     }
 
     @FXML
@@ -58,13 +71,21 @@ class SignInController : ViewController<SignInController.Context> {
                 it.apply { session ->
                     session.save()
                     Platform.runLater {
-                        session.getAccount()?.let { account ->
-                            openSignedInViewCallback.accept(account)
-                        }
+                        invokeCallback(session)
+                    }
+                }.ifCodeEquals(400) {
+                    Platform.runLater {
+                        errorLabel.text = TRANSLATIONS_BUNDLE.getString("error.sign_in.invalid")
                     }
                 }.logIfError("Signing in.")
             }.join()
         } catch (ignored: FieldValidator.InvalidException) {}
+    }
+
+    private fun invokeCallback(session: Session) {
+        session.getAccount()?.let { account ->
+            openSignedInViewCallback.accept(account)
+        }
     }
 
     @FXML

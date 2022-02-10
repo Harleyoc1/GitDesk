@@ -13,12 +13,14 @@ typealias FieldValidatorFactory = (Array<String>) -> FieldValidator
 object FieldValidators {
 
     val EMAIL: FieldValidator = RegexFieldValidator(Patterns.EMAIL, "validation.invalid_email")
+    val PASSWORD: FieldValidator = RegexFieldValidator(Patterns.PASSWORD, "validation.invalid_password")
 
     private val validators: Map<String, FieldValidatorFactory> = mapOf(
         "Length" to { arguments -> constructLengthValidator(arguments[0]) },
         "NotEmpty" to { NotEmptyValidator },
         "Regex" to { arguments -> constructRegexValidator(arguments[0], arguments[1]) },
         "Email" to { EMAIL },
+        "Password" to { PASSWORD },
         "UsernameAvailable" to { UsernameAvailableValidator },
         "LocationFree" to { LocationFreeValidator },
         "IsExecutable" to { IsExecutableValidator }

@@ -54,7 +54,7 @@ class PullRequestsTabController : ViewController<PullRequestsTabController.Conte
         stage = context.stage
         repository = context.repository
         remoteContext = context.remoteContext
-        titleLabel.text = repository.id
+        titleLabel.text = context.remoteContext.remote.name.getFullName()
         sideBar.children.add(
             loadPullRequestsList()
         )
