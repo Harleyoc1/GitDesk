@@ -50,7 +50,14 @@ class CommitController : ViewController<CommitController.Context> {
 
     @FXML
     private fun commitAndPush(event: ActionEvent) {
-        commit(event)
+        repository.commit(summaryField.text, descriptionField.text)
+            .ifSuccessful {
+                Platform.runLater {
+                    refreshAfterCommit()
+                }
+                repository.push().beginAndWaitFor()
+            }
+            .begin()
     }
 
     @FXML
@@ -58,13 +65,17 @@ class CommitController : ViewController<CommitController.Context> {
         repository.commit(summaryField.text, descriptionField.text)
             .ifSuccessful {
                 Platform.runLater {
-                    summaryField.clear()
-                    descriptionField.clear()
-                    parent.refresh()
+                    refreshAfterCommit()
                 }
             }
             .ifFailure(::logFailure)
             .begin()
+    }
+
+    private fun refreshAfterCommit() {
+        summaryField.clear()
+        descriptionField.clear()
+        parent.refresh()
     }
 
     @FXML

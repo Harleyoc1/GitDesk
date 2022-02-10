@@ -38,7 +38,9 @@ class RepositoryMenu : Menu() {
 
     @FXML
     private fun push(event: ActionEvent) {
-        // not implemented
+        window.repository.gitRepository.push()
+            .ifFailure(::logFailure)
+            .begin()
     }
 
     @FXML

@@ -149,6 +149,13 @@ data class Repository @Throws(NoSuchRepositoryException::class) constructor(val 
             .directory(directory)
     }
 
+    fun push(): ProceduralProcessBuilder {
+        return ProceduralProcessBuilder()
+            .gitCommand()
+            .arguments("push")
+            .directory(directory)
+    }
+
     fun addToStage(file: File): ProceduralProcessBuilder = ProceduralProcessBuilder()
         .gitCommand()
         .arguments("add", file.canonicalFile.relativeTo(directory).path)
