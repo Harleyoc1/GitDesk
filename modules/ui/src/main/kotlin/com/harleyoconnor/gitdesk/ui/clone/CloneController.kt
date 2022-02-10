@@ -5,6 +5,7 @@ import com.harleyoconnor.gitdesk.git.clone
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.clone.CloneWindow
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.process.logFailure
@@ -18,11 +19,11 @@ import javafx.scene.layout.VBox
  */
 class CloneController : ViewController<CloneController.Context> {
 
-    object Loader: ResourceViewLoader<Context, CloneController, VBox>(
+    object Loader : ResourceViewLoader<Context, CloneController, VBox>(
         UIResource("/ui/layouts/clone/Clone.fxml")
     )
 
-    class Context(val parent: CloneWindow): ViewController.Context
+    class Context(val parent: CloneWindow) : ViewController.Context
 
     private lateinit var parent: CloneWindow
 
@@ -48,7 +49,12 @@ class CloneController : ViewController<CloneController.Context> {
     private fun queueOpenRepository() {
         Platform.runLater {
             RepositoryWindow.focusOrOpen(
-                LocalRepository(parent.destination.name, parent.destination)
+                LocalRepository(
+                    parent.destination.name,
+                    parent.destination,
+                    null,
+                    AppSettings.get().getOrLoad().repositories.showHiddenFilesByDefault
+                )
             )
             parent.close()
         }

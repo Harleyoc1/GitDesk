@@ -16,9 +16,10 @@ class LocalRepository(
     val id: String,
     val directory: Directory,
     @Json(name = "last_open") private var lastOpen: Date? = null,
+    @Json(name = "show_hidden_files") var showHiddenFiles: Boolean = false,
     @DirectoryTree @Json(name = "open_directories") val openDirectories: MutableTree<Directory> =
         MutableArrayTree(directory),
-    @Json(name = "window_cache") var windowCache: WindowCache = WindowCache() // TODO: Cache all windows separately.
+    @Json(name = "window_cache") var windowCache: WindowCache = WindowCache()
 ) {
 
     val gitRepository: Repository by lazy { Repository(directory) }

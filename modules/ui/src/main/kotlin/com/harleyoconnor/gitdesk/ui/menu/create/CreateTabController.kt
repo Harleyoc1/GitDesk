@@ -4,6 +4,7 @@ import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.git.initRepository
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
@@ -22,11 +23,11 @@ import java.io.File
  */
 class CreateTabController : ViewController<CreateTabController.Context> {
 
-    object Loader: ResourceViewLoader<Context, CreateTabController, VBox>(
+    object Loader : ResourceViewLoader<Context, CreateTabController, VBox>(
         UIResource("/ui/layouts/menu/create/CreateTab.fxml")
     )
 
-    class Context(val parent: MenuController): ViewController.Context
+    class Context(val parent: MenuController) : ViewController.Context
 
     private lateinit var parent: MenuController
 
@@ -68,7 +69,14 @@ class CreateTabController : ViewController<CreateTabController.Context> {
         location.mkdirs()
         val directory = Directory(location)
         initRepository(directory)
-        parent.openRepository(LocalRepository(nameField.text, directory))
+        parent.openRepository(
+            LocalRepository(
+                nameField.text,
+                directory,
+                null,
+                AppSettings.get().getOrLoad().repositories.showHiddenFilesByDefault
+            )
+        )
     }
 
     @FXML

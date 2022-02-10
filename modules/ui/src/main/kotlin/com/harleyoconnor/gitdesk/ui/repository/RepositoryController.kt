@@ -18,6 +18,7 @@ import com.harleyoconnor.gitdesk.ui.util.Tab
 import com.harleyoconnor.gitdesk.ui.util.setOnSelected
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
+import com.harleyoconnor.gitdesk.util.addIfAbsent
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
@@ -40,7 +41,6 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     private lateinit var parent: RepositoryWindow
     private lateinit var repository: LocalRepository
-
     @FXML
     private lateinit var root: BorderPane
 
@@ -55,6 +55,9 @@ class RepositoryController : ViewController<RepositoryController.Context> {
 
     @FXML
     private lateinit var toggleTerminalMenuItem: MenuItem
+
+    @FXML
+    private lateinit var showHiddenFilesMenuItem: MenuItem
 
     @FXML
     private lateinit var repositoryMenu: RepositoryMenu
@@ -98,13 +101,14 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         EditorTabController.Loader.load(
             EditorTabController.Context(
                 parent,
-                repository
+                repository,
+                showHiddenFilesMenuItem
             )
         )
     }
 
     private val editorTab: Tab by lazy {
-        Tab(editorTabView.root, this::openTab)
+        Tab(editorTabView.root, this::openEditorTab)
     }
 
     private val changesTab by lazy {
@@ -175,7 +179,17 @@ class RepositoryController : ViewController<RepositoryController.Context> {
         disableTabsIfNotNeeded()
     }
 
+    private fun openEditorTab(node: Node) {
+        viewMenu.items.addIfAbsent(showHiddenFilesMenuItem)
+        setNodeInCentre(node)
+    }
+
     private fun openTab(node: Node) {
+        viewMenu.items.remove(showHiddenFilesMenuItem)
+        setNodeInCentre(node)
+    }
+
+    private fun setNodeInCentre(node: Node) {
         if (centreSplitPane.items.size < 1) {
             centreSplitPane.items.add(node)
         } else {

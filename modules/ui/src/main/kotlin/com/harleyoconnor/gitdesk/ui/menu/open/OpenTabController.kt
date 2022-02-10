@@ -7,6 +7,7 @@ import com.harleyoconnor.gitdesk.git.repositoryExistsAt
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.menu.MenuController
 import com.harleyoconnor.gitdesk.ui.node.RepositoryCellList
+import com.harleyoconnor.gitdesk.ui.settings.AppSettings
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import com.harleyoconnor.gitdesk.util.Directory
@@ -27,11 +28,11 @@ import org.fxmisc.wellbehaved.event.Nodes
  */
 class OpenTabController : ViewController<OpenTabController.Context> {
 
-    object Loader: ResourceViewLoader<Context, OpenTabController, VBox>(
+    object Loader : ResourceViewLoader<Context, OpenTabController, VBox>(
         UIResource("/ui/layouts/menu/open/OpenTab.fxml")
     )
 
-    class Context(val parent: MenuController): ViewController.Context
+    class Context(val parent: MenuController) : ViewController.Context
 
     private lateinit var parent: MenuController
 
@@ -78,7 +79,14 @@ class OpenTabController : ViewController<OpenTabController.Context> {
         if (!repositoryExistsAt(directory)) {
             initRepository(directory)
         }
-        parent.openRepository(LocalRepository(directory.name, directory))
+        parent.openRepository(
+            LocalRepository(
+                directory.name,
+                directory,
+                null,
+                AppSettings.get().getOrLoad().repositories.showHiddenFilesByDefault
+            )
+        )
     }
 
     @FXML

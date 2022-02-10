@@ -91,7 +91,7 @@ open class FileCellController<C : FileCellController.Context> : ViewController<C
         contextMenu.show(cell, event.screenX, event.screenY)
     }
 
-    private fun setupOpenInExternalEditorMenuItem() {
+    protected open fun setupOpenInExternalEditorMenuItem() {
         addOpenInExternalEditorMenuItem() // Add item in case the config option has been changed from unset.
         getExternalEditor()?.let { appFile ->
             openInExternalEditorMenuItem.text = appFile.nameWithoutExtension

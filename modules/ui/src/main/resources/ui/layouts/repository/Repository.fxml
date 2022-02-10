@@ -30,6 +30,8 @@
                 <SeparatorMenuItem/>
                 <MenuItem fx:id="toggleTerminalMenuItem" text="%ui.menu.view.toggle_terminal_view.enable"
                           accelerator="Shortcut+Alt+T" onAction="#toggleTerminalView"/>
+                <MenuItem fx:id="showHiddenFilesMenuItem" text="%ui.menu.view.show_hidden_files.enable"
+                          accelerator="Shortcut+Shift+."/>
             </ViewMenu>
             <RepositoryMenu fx:id="repositoryMenu"/>
             <WindowMenu fx:id="windowMenu"/>

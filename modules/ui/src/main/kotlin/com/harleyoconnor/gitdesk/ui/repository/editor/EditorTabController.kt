@@ -3,11 +3,13 @@ package com.harleyoconnor.gitdesk.ui.repository.editor
 import com.harleyoconnor.gitdesk.data.local.LocalRepository
 import com.harleyoconnor.gitdesk.ui.UIResource
 import com.harleyoconnor.gitdesk.ui.repository.RepositoryWindow
+import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.ui.view.ResourceViewLoader
 import com.harleyoconnor.gitdesk.ui.view.ViewController
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Label
+import javafx.scene.control.MenuItem
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
@@ -18,11 +20,15 @@ import javafx.scene.control.TabPane
  */
 class EditorTabController : ViewController<EditorTabController.Context> {
 
-    object Loader: ResourceViewLoader<Context, EditorTabController, SplitPane>(
+    object Loader : ResourceViewLoader<Context, EditorTabController, SplitPane>(
         UIResource("/ui/layouts/repository/editor/EditorTab.fxml")
     )
 
-    class Context(val window: RepositoryWindow, val repository: LocalRepository): ViewController.Context
+    class Context(
+        val window: RepositoryWindow,
+        val repository: LocalRepository,
+        val showHiddenFilesMenuItem: MenuItem
+    ) : ViewController.Context
 
     private lateinit var window: RepositoryWindow
     private lateinit var repository: LocalRepository
@@ -39,6 +45,10 @@ class EditorTabController : ViewController<EditorTabController.Context> {
     @FXML
     private lateinit var fileEditorTabs: TabPane
 
+    private val fileListView by lazy {
+        FileListController.Loader.load(FileListController.Context(this, repository))
+    }
+
     @FXML
     private fun initialize() {
         fileEditorTabs.tabDragPolicy = TabPane.TabDragPolicy.REORDER
@@ -49,8 +59,22 @@ class EditorTabController : ViewController<EditorTabController.Context> {
         this.repository = context.repository
         titleLabel.text = repository.id
         branchNameLabel.text = repository.gitRepository.getCurrentBranch().name
-        fileList.content = FileListController.Loader.load(FileListController.Context(this, repository)).root
+        fileList.content = fileListView.root
+        setupShowHiddenFilesMenuItem(context.showHiddenFilesMenuItem)
     }
+
+    private fun setupShowHiddenFilesMenuItem(showHiddenFilesMenuItem: MenuItem) {
+        showHiddenFilesMenuItem.text = getTextForShowHiddenFilesMenuItem()
+        showHiddenFilesMenuItem.setOnAction {
+            repository.showHiddenFiles = !repository.showHiddenFiles
+            showHiddenFilesMenuItem.text = getTextForShowHiddenFilesMenuItem()
+            fileListView.controller.reloadAll()
+        }
+    }
+
+    private fun getTextForShowHiddenFilesMenuItem() = TRANSLATIONS_BUNDLE.getString(
+        "ui.menu.view.show_hidden_files." + if (repository.showHiddenFiles) "disable" else "enable"
+    )
 
     fun open(fileCell: FileCellController<*>) {
         if (fileEditorTabs.tabs.firstOrNull() !is FileTab) {

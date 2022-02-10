@@ -21,7 +21,7 @@
                 <MenuItem text="%ui.button.delete" onAction="#delete"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="%ui.button.open" onAction="#expandPressed"/>
-                <Menu text="%ui.button.open_in">
+                <Menu fx:id="openInMenu" text="%ui.button.open_in">
                     <MenuItem text="%ui.button.open_in.file_browser" onAction="#openInFileBrowser"/>
                 </Menu>
             </items>

@@ -53,11 +53,11 @@ class FileListController : ViewController<FileListController.Context> {
     override fun setup(context: Context) {
         this.parent = context.parent
         this.repository = context.repository
-        loadRootCells()
+        reloadAll()
         showLastOpenDirectories()
     }
 
-    private fun loadRootCells() {
+    fun reloadAll() {
         root.children.clear()
         root.children.addAll(buildCells(repository.directory))
     }
@@ -110,7 +110,7 @@ class FileListController : ViewController<FileListController.Context> {
         FileCellController.Context(this, file, insetIndex)
     ).root
 
-    private fun shouldShowFile(file: File): Boolean = !file.name.startsWith(".")
+    private fun shouldShowFile(file: File): Boolean = repository.showHiddenFiles || !file.name.startsWith(".")
 
     fun onDirectoryOpened(directory: Directory) {
         val parent = Directory(directory.parentFile)
@@ -124,7 +124,7 @@ class FileListController : ViewController<FileListController.Context> {
     fun onDirectoryDeleted(directory: Directory) {
         val parent = Directory(directory.parentFile)
         directoryCells[parent]?.reloadCells() ?: run {
-            loadRootCells()
+            reloadAll()
         }
         this.repository.openDirectories.remove(directory)
         showLastOpenDirectories()
@@ -133,14 +133,14 @@ class FileListController : ViewController<FileListController.Context> {
     fun onFileDeleted(file: File) {
         val parent = Directory(file.parentFile)
         directoryCells[parent]?.reloadCells() ?: run {
-            loadRootCells()
+            reloadAll()
         }
         showLastOpenDirectories()
     }
 
     fun reloadCellsFor(directory: Directory) {
         directoryCells[directory]?.reloadCells() ?: run {
-            loadRootCells()
+            reloadAll()
         }
         showLastOpenDirectories()
     }
