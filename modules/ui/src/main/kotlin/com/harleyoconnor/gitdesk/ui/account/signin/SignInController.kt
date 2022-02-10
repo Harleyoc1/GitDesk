@@ -67,19 +67,23 @@ class SignInController : ViewController<SignInController.Context> {
     private fun signIn(event: ActionEvent) {
         try {
             val credentials = AccountCredentials(usernameField.getText(), passwordField.getText())
-            signInRequest(credentials).thenAccept {
-                it.apply { session ->
-                    session.save()
-                    Platform.runLater {
-                        invokeCallback(session)
-                    }
-                }.ifCodeEquals(400) {
-                    Platform.runLater {
-                        errorLabel.text = TRANSLATIONS_BUNDLE.getString("error.sign_in.invalid")
-                    }
-                }.logIfError("Signing in.")
-            }.join()
+            signIn(credentials)
         } catch (ignored: FieldValidator.InvalidException) {}
+    }
+
+    private fun signIn(credentials: AccountCredentials) {
+        signInRequest(credentials).thenAccept {
+            it.apply { session ->
+                session.save()
+                Platform.runLater {
+                    invokeCallback(session)
+                }
+            }.ifCodeEquals(400) {
+                Platform.runLater {
+                    errorLabel.text = TRANSLATIONS_BUNDLE.getString("error.sign_in.invalid")
+                }
+            }.logIfError("Signing in.")
+        }
     }
 
     private fun invokeCallback(session: Session) {
