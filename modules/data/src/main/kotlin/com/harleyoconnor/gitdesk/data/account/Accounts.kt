@@ -209,8 +209,7 @@ private fun createGetGitHubAccountRequest(session: Session): HttpRequest {
 
 class GitHubLinkingData(
     val username: String,
-    val state: String,
-    val code: String
+    val state: String
 ) {
     companion object {
         val ADAPTER: JsonAdapter<GitHubLinkingData> = MOSHI.adapter(GitHubLinkingData::class.java)

@@ -76,7 +76,9 @@ class LinkGitHubController : ViewController<LinkGitHubController.Context> {
                         openRegisterLink(it)
                     }
                 }.ifError {
-                    populateErrorField(it)
+                    Platform.runLater {
+                        populateErrorField(it)
+                    }
                 }.logIfError("Link GitHub request failed.")
             }.join()
     }

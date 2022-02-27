@@ -63,7 +63,7 @@ class VerifyEmailController : ViewController<VerifyEmailController.Context> {
                             parent.toSignedInView(account)
                         }
                     }
-                }
+                }.logIfError("Verifying email.")
             }.join()
         } catch (ignored: FieldValidator.InvalidException) { }
     }

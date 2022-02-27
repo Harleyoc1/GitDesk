@@ -32,8 +32,8 @@ class SignedInController : ViewController<SignedInController.Context> {
     @FXML
     private lateinit var root: BorderPane
 
-    @FXML
-    private lateinit var detailsTabButton: RadioButton
+//    @FXML
+//    private lateinit var detailsTabButton: RadioButton
 
     @FXML
     private lateinit var gitHubLinkTabButton: RadioButton
@@ -54,7 +54,7 @@ class SignedInController : ViewController<SignedInController.Context> {
         gitHubLinkTabButton.setOnSelected {
             gitHubLinkTab.open()
         }
-        detailsTabButton.fire()
+        gitHubLinkTabButton.fire()
     }
 
     @FXML

@@ -3,6 +3,7 @@ package com.harleyoconnor.gitdesk.ui.repository
 import com.harleyoconnor.gitdesk.ui.menubar.ViewMenu
 import com.harleyoconnor.gitdesk.ui.translation.TRANSLATIONS_BUNDLE
 import com.harleyoconnor.gitdesk.util.process.logFailure
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -52,8 +53,10 @@ class RepositoryMenu : Menu() {
     private fun pull(event: ActionEvent) {
         window.repository.gitRepository.pull()
             .ifSuccessful {
-                // Pull will change files, so we refresh the view.
-                window.refreshView()
+                Platform.runLater {
+                    // Pull will change files, so we refresh the view.
+                    window.refreshView()
+                }
             }
             .ifFailure(::logFailure)
             .begin()

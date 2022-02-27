@@ -13,7 +13,7 @@
     <padding>
         <Insets topRightBottomLeft="10"/>
     </padding>
-    <TextField fx:id="nameField" labelText="%field.name" fieldPrefHeight="35" validation="NotEmpty; Length [0,256]"
+    <TextField fx:id="nameField" labelText="%field.name" fieldPrefHeight="35" validation="NotEmpty; Length [0,64]"
                styleClass="field"/>
     <TextArea fx:id="descriptionField" labelText="%field.description" fieldPrefHeight="150" styleClass="field"/>
     <Region VBox.vgrow="ALWAYS"/>
