@@ -1,6 +1,7 @@
 package com.harleyoconnor.gitdesk.test.data.remote
 
 import com.harleyoconnor.gitdesk.data.remote.github.GitHubNetworking
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIf
 
@@ -10,6 +11,7 @@ class GitHubIssueTests {
         GitHubNetworking.getRemoteRepository("Harleyoc1", "GitDesk-Test")
     }
 
+    @Disabled("Test remote deleted")
     @EnabledIf("com.harleyoconnor.gitdesk.test.data.remote.GitHubIssueTests#canConnectToNetwork")
     @Test
     fun `test getting issue data from GitHub`() {
@@ -18,6 +20,7 @@ class GitHubIssueTests {
         assert(issue?.title == "Issue title")
     }
 
+    @Disabled("Test remote deleted")
     @EnabledIf("com.harleyoconnor.gitdesk.test.data.remote.GitHubIssueTests#canConnectToNetwork")
     @Test
     fun `test getting issue timeline data from GitHub`() {
