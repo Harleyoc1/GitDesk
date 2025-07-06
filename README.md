@@ -12,7 +12,7 @@ The main idea of GitDesk was to provide a desktop application for Git project ma
   - Pull/push
   - Merge
 - Integration with GitHub API for issues and pull requests
-- Integration with a custom web backend for a unique checklist feature
+- Integration with a custom [web backend](https://github.com/Harleyoc1/GitDesk) for a unique checklist feature
 
 ## Environment
 GitDesk was written using JavaFX, with logic implemented in Kotlin and layouts in FXML. Gradle was used as the build tool. Dependency versions:
